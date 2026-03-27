@@ -1,0 +1,1209 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Deliverable 1 — Solution Analysis & Prototype Recommendation</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,400;0,9..144,500;1,9..144,300;1,9..144,400&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;1,9..40,300&family=DM+Mono:wght@400;500&display=swap');
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --bg:          #faf9f6;
+  --surface:     #ffffff;
+  --surface2:    #f3f1eb;
+  --surface3:    #eae7df;
+  --border:      rgba(0,0,0,0.07);
+  --border-md:   rgba(0,0,0,0.13);
+  --border-hi:   rgba(0,0,0,0.22);
+  --text:        #1c1b18;
+  --text-2:      #6b6860;
+  --text-3:      #a09d95;
+  --ink:         #1c1b18;
+  --green:       #1a6648;
+  --green-bg:    #e8f5ef;
+  --green-mid:   #2d9e71;
+  --amber:       #92540a;
+  --amber-bg:    #fdf3e3;
+  --amber-mid:   #d4820f;
+  --red:         #9e2a2a;
+  --red-bg:      #fdf0f0;
+  --blue:        #1a4e8c;
+  --blue-bg:     #eef4fc;
+  --blue-mid:    #2d6dbf;
+  --purple:      #4a3a9e;
+  --purple-bg:   #f0eefe;
+  --purple-mid:  #6b5fd4;
+  --slate:       #2d3748;
+}
+
+html { scroll-behavior: smooth; }
+
+body {
+  font-family: 'DM Sans', sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  font-size: 15px;
+  line-height: 1.75;
+  -webkit-font-smoothing: antialiased;
+}
+
+.page {
+  max-width: 960px;
+  margin: 0 auto;
+  padding: 0 40px 120px;
+}
+
+/* ── Cover ── */
+.cover {
+  padding: 72px 0 60px;
+  border-bottom: 1px solid var(--border-md);
+  margin-bottom: 64px;
+  position: relative;
+}
+.cover-meta {
+  font-family: 'DM Mono', monospace;
+  font-size: 10px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--green);
+  margin-bottom: 20px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+.cover-meta::before {
+  content: '';
+  display: inline-block;
+  width: 28px;
+  height: 1px;
+  background: var(--green);
+}
+.cover-d-label {
+  font-family: 'DM Mono', monospace;
+  font-size: 11px;
+  color: var(--text-3);
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  margin-bottom: 10px;
+}
+.cover-title {
+  font-family: 'Fraunces', serif;
+  font-size: 52px;
+  font-weight: 300;
+  line-height: 1.08;
+  letter-spacing: -0.02em;
+  color: var(--text);
+  margin-bottom: 10px;
+}
+.cover-title em {
+  font-style: italic;
+  color: var(--green);
+}
+.cover-subtitle {
+  font-size: 18px;
+  color: var(--text-2);
+  font-weight: 300;
+  margin-bottom: 36px;
+  max-width: 600px;
+  line-height: 1.5;
+}
+.cover-pills {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+.pill {
+  font-family: 'DM Mono', monospace;
+  font-size: 10px;
+  letter-spacing: 0.06em;
+  padding: 5px 12px;
+  border-radius: 3px;
+  border: 1px solid var(--border-md);
+  color: var(--text-2);
+}
+.pill.green { border-color: #aad4bc; color: var(--green); background: var(--green-bg); }
+.pill.amber { border-color: #f0c880; color: var(--amber); background: var(--amber-bg); }
+
+/* ── TOC ── */
+.toc {
+  background: var(--surface2);
+  border: 1px solid var(--border-md);
+  border-radius: 10px;
+  padding: 24px 28px;
+  margin-bottom: 64px;
+}
+.toc-title {
+  font-family: 'DM Mono', monospace;
+  font-size: 10px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--text-3);
+  margin-bottom: 16px;
+}
+.toc-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 4px 32px;
+}
+.toc-item {
+  display: flex;
+  align-items: baseline;
+  gap: 10px;
+  font-size: 13px;
+  color: var(--text-2);
+  padding: 4px 0;
+  border-bottom: 1px dashed var(--border);
+  text-decoration: none;
+}
+.toc-item:hover { color: var(--green); }
+.toc-num {
+  font-family: 'DM Mono', monospace;
+  font-size: 10px;
+  color: var(--text-3);
+  flex-shrink: 0;
+}
+
+/* ── Section ── */
+.section {
+  margin-bottom: 72px;
+  scroll-margin-top: 40px;
+}
+.section-header {
+  display: flex;
+  align-items: flex-end;
+  gap: 16px;
+  margin-bottom: 28px;
+  padding-bottom: 16px;
+  border-bottom: 1px solid var(--border-md);
+  position: relative;
+}
+.section-header::after {
+  content: '';
+  position: absolute;
+  bottom: -1px; left: 0;
+  width: 48px; height: 1px;
+  background: var(--green);
+}
+.section-num {
+  font-family: 'DM Mono', monospace;
+  font-size: 11px;
+  color: var(--text-3);
+  letter-spacing: 0.1em;
+  padding-bottom: 3px;
+}
+.section-title {
+  font-family: 'Fraunces', serif;
+  font-size: 28px;
+  font-weight: 300;
+  color: var(--text);
+  letter-spacing: -0.01em;
+  line-height: 1.15;
+}
+.section-title em { font-style: italic; color: var(--green); }
+
+/* ── Prose ── */
+.prose {
+  font-size: 15px;
+  color: var(--text-2);
+  line-height: 1.8;
+  margin-bottom: 16px;
+  max-width: 720px;
+}
+.prose strong { color: var(--text); font-weight: 500; }
+.prose em { color: var(--green); font-style: normal; }
+
+/* ── Pull quote ── */
+.pullquote {
+  border-left: 3px solid var(--green);
+  margin: 28px 0;
+  padding: 12px 0 12px 24px;
+}
+.pullquote-text {
+  font-family: 'Fraunces', serif;
+  font-size: 19px;
+  font-weight: 300;
+  font-style: italic;
+  color: var(--text);
+  line-height: 1.55;
+  margin-bottom: 8px;
+}
+.pullquote-attr {
+  font-family: 'DM Mono', monospace;
+  font-size: 11px;
+  color: var(--text-3);
+  letter-spacing: 0.06em;
+}
+
+/* ── Insight box ── */
+.insight {
+  background: var(--green-bg);
+  border: 1px solid #aad4bc;
+  border-radius: 8px;
+  padding: 18px 22px;
+  margin: 24px 0;
+  font-size: 14px;
+  color: var(--green);
+  line-height: 1.7;
+}
+.insight strong { font-weight: 500; }
+
+/* ── Pain point cards ── */
+.pain-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+  margin: 24px 0;
+}
+.pain-card {
+  background: var(--surface);
+  border: 1px solid var(--border-md);
+  border-radius: 8px;
+  padding: 18px 20px;
+  position: relative;
+  overflow: hidden;
+}
+.pain-card::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 3px;
+  background: var(--amber-mid);
+}
+.pain-card.structural::before { background: var(--red); }
+.pain-card.speed::before      { background: var(--amber-mid); }
+.pain-card.trust::before      { background: var(--blue-mid); }
+.pain-card.reach::before      { background: var(--purple-mid); }
+.pain-title {
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--text);
+  margin-bottom: 6px;
+}
+.pain-body {
+  font-size: 13px;
+  color: var(--text-2);
+  line-height: 1.6;
+}
+
+/* ── Persona cards ── */
+.persona-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 12px;
+  margin: 24px 0;
+}
+.persona-card {
+  background: var(--surface);
+  border: 1px solid var(--border-md);
+  border-radius: 10px;
+  padding: 20px;
+  position: relative;
+}
+.persona-avatar {
+  width: 40px; height: 40px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: 'DM Mono', monospace;
+  font-size: 13px;
+  font-weight: 500;
+  margin-bottom: 12px;
+}
+.persona-role {
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--text);
+  margin-bottom: 2px;
+}
+.persona-name {
+  font-family: 'DM Mono', monospace;
+  font-size: 10px;
+  color: var(--text-3);
+  letter-spacing: 0.06em;
+  margin-bottom: 10px;
+}
+.persona-needs {
+  font-size: 12px;
+  color: var(--text-2);
+  line-height: 1.55;
+  margin-bottom: 10px;
+}
+.persona-data {
+  font-family: 'DM Mono', monospace;
+  font-size: 10px;
+  color: var(--text-3);
+  line-height: 1.7;
+}
+
+/* ── Competitor table ── */
+.comp-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 24px 0;
+  font-size: 13px;
+}
+.comp-table th {
+  font-family: 'DM Mono', monospace;
+  font-size: 9px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--text-3);
+  text-align: left;
+  padding: 8px 14px;
+  border-bottom: 1px solid var(--border-md);
+  background: var(--surface2);
+}
+.comp-table th:first-child { border-radius: 8px 0 0 0; }
+.comp-table th:last-child  { border-radius: 0 8px 0 0; }
+.comp-table td {
+  padding: 12px 14px;
+  border-bottom: 1px solid var(--border);
+  vertical-align: top;
+  line-height: 1.55;
+  color: var(--text-2);
+}
+.comp-table td:first-child { font-weight: 500; color: var(--text); }
+.comp-table tr:last-child td { border-bottom: none; }
+.comp-table tr:hover td { background: var(--surface2); }
+.dot { display: inline-block; width: 7px; height: 7px; border-radius: 50%; margin-right: 5px; vertical-align: middle; }
+.dot-green  { background: var(--green-mid); }
+.dot-amber  { background: var(--amber-mid); }
+.dot-red    { background: #e05c5c; }
+.gap-badge {
+  display: inline-block;
+  font-size: 10px;
+  padding: 2px 7px;
+  border-radius: 3px;
+  font-family: 'DM Mono', monospace;
+  font-weight: 500;
+  margin-top: 3px;
+}
+.gap-yes   { background: var(--green-bg);   color: var(--green); }
+.gap-no    { background: var(--red-bg);     color: var(--red); }
+.gap-part  { background: var(--amber-bg);   color: var(--amber); }
+
+/* ── Architecture layers ── */
+.arch-stack {
+  border: 1px solid var(--border-md);
+  border-radius: 10px;
+  overflow: hidden;
+  margin: 24px 0;
+}
+.arch-layer {
+  padding: 18px 22px;
+  border-bottom: 1px solid var(--border);
+  display: grid;
+  grid-template-columns: 180px 1fr;
+  gap: 20px;
+  align-items: start;
+}
+.arch-layer:last-child { border-bottom: none; }
+.arch-layer-label {
+  font-family: 'DM Mono', monospace;
+  font-size: 10px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  padding-top: 3px;
+}
+.arch-layer-content {
+  font-size: 13px;
+  color: var(--text-2);
+  line-height: 1.65;
+}
+.arch-layer-content strong { color: var(--text); font-weight: 500; }
+.layer-personas  { background: #f7f3fe; }
+.layer-channels  { background: #f0f8f5; }
+.layer-intel     { background: #fef9f0; }
+.layer-connect   { background: #f0f5fe; }
+.layer-data      { background: var(--surface2); }
+
+/* ── Prototype focus box ── */
+.proto-focus {
+  background: var(--surface);
+  border: 2px solid var(--green);
+  border-radius: 12px;
+  padding: 28px 32px;
+  margin: 32px 0;
+  position: relative;
+}
+.proto-focus-eyebrow {
+  font-family: 'DM Mono', monospace;
+  font-size: 10px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--green);
+  margin-bottom: 10px;
+}
+.proto-focus-title {
+  font-family: 'Fraunces', serif;
+  font-size: 22px;
+  font-weight: 400;
+  color: var(--text);
+  margin-bottom: 14px;
+  line-height: 1.3;
+}
+.proto-focus-body {
+  font-size: 14px;
+  color: var(--text-2);
+  line-height: 1.75;
+  margin-bottom: 14px;
+}
+.proto-focus-body strong { color: var(--text); font-weight: 500; }
+
+/* ── Why this slice ── */
+.reason-list { margin: 20px 0; display: flex; flex-direction: column; gap: 10px; }
+.reason-item {
+  display: grid;
+  grid-template-columns: 28px 1fr;
+  gap: 14px;
+  align-items: start;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 14px 16px;
+}
+.reason-num {
+  font-family: 'DM Mono', monospace;
+  font-size: 11px;
+  color: var(--green);
+  font-weight: 500;
+  padding-top: 2px;
+}
+.reason-content {}
+.reason-title { font-size: 13px; font-weight: 500; color: var(--text); margin-bottom: 3px; }
+.reason-body  { font-size: 13px; color: var(--text-2); line-height: 1.6; }
+
+/* ── Demo moment ── */
+.demo-moment {
+  background: var(--slate);
+  border-radius: 12px;
+  padding: 32px;
+  margin: 28px 0;
+  color: #e2e8f0;
+}
+.demo-moment-label {
+  font-family: 'DM Mono', monospace;
+  font-size: 10px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: #68d391;
+  margin-bottom: 16px;
+}
+.demo-exchange { display: flex; flex-direction: column; gap: 14px; }
+.dm-q {
+  background: rgba(255,255,255,0.06);
+  border: 1px solid rgba(255,255,255,0.1);
+  border-radius: 8px;
+  padding: 12px 16px;
+  font-size: 14px;
+  color: #e2e8f0;
+  line-height: 1.6;
+}
+.dm-q-label {
+  font-family: 'DM Mono', monospace;
+  font-size: 9px;
+  letter-spacing: 0.1em;
+  color: #a0aec0;
+  margin-bottom: 6px;
+  text-transform: uppercase;
+}
+.dm-a {
+  background: rgba(104,211,145,0.08);
+  border: 1px solid rgba(104,211,145,0.2);
+  border-radius: 8px;
+  padding: 14px 16px;
+  font-size: 14px;
+  color: #e2e8f0;
+  line-height: 1.75;
+}
+.dm-a-label {
+  font-family: 'DM Mono', monospace;
+  font-size: 9px;
+  letter-spacing: 0.1em;
+  color: #68d391;
+  margin-bottom: 6px;
+  text-transform: uppercase;
+}
+.dm-a em { color: #fbd38d; font-style: normal; font-weight: 500; }
+.dm-source {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  margin-top: 10px;
+}
+.dm-source-pill {
+  font-family: 'DM Mono', monospace;
+  font-size: 10px;
+  padding: 3px 9px;
+  border-radius: 3px;
+  border: 1px solid rgba(255,255,255,0.12);
+  color: #a0aec0;
+}
+
+/* ── Phase roadmap ── */
+.roadmap { display: flex; flex-direction: column; gap: 0; margin: 24px 0; }
+.roadmap-phase {
+  display: grid;
+  grid-template-columns: 140px 1fr;
+  gap: 0;
+  position: relative;
+}
+.roadmap-phase::before {
+  content: '';
+  position: absolute;
+  left: 68px;
+  top: 32px;
+  bottom: -1px;
+  width: 1px;
+  background: var(--border-md);
+}
+.roadmap-phase:last-child::before { display: none; }
+.roadmap-left {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 20px 0;
+  position: relative;
+}
+.roadmap-dot {
+  width: 14px; height: 14px;
+  border-radius: 50%;
+  border: 2px solid var(--border-md);
+  background: var(--bg);
+  z-index: 1;
+  flex-shrink: 0;
+}
+.roadmap-dot.active { background: var(--green); border-color: var(--green); }
+.roadmap-dot.future { background: var(--surface2); border-color: var(--border-md); }
+.roadmap-phase-label {
+  font-family: 'DM Mono', monospace;
+  font-size: 10px;
+  color: var(--text-3);
+  letter-spacing: 0.08em;
+  text-align: center;
+  margin-top: 6px;
+  line-height: 1.4;
+}
+.roadmap-right {
+  padding: 16px 0 24px 20px;
+  border-left: none;
+}
+.roadmap-title {
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--text);
+  margin-bottom: 6px;
+}
+.roadmap-body {
+  font-size: 13px;
+  color: var(--text-2);
+  line-height: 1.65;
+}
+.roadmap-body strong { color: var(--text); font-weight: 500; }
+.roadmap-tags { display: flex; gap: 6px; flex-wrap: wrap; margin-top: 8px; }
+.rtag {
+  font-family: 'DM Mono', monospace;
+  font-size: 10px;
+  padding: 2px 8px;
+  border-radius: 3px;
+  border: 1px solid var(--border-md);
+  color: var(--text-3);
+}
+.rtag.g { border-color: #aad4bc; color: var(--green); background: var(--green-bg); }
+.rtag.a { border-color: #f0c880; color: var(--amber); background: var(--amber-bg); }
+.rtag.b { border-color: #b3cef5; color: var(--blue);  background: var(--blue-bg); }
+
+/* ── Commercial hypothesis ── */
+.commercial-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 12px;
+  margin: 20px 0;
+}
+.comm-card {
+  background: var(--surface);
+  border: 1px solid var(--border-md);
+  border-radius: 8px;
+  padding: 18px;
+}
+.comm-step {
+  font-family: 'DM Mono', monospace;
+  font-size: 10px;
+  color: var(--text-3);
+  letter-spacing: 0.08em;
+  margin-bottom: 8px;
+}
+.comm-title {
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--text);
+  margin-bottom: 6px;
+}
+.comm-body {
+  font-size: 12px;
+  color: var(--text-2);
+  line-height: 1.6;
+}
+.comm-value {
+  font-family: 'DM Mono', monospace;
+  font-size: 11px;
+  color: var(--green);
+  margin-top: 8px;
+  font-weight: 500;
+}
+
+/* ── Footer ── */
+.doc-footer {
+  margin-top: 80px;
+  padding-top: 24px;
+  border-top: 1px solid var(--border-md);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.footer-brand {
+  font-family: 'DM Mono', monospace;
+  font-size: 10px;
+  letter-spacing: 0.1em;
+  color: var(--text-3);
+  text-transform: uppercase;
+}
+.footer-conf {
+  font-family: 'DM Mono', monospace;
+  font-size: 10px;
+  color: var(--text-3);
+  letter-spacing: 0.06em;
+}
+
+/* ── Responsive ── */
+@media (max-width: 700px) {
+  .page { padding: 0 20px 80px; }
+  .cover-title { font-size: 36px; }
+  .pain-grid { grid-template-columns: 1fr; }
+  .persona-grid { grid-template-columns: 1fr 1fr; }
+  .commercial-grid { grid-template-columns: 1fr; }
+  .toc-grid { grid-template-columns: 1fr; }
+  .arch-layer { grid-template-columns: 1fr; }
+  .roadmap-phase { grid-template-columns: 80px 1fr; }
+}
+</style>
+</head>
+<body>
+<div class="page">
+
+  <!-- ══ COVER ══ -->
+  <div class="cover">
+    <div class="cover-meta">Calibrax · Pitch Sprint · FreshChoice Group</div>
+    <div class="cover-d-label">Deliverable 1 of 5</div>
+    <div class="cover-title">Solution Analysis &<br><em>Prototype Recommendation</em></div>
+    <div class="cover-subtitle">A structured analysis of FreshChoice's intelligence deficit, the market landscape, the full platform vision, and the carefully chosen prototype slice designed to secure a paid engagement.</div>
+    <div class="cover-pills">
+      <span class="pill green">For: James Whitfield, CEO · Sarah Chen, CSO</span>
+      <span class="pill amber">Prepared by: Calibrax AI Product Team</span>
+      <span class="pill">Confidential</span>
+      <span class="pill">Pitch Sprint — 14 Days</span>
+    </div>
+  </div>
+
+  <!-- ══ TOC ══ -->
+  <div class="toc">
+    <div class="toc-title">Contents</div>
+    <div class="toc-grid">
+      <a class="toc-item" href="#s1"><span class="toc-num">01</span>Problem inference — what we heard</a>
+      <a class="toc-item" href="#s5"><span class="toc-num">05</span>The full platform vision — Nexus</a>
+      <a class="toc-item" href="#s2"><span class="toc-num">02</span>Root cause — why the problem persists</a>
+      <a class="toc-item" href="#s6"><span class="toc-num">06</span>The prototype — what we are building</a>
+      <a class="toc-item" href="#s3"><span class="toc-num">03</span>Who has this problem — all users</a>
+      <a class="toc-item" href="#s7"><span class="toc-num">07</span>The wow moment — demo design</a>
+      <a class="toc-item" href="#s4"><span class="toc-num">04</span>Market landscape — what exists</a>
+      <a class="toc-item" href="#s8"><span class="toc-num">08</span>Commercial hypothesis</a>
+    </div>
+  </div>
+
+
+  <!-- ══ 01: PROBLEM INFERENCE ══ -->
+  <div class="section" id="s1">
+    <div class="section-header">
+      <span class="section-num">01</span>
+      <span class="section-title">Problem inference — <em>what we heard</em></span>
+    </div>
+
+    <div class="pullquote">
+      <div class="pullquote-text">"I run a $2.4 billion business and I still can't get a straight answer to a simple question without waiting days."</div>
+      <div class="pullquote-attr">James Whitfield · CEO, FreshChoice Group · SDR Briefing Memo</div>
+    </div>
+
+    <p class="prose">On the surface, this is a technology complaint. A CEO frustrated with slow reporting. But reading the briefing memo carefully, the problem runs deeper than data latency. James Whitfield is describing a <strong>structural intelligence gap</strong> — a disconnect between the pace at which his business generates events and the pace at which insight about those events reaches the people who need to act on them.</p>
+
+    <p class="prose">He is not asking for a faster dashboard. He has dashboards — the Tableau rollout 18 months ago was specifically meant to solve this, and it failed. What he described is something categorically different: <strong>a conversation with his business</strong>. The ability to ask an unscripted question in plain language and receive an answer that combines hard numbers with the human context that explains them.</p>
+
+    <div class="pain-grid">
+      <div class="pain-card speed">
+        <div class="pain-title">Speed gap</div>
+        <div class="pain-body">A 1–2 business day turnaround for a question that should take minutes. The CEO must pre-schedule curiosity. By the time the answer arrives, the decision window has often closed or the context has shifted.</div>
+      </div>
+      <div class="pain-card structural">
+        <div class="pain-title">Structural silo gap</div>
+        <div class="pain-body">Finance lives in SAP. Suppliers in Salesforce. Transactions in POS. Supply chain in a legacy WMS. Operational reality in Teams, WhatsApp, and email. No system talks to any other. The human intermediary is the only integration layer.</div>
+      </div>
+      <div class="pain-card trust">
+        <div class="pain-title">Trust gap</div>
+        <div class="pain-body">The failed Tableau rollout created scar tissue. The CEO does not just need faster answers — he needs answers he can trust. This means transparency about where numbers come from. Source attribution is not a feature. It is a prerequisite.</div>
+      </div>
+      <div class="pain-card reach">
+        <div class="pain-title">Reach gap</div>
+        <div class="pain-body">The intelligence bottleneck does not stop at the CEO. Every regional manager, store manager, logistics lead, and operations analyst in FreshChoice faces a version of this problem calibrated to their role. The $2.4B business runs on delayed, partial information at every level.</div>
+      </div>
+    </div>
+
+    <div class="insight">
+      <strong>Our inference:</strong> FreshChoice does not have a reporting problem. It has an <strong>intelligence distribution problem</strong>. Data exists — the business generates 1.5 million transactions per day. The failure is in the last mile: translating raw data into timely, contextual, role-appropriate insight and getting it to the right person at the right moment. That is the problem Calibrax is uniquely positioned to solve.
+    </div>
+  </div>
+
+
+  <!-- ══ 02: ROOT CAUSE ══ -->
+  <div class="section" id="s2">
+    <div class="section-header">
+      <span class="section-num">02</span>
+      <span class="section-title">Root cause — <em>why the problem persists</em></span>
+    </div>
+
+    <p class="prose">Previous attempts — including the Tableau rollout — failed because they attacked the symptom (slow reports) without addressing the cause. There are three structural reasons FreshChoice cannot solve this internally:</p>
+
+    <p class="prose"><strong>1. The data team is mismatched to the task.</strong> FreshChoice's 15-person data team are BI analysts — skilled at producing scheduled reports and maintaining dashboards, but not trained in data engineering, machine learning, or AI system design. They are built for a world of pull-based reporting. The world the CEO wants requires push-based intelligence. The gap between those two paradigms is not a skills gap that a training programme closes — it is an architectural paradigm shift.</p>
+
+    <p class="prose"><strong>2. The technology stack was never designed for unified access.</strong> SAP, Salesforce, the proprietary POS, and the legacy WMS were each procured to solve a specific operational problem. None were designed to share data with each other or to surface insight to end users. Unifying them through traditional ETL and data warehousing takes 18–24 months and millions of dollars. That is not the answer being sought here.</p>
+
+    <p class="prose"><strong>3. Unstructured data has never been part of the intelligence picture.</strong> The qualitative context that explains why numbers move — a supplier delay flagged in a Teams message, a store manager's WhatsApp escalation about a staffing crisis, a regional director's email about a competitive incursion — lives entirely outside every data system. No BI tool, no dashboard, no SAP report can surface it. This is the dimension that makes the CEO's ask genuinely novel: he wants both the number and the story.</p>
+
+    <div class="insight">
+      <strong>The opportunity:</strong> The convergence of large language models, retrieval-augmented generation, and low-friction API connectivity has — for the first time — made it technically feasible to bridge all three gaps simultaneously, without requiring FreshChoice to replace its existing technology stack. The question is not whether this is possible. It is who builds it first.
+    </div>
+  </div>
+
+
+  <!-- ══ 03: WHO HAS THIS PROBLEM ══ -->
+  <div class="section" id="s3">
+    <div class="section-header">
+      <span class="section-num">03</span>
+      <span class="section-title">Who has this problem — <em>all users across FreshChoice</em></span>
+    </div>
+
+    <p class="prose">The briefing framed this as the CEO's problem. That is the entry point — but the intelligence deficit runs through every layer of the organisation. The full solution must serve each persona with a role-appropriate view of the same underlying platform. This is what makes the opportunity commercially significant: a single platform deployed once, generating value at every level of a 38,000-person organisation.</p>
+
+    <div class="persona-grid">
+
+      <div class="persona-card">
+        <div class="persona-avatar" style="background:#e8f5ef;color:#1a6648;">JW</div>
+        <div class="persona-role">CEO / C-Suite</div>
+        <div class="persona-name">James Whitfield · Primary pitch target</div>
+        <div class="persona-needs">Needs cross-market performance comparisons, supply chain margin impact, and a read on what regional teams are prioritising — in minutes, not days.</div>
+        <div class="persona-data">Data scope: all markets · all categories · all formats<br>Key sources: SAP, Teams, executive emails<br>Query type: strategic, comparative, blended</div>
+      </div>
+
+      <div class="persona-card">
+        <div class="persona-avatar" style="background:#eef4fc;color:#1a4e8c;">SC</div>
+        <div class="persona-role">Chief Strategy Officer</div>
+        <div class="persona-name">Sarah Chen · Internal champion</div>
+        <div class="persona-needs">Has been pushing for an enterprise AI initiative for 12 months. Needs a platform that demonstrates measurable adoption across the business — not just executive use — to justify continued budget.</div>
+        <div class="persona-data">Data scope: strategic initiatives · market trends<br>Key sources: SAP, Salesforce, strategy docs<br>Query type: trend analysis, initiative tracking</div>
+      </div>
+
+      <div class="persona-card">
+        <div class="persona-avatar" style="background:#fdf3e3;color:#92540a;">RM</div>
+        <div class="persona-role">Regional Manager</div>
+        <div class="persona-name">Cluster of 5–8 stores</div>
+        <div class="persona-needs">Needs to understand performance variance across their stores, flag supply chain issues upstream, and escalate staff and operational problems without waiting for a weekly report cycle.</div>
+        <div class="persona-data">Data scope: regional stores only<br>Key sources: POS, WMS, store manager comms<br>Query type: operational, variance, escalation</div>
+      </div>
+
+      <div class="persona-card">
+        <div class="persona-avatar" style="background:#f0eefe;color:#4a3a9e;">SM</div>
+        <div class="persona-role">Store Manager</div>
+        <div class="persona-name">Single store — 80–300 staff</div>
+        <div class="persona-needs">Needs daily insight on their store's sales vs target, stock-outs, wastage, and staff coverage — currently assembled from a patchwork of POS reports, Excel sheets, and WhatsApp chains.</div>
+        <div class="persona-data">Data scope: single store<br>Key sources: POS, WMS, local roster system<br>Query type: daily ops, inventory, staff</div>
+      </div>
+
+      <div class="persona-card">
+        <div class="persona-avatar" style="background:#fdf0f0;color:#9e2a2a;">LL</div>
+        <div class="persona-role">Logistics Lead</div>
+        <div class="persona-name">Distribution & fleet ops</div>
+        <div class="persona-needs">Needs real-time visibility on distribution centre throughput, vehicle utilisation, delivery delays, and their impact on store replenishment — currently navigated through a legacy WMS and phone calls.</div>
+        <div class="persona-data">Data scope: DCs, fleet, supplier schedules<br>Key sources: WMS, fleet system, supplier comms<br>Query type: operational, predictive, exception</div>
+      </div>
+
+      <div class="persona-card">
+        <div class="persona-avatar" style="background:#e8f5ef;color:#1a6648;">FA</div>
+        <div class="persona-role">Finance / Category Analyst</div>
+        <div class="persona-name">~15 BI analysts today</div>
+        <div class="persona-needs">Currently spends the majority of their time running the same scheduled extracts and building the same dashboards. With Nexus, their role shifts to interpreting and acting on insight — rather than producing it.</div>
+        <div class="persona-data">Data scope: full P&L, category margin detail<br>Key sources: SAP, POS, supplier contracts<br>Query type: financial, margin, promotional</div>
+      </div>
+
+    </div>
+
+    <p class="prose">Each persona above has a different data scope, different source systems, and different query types — but they all share the same underlying problem: <strong>intelligence that should take minutes takes days, and qualitative context is never part of the picture.</strong> The platform architecture we are proposing — Nexus — is designed to serve all six personas from a single core, with role-based access control determining what each person can see.</p>
+  </div>
+
+
+  <!-- ══ 04: MARKET LANDSCAPE ══ -->
+  <div class="section" id="s4">
+    <div class="section-header">
+      <span class="section-num">04</span>
+      <span class="section-title">Market landscape — <em>what exists and where it falls short</em></span>
+    </div>
+
+    <p class="prose">The market is not standing still. A range of direct and indirect competitors are attempting to address the enterprise intelligence problem. Understanding where each falls short is essential to understanding why FreshChoice's problem remains unsolved — and why the Calibrax approach is differentiated.</p>
+
+    <table class="comp-table">
+      <thead>
+        <tr>
+          <th style="width:16%">Product</th>
+          <th style="width:12%">Category</th>
+          <th style="width:28%">What it does well</th>
+          <th style="width:28%">Where it falls short for FreshChoice</th>
+          <th style="width:16%">Nexus gap</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>ThoughtSpot</td>
+          <td>Direct — NL BI</td>
+          <td>Natural language queries over structured enterprise data. Strong retail adoption (Walmart, 7-Eleven). Fast analytics on clean data warehouses.</td>
+          <td>Requires clean, connected structured data upfront. Cannot synthesise unstructured sources (emails, Teams, WhatsApp). No qualitative context layer. Expensive, long deployment.</td>
+          <td><span class="gap-badge gap-no">No unstructured</span><br><span class="gap-badge gap-no">No role personas</span></td>
+        </tr>
+        <tr>
+          <td>Databricks Genie</td>
+          <td>Direct — NL data</td>
+          <td>Conversational interface over a unified data lakehouse. Strong for data-mature organisations already on Databricks. Powerful NL-to-SQL.</td>
+          <td>Requires a functioning data engineering foundation that FreshChoice does not have. 12–18 month runway before value is visible. No unstructured data support.</td>
+          <td><span class="gap-badge gap-no">Needs data infra</span><br><span class="gap-badge gap-no">Heavy implementation</span></td>
+        </tr>
+        <tr>
+          <td>Microsoft Copilot</td>
+          <td>Direct — enterprise AI</td>
+          <td>Native integration with Teams, Outlook, and Excel — all tools FreshChoice already uses. Copilot for Finance integrates with SAP.</td>
+          <td>Fragmented product suite — each Copilot solves one slice. No unified CEO-level view across all sources simultaneously. No structured data + unstructured synthesis in one response.</td>
+          <td><span class="gap-badge gap-part">Partial fit</span><br><span class="gap-badge gap-no">No unified view</span></td>
+        </tr>
+        <tr>
+          <td>Tableau Pulse (Salesforce)</td>
+          <td>Direct — proactive BI</td>
+          <td>Push-based insight delivered proactively to users. AI-generated summaries of key metric changes. FreshChoice already uses Salesforce.</td>
+          <td>FreshChoice already tried Tableau — failed due to poor data integration and low adoption. The CEO views this vendor with scepticism. Pulse requires Tableau data foundation to be working.</td>
+          <td><span class="gap-badge gap-no">Trust issue</span><br><span class="gap-badge gap-no">Prior failure</span></td>
+        </tr>
+        <tr>
+          <td>Glean</td>
+          <td>Indirect — enterprise search</td>
+          <td>Connects to all internal systems and enables search across email, Slack, CRM, and docs. Strong for knowledge retrieval.</td>
+          <td>Retrieves information — does not synthesise it. Cannot answer "what was our margin in NZ last month?" — only finds documents mentioning NZ margins. No structured data integration.</td>
+          <td><span class="gap-badge gap-no">Search not insight</span><br><span class="gap-badge gap-no">No structured data</span></td>
+        </tr>
+        <tr>
+          <td>Palantir Foundry</td>
+          <td>Indirect — data platform</td>
+          <td>Enterprise-grade data integration and analytics. Used by large organisations with complex data environments. Extremely powerful.</td>
+          <td>18–36 month implementations. Primarily government and defence oriented. Cost and complexity is orders of magnitude beyond what FreshChoice can absorb at this stage.</td>
+          <td><span class="gap-badge gap-no">Wrong scale</span><br><span class="gap-badge gap-no">Wrong timeline</span></td>
+        </tr>
+        <tr>
+          <td>Woolworths internal (AU)</td>
+          <td>Industry peer</td>
+          <td>Invested heavily in Google Cloud + Looker for self-serve analytics. Commercial teams can query their data warehouse directly. Strong data maturity.</td>
+          <td>Took 3–4 years and significant investment to reach current state. Started from a far more mature data foundation than FreshChoice. No off-the-shelf product emerged — it was a bespoke build.</td>
+          <td><span class="gap-badge gap-part">Proof of concept</span><br><span class="gap-badge gap-no">Not available to buy</span></td>
+        </tr>
+        <tr>
+          <td>Tesco Ask Tesco (UK)</td>
+          <td>Industry peer</td>
+          <td>Internal NL query tool for store managers to access operational data. Demonstrates the pattern works at retail scale.</td>
+          <td>Store-level only — not CEO or cross-market. Internal build, not available commercially. No unstructured data synthesis.</td>
+          <td><span class="gap-badge gap-part">Pattern validation</span><br><span class="gap-badge gap-no">Not multi-level</span></td>
+        </tr>
+      </tbody>
+    </table>
+
+    <div class="insight">
+      <strong>The whitespace:</strong> No off-the-shelf product elegantly handles both <strong>structured data queries</strong> (sales figures, margin percentages) and <strong>unstructured qualitative context</strong> (what managers are saying in Teams, what is being escalated in email) in one unified, CEO-friendly interface — without requiring a multi-year data engineering programme first. That is the precise gap Calibrax is building into. The Nexus platform is not competing with ThoughtSpot on BI features. It is addressing a dimension of enterprise intelligence that no existing product has fully claimed.
+    </div>
+  </div>
+
+
+  <!-- ══ 05: FULL PLATFORM VISION ══ -->
+  <div class="section" id="s5">
+    <div class="section-header">
+      <span class="section-num">05</span>
+      <span class="section-title">The full platform vision — <em>Nexus</em></span>
+    </div>
+
+    <p class="prose">Nexus is Calibrax's enterprise intelligence platform. It is not a product built for FreshChoice — it is a reusable platform that Calibrax deploys across enterprises with similar intelligence distribution problems: large retailers, FMCG manufacturers, logistics operators, healthcare networks. FreshChoice is the first deployment. The architecture is designed for configurability, not customisation.</p>
+
+    <p class="prose">The platform operates across five layers. Each layer is independently valuable but the full power emerges when they work together:</p>
+
+    <div class="arch-stack">
+      <div class="arch-layer layer-personas">
+        <div class="arch-layer-label" style="color:var(--purple);">Layer 1<br>Role-aware personas</div>
+        <div class="arch-layer-content">
+          <strong>What it does:</strong> Every user who logs into Nexus sees a version of the platform calibrated to their role. The CEO sees cross-market P&L and strategic signals. The regional manager sees their cluster. The store manager sees their store. The logistics lead sees the supply chain. The driver sees their route and tasks. Same platform. Same data engine. Radically different surfaces. Access control is enforced at the data row and column level — a store manager cannot see another store's financials, a regional manager cannot see another region's Teams threads.
+        </div>
+      </div>
+      <div class="arch-layer layer-channels">
+        <div class="arch-layer-label" style="color:var(--green);">Layer 2<br>Delivery channels</div>
+        <div class="arch-layer-content">
+          <strong>What it does:</strong> Intelligence reaches users through whichever channel they already use. The CEO uses the web app. The regional manager uses a Teams bot. The store manager uses mobile. The driver uses WhatsApp. The finance team gets a daily email digest. The intelligence core does not care which channel is used — it produces structured responses that any channel adapter can render. New channels are added without touching the intelligence layer.
+        </div>
+      </div>
+      <div class="arch-layer layer-intel">
+        <div class="arch-layer-label" style="color:var(--amber);">Layer 3<br>Intelligence core</div>
+        <div class="arch-layer-content">
+          <strong>What it does:</strong> Three engines working in concert. The <strong>query engine</strong> handles structured data questions — translating natural language into data retrieval against the connected sources. The <strong>synthesis engine</strong> handles unstructured questions — RAG-based retrieval over emails, Teams messages, documents, and any other text corpus. The <strong>alert engine</strong> monitors all sources continuously and proactively pushes relevant signals to the right personas before they ask. An <strong>access control layer</strong> sits beneath all three, scoping every query to the requesting user's permitted data domain. A <strong>memory and context layer</strong> learns each user's preferences, frequent queries, and the organisation's trending topics over time.
+        </div>
+      </div>
+      <div class="arch-layer layer-connect">
+        <div class="arch-layer-label" style="color:var(--blue);">Layer 4<br>Universal connectors</div>
+        <div class="arch-layer-content">
+          <strong>What it does:</strong> Pre-built connectors for the most common enterprise systems — SAP, Salesforce, Microsoft Teams, Outlook, WhatsApp Business, common WMS and POS platforms. A REST/webhook gateway for custom integrations. A file ingest pipeline for CSVs, Excel, and PDFs. Direct database connectors for SQL and NoSQL. <strong>No client ever migrates their data.</strong> Nexus reads where data lives. The connector layer is Calibrax's primary reusability asset — every new client deployment is a connector configuration exercise, not a rebuild.
+        </div>
+      </div>
+      <div class="arch-layer layer-data">
+        <div class="arch-layer-label" style="color:var(--text-2);">Layer 5<br>Client data sources</div>
+        <div class="arch-layer-content">
+          <strong>What it does:</strong> The client's existing systems, untouched. For FreshChoice: SAP (finance and procurement), Salesforce (supplier CRM), proprietary POS (transactions), legacy WMS (supply chain), Teams and Outlook (communications), WhatsApp (store operations), and Excel-based reports. For the next client: whatever they already have. The platform adapts to the client's reality rather than requiring the client to adapt to the platform.
+        </div>
+      </div>
+    </div>
+
+    <p class="prose">This is a multi-year, multi-million dollar product in its full form. The full platform for FreshChoice across all six personas, all five data sources, and all four delivery channels is a 12–18 month engagement. But — and this is the core of our commercial strategy — <strong>none of that needs to be built before the first cheque is written.</strong></p>
+  </div>
+
+
+  <!-- ══ 06: THE PROTOTYPE ══ -->
+  <div class="section" id="s6">
+    <div class="section-header">
+      <span class="section-num">06</span>
+      <span class="section-title">The prototype — <em>what we are building and why this slice</em></span>
+    </div>
+
+    <p class="prose">Of the entire Nexus platform, we have selected one precisely calibrated slice to build for the pitch. Not the easiest slice. Not the most technically impressive slice in isolation. The slice that, when demonstrated to James Whitfield in 20 minutes, makes him say: <em>"this is exactly what I have been asking for."</em></p>
+
+    <div class="proto-focus">
+      <div class="proto-focus-eyebrow">The 14-day prototype</div>
+      <div class="proto-focus-title">Nexus Command Console — CEO Intelligence Interface</div>
+      <div class="proto-focus-body">A conversational web interface through which the CEO types a natural language business question and receives, within seconds, a grounded answer that blends structured financial data with qualitative context from his organisation's communications — with full source attribution for every claim.</div>
+      <div class="proto-focus-body">Built on: <strong>pre-computed structured data lookup</strong> (covering ~40–50 query variants across all markets and categories) + <strong>RAG pipeline over a simulated Teams and email corpus</strong> + a <strong>keyword-based query classifier</strong> that routes each question to the right retrieval path + an <strong>LLM synthesis layer</strong> that weaves both sources into a single cited response + a <strong>numeric hallucination guardrail</strong> that verifies every number before it renders.</div>
+    </div>
+
+    <p class="prose" style="margin-top: 24px;">The decision to build this specific slice — and not, say, the logistics manager view or the alert feed — is not arbitrary. It is the product of five specific strategic decisions:</p>
+
+    <div class="reason-list">
+      <div class="reason-item">
+        <div class="reason-num">01</div>
+        <div class="reason-content">
+          <div class="reason-title">It mirrors the CEO's exact words, not a paraphrase</div>
+          <div class="reason-body">James Whitfield said: "I want to ask 'How did our fresh produce margins perform in New Zealand last month?' and get an actual number, with context. I want to ask 'What are the top three issues my regional managers are escalating?' and have it pull from their emails and Teams messages." The prototype does these two things, together, in one interface. It is not an approximation of his ask. It is a direct response to it.</div>
+        </div>
+      </div>
+      <div class="reason-item">
+        <div class="reason-num">02</div>
+        <div class="reason-content">
+          <div class="reason-title">It addresses the trust deficit head-on</div>
+          <div class="reason-body">The CEO failed with Tableau because he could not trust the numbers. The source attribution panel — which shows exactly which data file or message thread each part of the answer came from — is not a UX feature. It is the trust mechanism that differentiates this demo from everything he has seen before. Every answer is citable. Every number is verifiable. That is new.</div>
+        </div>
+      </div>
+      <div class="reason-item">
+        <div class="reason-num">03</div>
+        <div class="reason-content">
+          <div class="reason-title">It demonstrates the hardest part of the full platform</div>
+          <div class="reason-body">The blended retrieval of structured data plus unstructured context is the technically novel piece of the Nexus platform. It is what no competitor does. If we can show it working cleanly in 20 minutes, the rest of the platform — multi-role access, multi-channel delivery, live connectors — is a credible next step rather than a theoretical one. We are proving the hardest thing first.</div>
+        </div>
+      </div>
+      <div class="reason-item">
+        <div class="reason-num">04</div>
+        <div class="reason-content">
+          <div class="reason-title">It is the entry point to a 38,000-person deployment story</div>
+          <div class="reason-body">When James Whitfield asks "can my regional managers use this too?" — the answer is yes, and here is what their view looks like. The CEO persona is not the end state. It is the trojan horse. By solving the CEO's problem first and demonstrating it compellingly, we earn the right to expand the engagement across every persona in the organisation. The commercial upside is not one seat. It is the entire FreshChoice intelligence layer.</div>
+        </div>
+      </div>
+      <div class="reason-item">
+        <div class="reason-num">05</div>
+        <div class="reason-content">
+          <div class="reason-title">It is buildable to demo quality in 14 days</div>
+          <div class="reason-body">One data scientist and one engineer. A pre-computed lookup table for structured data (saving 3 days versus a full NL-to-SQL engine). A RAG pipeline for unstructured retrieval. A keyword-based query classifier. A carefully engineered system prompt. A clean React chat interface with streaming and source attribution. This is achievable. We have scoped it, challenged it, and negotiated it to a plan with zero wishful thinking. The demo will not crash. The wow will not be theoretical.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+  <!-- ══ 07: THE WOW MOMENT ══ -->
+  <div class="section" id="s7">
+    <div class="section-header">
+      <span class="section-num">07</span>
+      <span class="section-title">The wow moment — <em>what James will see in the room</em></span>
+    </div>
+
+    <p class="prose">The demo is not a slide deck with a screenshot. James Whitfield types his own question. The system responds in seconds. Here is what that exchange looks like — and what he will feel when it happens.</p>
+
+    <div class="demo-moment">
+      <div class="demo-moment-label">Live demo — the blended question</div>
+      <div class="demo-exchange">
+
+        <div class="dm-q">
+          <div class="dm-q-label">CEO types</div>
+          What's happening with supply chain disruptions and how is it affecting our margins in New Zealand?
+        </div>
+
+        <div class="dm-a">
+          <div class="dm-a-label">Nexus responds — streaming, within 2 seconds</div>
+          NZ fresh produce margins dropped <em>3.2%</em> in March compared to February, driven primarily by replenishment shortfalls in leafy greens and stone fruit. The Auckland Distribution Centre experienced a <em>6-day delay</em> beginning 8 March due to a Northland supplier fulfilment failure, reducing on-shelf availability across <em>14 Auckland and Waikato stores</em>.<br><br>
+          Your regional ops team flagged this in real time — Sarah Chen noted on 11 March that the Northland delay was "cascading into broader fresh category performance" and that recovery was expected by week-end 22 March. As of the latest data, margins have partially recovered to <em>−1.4%</em> vs February.
+          <div class="dm-source">
+            <span class="dm-source-pill">NZ Sales Summary — March 2025.csv</span>
+            <span class="dm-source-pill">Supply Chain Incident Log — Mar 2025</span>
+            <span class="dm-source-pill">Teams: Regional Ops Thread — S. Chen, 11 Mar</span>
+          </div>
+        </div>
+
+        <div class="dm-q">
+          <div class="dm-q-label">CEO follows up — off-script</div>
+          Which stores were most affected and has anyone escalated this to procurement?
+        </div>
+
+        <div class="dm-a">
+          <div class="dm-a-label">Nexus responds</div>
+          The most affected stores were in the Auckland Metro cluster — <em>Newmarket, Sylvia Park, and Albany</em> showing the steepest availability drops. An escalation to procurement was raised by the Auckland Regional Manager on <em>13 March</em>, and a supplier review meeting was scheduled for the following week per the email chain between operations and the procurement lead.
+          <div class="dm-source">
+            <span class="dm-source-pill">POS Store Performance — Week 11</span>
+            <span class="dm-source-pill">Email: Auckland RM to Procurement Lead, 13 Mar</span>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <p class="prose" style="margin-top: 24px;">That exchange takes less than 90 seconds. No analyst. No dashboard. No waiting. The CEO just had a conversation with his business — and every claim was cited. That is the moment we are engineering the entire 14-day sprint to produce.</p>
+
+    <p class="prose">After that exchange, James Whitfield will ask one of two questions. Either: <em>"Can my regional managers use this too?"</em> or <em>"What would it take to connect this to our real SAP data?"</em> Either question is the opening to the paid engagement conversation. Both questions are answered by the Nexus roadmap.</p>
+  </div>
+
+
+  <!-- ══ 08: COMMERCIAL HYPOTHESIS ══ -->
+  <div class="section" id="s8">
+    <div class="section-header">
+      <span class="section-num">08</span>
+      <span class="section-title">Commercial hypothesis — <em>the path from demo to deployment</em></span>
+    </div>
+
+    <p class="prose">The prototype is not the product. It is the proof that the product is worth building. The commercial structure maps directly from the demo to a multi-phase engagement:</p>
+
+    <div class="commercial-grid">
+      <div class="comm-card">
+        <div class="comm-step">Phase 0 · Today</div>
+        <div class="comm-title">Pitch demo</div>
+        <div class="comm-body">CEO sees the Command Console prototype. Blended structured + unstructured answer. Source attribution. The wow moment. Sarah Chen sees the multi-role expansion potential. Both say yes.</div>
+        <div class="comm-value">Goal: paid discovery approved</div>
+      </div>
+      <div class="comm-card">
+        <div class="comm-step">Phase 1 · Weeks 1–8</div>
+        <div class="comm-title">Paid discovery & POC</div>
+        <div class="comm-body">Connect to 2 real data sources (SAP read-only + Teams API). Expand from CEO persona to include Regional Manager view. Replace pre-computed lookup with live NL-to-SQL engine. Deliver a production-grade POC for internal user testing across 10–15 users.</div>
+        <div class="comm-value">~$150–250K engagement</div>
+      </div>
+      <div class="comm-card">
+        <div class="comm-step">Phase 2 · Months 3–9</div>
+        <div class="comm-title">Platform rollout</div>
+        <div class="comm-body">All 6 personas live. All major data connectors (SAP, Salesforce, POS, WMS, Teams, email). Alert engine. Mobile channel. Role-based access control. Rollout to 100+ users across regional managers and store managers. FreshChoice becomes a reference client.</div>
+        <div class="comm-value">~$800K–1.2M engagement</div>
+      </div>
+    </div>
+
+    <p class="prose" style="margin-top: 8px;">The full-platform vision — all channels, all personas, all data sources, proactive alerts, memory and context, multi-market deployment — is not sold today. It is shown today. The prototype demonstrates that Calibrax can do the hardest part. The roadmap shows what the rest looks like. The CEO's job is to decide whether he wants to be the enterprise that built this first, or the one that watched a competitor build it.</p>
+
+    <div class="roadmap">
+      <div class="roadmap-phase">
+        <div class="roadmap-left">
+          <div class="roadmap-dot active"></div>
+          <div class="roadmap-phase-label">Day 14<br>Pitch</div>
+        </div>
+        <div class="roadmap-right">
+          <div class="roadmap-title">Command Console prototype — CEO view</div>
+          <div class="roadmap-body">Blended NL query over structured + unstructured data. Source attribution. Streaming response. 5 scripted demo questions plus off-script capability. <strong>This is what we are building.</strong></div>
+          <div class="roadmap-tags">
+            <span class="rtag g">CEO persona</span>
+            <span class="rtag g">Synthetic data</span>
+            <span class="rtag g">Web app only</span>
+            <span class="rtag g">14 days</span>
+          </div>
+        </div>
+      </div>
+      <div class="roadmap-phase">
+        <div class="roadmap-left">
+          <div class="roadmap-dot future"></div>
+          <div class="roadmap-phase-label">Phase 1<br>Weeks 1–8</div>
+        </div>
+        <div class="roadmap-right">
+          <div class="roadmap-title">Paid POC — live data, two personas</div>
+          <div class="roadmap-body">SAP and Teams connected live. NL-to-SQL engine replaces pre-computed lookup. CEO + Regional Manager personas. 10–15 internal users. Proof of adoption and accuracy on real data.</div>
+          <div class="roadmap-tags">
+            <span class="rtag a">CEO + Regional Mgr</span>
+            <span class="rtag a">Live SAP + Teams</span>
+            <span class="rtag a">NL-to-SQL engine</span>
+          </div>
+        </div>
+      </div>
+      <div class="roadmap-phase">
+        <div class="roadmap-left">
+          <div class="roadmap-dot future"></div>
+          <div class="roadmap-phase-label">Phase 2<br>Months 3–9</div>
+        </div>
+        <div class="roadmap-right">
+          <div class="roadmap-title">Full platform — all personas, all connectors</div>
+          <div class="roadmap-body">All 6 personas live with role-scoped data access. All major connectors (SAP, Salesforce, POS, WMS). Alert engine proactively surfacing signals. Mobile channel for store managers. Teams and WhatsApp bot for frontline staff.</div>
+          <div class="roadmap-tags">
+            <span class="rtag b">6 personas</span>
+            <span class="rtag b">5 connectors</span>
+            <span class="rtag b">4 channels</span>
+            <span class="rtag b">Alert engine</span>
+          </div>
+        </div>
+      </div>
+      <div class="roadmap-phase">
+        <div class="roadmap-left">
+          <div class="roadmap-dot future"></div>
+          <div class="roadmap-phase-label">Phase 3<br>Year 2+</div>
+        </div>
+        <div class="roadmap-right">
+          <div class="roadmap-title">Intelligence at scale — memory, prediction, multi-market</div>
+          <div class="roadmap-body">Memory and context layer learns user preferences and organisational patterns. Predictive signals — flagging issues before they show up in the numbers. Multi-market deployment (AU, NZ, SG) with localised data scoping. FreshChoice as the reference retail deployment for the Nexus platform globally.</div>
+          <div class="roadmap-tags">
+            <span class="rtag">Memory layer</span>
+            <span class="rtag">Predictive alerts</span>
+            <span class="rtag">AU · NZ · SG</span>
+            <span class="rtag">Reference client</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="insight" style="margin-top: 32px;">
+      <strong>The ask at the end of this pitch is not a signature on a large contract.</strong> It is a decision to commission an 8-week paid discovery engagement that proves the platform on FreshChoice's real data, with real users, and real measurable outcomes. The prototype is the evidence that Calibrax can execute. The discovery engagement is the path to the full deployment. The full deployment is the control tower James Whitfield asked for.
+    </div>
+  </div>
+
+
+  <!-- ══ FOOTER ══ -->
+  <div class="doc-footer">
+    <div class="footer-brand">Calibrax · AI Strategy & Execution · Deliverable 1 of 5</div>
+    <div class="footer-conf">Confidential — FreshChoice Group Pitch Sprint</div>
+  </div>
+
+</div>
+</body>
+</html>
