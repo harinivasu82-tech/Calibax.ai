@@ -1,0 +1,525 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Calibrax × FreshChoice — Control Tower</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400;1,700&family=Cabinet+Grotesk:wght@300;400;500;700;800&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+:root{
+  --bg:#0b0f0b;--bg2:#111611;--bg3:#161d16;
+  --surface:#1c231c;--surface2:#222a22;
+  --g:#23c45e;--g2:#1a9448;--g3:#0f5c2c;
+  --gdim:rgba(35,196,94,.12);--gdim2:rgba(35,196,94,.06);
+  --text:#f0f2ee;--text2:#a8b4a4;--text3:#5a6656;
+  --border:rgba(255,255,255,0.06);--border2:rgba(255,255,255,0.1);
+  --amber:#e8a020;--blue:#4a8fd4;
+}
+html{font-size:15px;scroll-behavior:smooth;}
+body{font-family:'Cabinet Grotesk',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;overflow-x:hidden;}
+
+body::before{
+  content:'';position:fixed;inset:0;
+  background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");
+  pointer-events:none;z-index:0;opacity:.35;
+}
+.grid-bg{
+  position:fixed;inset:0;
+  background-image:linear-gradient(rgba(35,196,94,.025) 1px,transparent 1px),linear-gradient(90deg,rgba(35,196,94,.025) 1px,transparent 1px);
+  background-size:64px 64px;pointer-events:none;z-index:0;
+}
+.orb{position:fixed;border-radius:50%;filter:blur(130px);pointer-events:none;z-index:0;}
+.orb1{width:700px;height:700px;background:rgba(35,196,94,.06);top:-250px;right:-200px;animation:d1 20s ease-in-out infinite;}
+.orb2{width:500px;height:500px;background:rgba(35,196,94,.04);bottom:-150px;left:-120px;animation:d2 25s ease-in-out infinite;}
+.orb3{width:350px;height:350px;background:rgba(74,143,212,.035);top:45%;left:35%;animation:d3 30s ease-in-out infinite;}
+@keyframes d1{0%,100%{transform:translate(0,0);}50%{transform:translate(-50px,70px);}}
+@keyframes d2{0%,100%{transform:translate(0,0);}50%{transform:translate(70px,-50px);}}
+@keyframes d3{0%,100%{transform:translate(0,0);}33%{transform:translate(40px,-60px);}66%{transform:translate(-40px,40px);}}
+
+.page{position:relative;z-index:1;}
+
+/* NAV */
+nav{
+  position:fixed;top:0;left:0;right:0;z-index:100;
+  padding:18px 56px;display:flex;align-items:center;justify-content:space-between;
+  border-bottom:1px solid transparent;transition:all .3s;
+}
+nav.scrolled{background:rgba(11,15,11,.88);border-color:var(--border);backdrop-filter:blur(24px);}
+.nav-brand{font-family:'DM Mono',monospace;font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--g);display:flex;align-items:center;gap:8px;}
+.nav-dot{width:6px;height:6px;border-radius:50%;background:var(--g);animation:pulse 2.5s infinite;}
+@keyframes pulse{0%,100%{opacity:1;transform:scale(1);}50%{opacity:.35;transform:scale(.75);}}
+.nav-links{display:flex;gap:32px;}
+.nav-link{font-size:12px;color:var(--text3);text-decoration:none;letter-spacing:.04em;transition:color .2s;}
+.nav-link:hover{color:var(--text2);}
+.nav-cta{
+  font-size:12px;font-weight:700;color:var(--bg);
+  background:var(--g);border:none;border-radius:6px;
+  padding:8px 18px;cursor:pointer;letter-spacing:.04em;
+  text-decoration:none;transition:all .2s;font-family:'Cabinet Grotesk',sans-serif;
+}
+.nav-cta:hover{background:#1fa84f;transform:translateY(-1px);box-shadow:0 6px 20px rgba(35,196,94,.25);}
+
+/* HERO */
+.hero{min-height:100vh;display:flex;flex-direction:column;justify-content:center;padding:130px 56px 80px;max-width:1140px;margin:0 auto;}
+
+.hero-tag{
+  display:inline-flex;align-items:center;gap:8px;
+  border:1px solid var(--border2);border-radius:20px;
+  padding:5px 16px;margin-bottom:44px;
+  font-family:'DM Mono',monospace;font-size:10px;letter-spacing:.1em;text-transform:uppercase;
+  color:var(--g);background:var(--gdim2);width:fit-content;
+  animation:fadeUp .8s ease both;
+}
+.htag-dot{width:5px;height:5px;border-radius:50%;background:var(--g);animation:pulse 2s infinite;}
+
+.hero-headline{
+  font-family:'Playfair Display',serif;
+  font-size:clamp(60px,8.5vw,116px);
+  font-weight:900;line-height:.94;letter-spacing:-.03em;
+  margin-bottom:8px;
+}
+.hl1{display:block;color:var(--text);animation:fadeUp .8s .08s ease both;}
+.hl2{display:block;-webkit-text-stroke:1px rgba(255,255,255,.18);color:transparent;animation:fadeUp .8s .16s ease both;}
+.hl3{
+  display:block;font-style:italic;
+  background:linear-gradient(110deg,#1a9448 0%,#23c45e 35%,#7effa8 55%,#23c45e 75%,#1a9448 100%);
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;
+  background-size:220% 100%;
+  animation:fadeUp .8s .24s ease both, shimmer 5s 1s linear infinite;
+}
+@keyframes shimmer{0%{background-position:0%;}100%{background-position:220%;}}
+
+.hero-rule{width:72px;height:2px;background:linear-gradient(90deg,var(--g),transparent);margin:36px 0;animation:fadeUp .8s .32s ease both;}
+
+.hero-sub{
+  font-size:18px;color:var(--text2);line-height:1.8;max-width:560px;
+  font-weight:300;animation:fadeUp .8s .38s ease both;margin-bottom:52px;
+}
+.hero-sub em{color:var(--text);font-style:normal;font-weight:500;border-bottom:1px solid rgba(255,255,255,.18);}
+
+.hero-actions{display:flex;align-items:center;gap:20px;animation:fadeUp .8s .46s ease both;margin-bottom:88px;}
+.btn-primary{
+  display:inline-flex;align-items:center;gap:10px;
+  background:var(--g);color:var(--bg);
+  font-family:'Cabinet Grotesk',sans-serif;font-size:14px;font-weight:800;letter-spacing:.03em;
+  padding:14px 30px;border-radius:8px;text-decoration:none;
+  transition:all .2s;box-shadow:0 0 0 0 rgba(35,196,94,.3);
+}
+.btn-primary:hover{background:#1fa84f;transform:translateY(-2px);box-shadow:0 10px 35px rgba(35,196,94,.28);}
+.btn-arrow{transition:transform .2s;}
+.btn-primary:hover .btn-arrow{transform:translateX(5px);}
+.btn-ghost{
+  font-size:13px;color:var(--text3);text-decoration:none;
+  letter-spacing:.04em;transition:color .2s;display:flex;align-items:center;gap:6px;
+}
+.btn-ghost:hover{color:var(--text2);}
+
+.hero-stats{
+  display:flex;border-top:1px solid var(--border);padding-top:44px;
+  animation:fadeUp .8s .54s ease both;
+}
+.hstat{flex:1;padding-right:44px;border-right:1px solid var(--border);}
+.hstat:last-child{padding-right:0;border-right:none;}
+.hstat:not(:first-child){padding-left:44px;}
+.hstat-n{font-family:'Playfair Display',serif;font-size:40px;font-weight:700;color:var(--g);line-height:1;margin-bottom:6px;}
+.hstat-l{font-size:12px;color:var(--text3);line-height:1.55;}
+
+@keyframes fadeUp{from{opacity:0;transform:translateY(28px);}to{opacity:1;transform:translateY(0);}}
+
+/* BRIEF */
+.section{padding:104px 56px;max-width:1140px;margin:0 auto;}
+.eyebrow{
+  font-family:'DM Mono',monospace;font-size:10px;letter-spacing:.14em;text-transform:uppercase;
+  color:var(--g);margin-bottom:22px;display:flex;align-items:center;gap:12px;
+}
+.eyebrow::before{content:'';width:28px;height:1px;background:var(--g);}
+
+.brief-grid{display:grid;grid-template-columns:1fr 1fr;gap:88px;align-items:start;}
+
+.brief-h{
+  font-family:'Playfair Display',serif;font-size:44px;font-weight:700;
+  line-height:1.12;letter-spacing:-.025em;color:var(--text);margin-bottom:28px;
+}
+.brief-h em{font-style:italic;color:var(--g);}
+
+.pullquote{
+  border-left:2px solid var(--g3);padding:22px 26px;
+  background:var(--gdim2);border-radius:0 10px 10px 0;margin:30px 0;
+}
+.pullquote p{
+  font-family:'Playfair Display',serif;font-size:16px;font-style:italic;
+  color:var(--text2);line-height:1.8;margin-bottom:10px;
+}
+.pullquote cite{font-family:'DM Mono',monospace;font-size:10px;color:var(--text3);letter-spacing:.06em;}
+
+.brief-p{font-size:14px;color:var(--text3);line-height:1.9;font-weight:300;margin-bottom:14px;}
+
+/* PROBLEM CARDS */
+.prob-stack{display:flex;flex-direction:column;gap:10px;}
+.prob-card{
+  background:var(--surface);border:1px solid var(--border);border-radius:12px;
+  padding:18px 20px;display:flex;gap:14px;align-items:flex-start;
+  transition:border-color .2s,background .2s,transform .2s;cursor:default;
+}
+.prob-card:hover{border-color:rgba(35,196,94,.22);background:var(--surface2);transform:translateX(4px);}
+.pc-ic{
+  width:34px;height:34px;border-radius:8px;display:flex;align-items:center;
+  justify-content:center;font-size:15px;flex-shrink:0;
+}
+.ic-a{background:rgba(232,160,32,.1);color:var(--amber);}
+.ic-g{background:rgba(35,196,94,.1);color:var(--g);}
+.ic-b{background:rgba(74,143,212,.1);color:var(--blue);}
+.ic-r{background:rgba(200,80,80,.1);color:#e07070;}
+.pc-t{font-size:13px;font-weight:700;color:var(--text);margin-bottom:3px;}
+.pc-d{font-size:12px;color:var(--text3);line-height:1.6;}
+
+/* DELIVERABLES */
+.del-section{padding:80px 56px 104px;max-width:1140px;margin:0 auto;}
+.del-top{display:flex;align-items:flex-end;justify-content:space-between;margin-bottom:52px;}
+.del-h{
+  font-family:'Playfair Display',serif;font-size:44px;font-weight:700;
+  letter-spacing:-.025em;color:var(--text);line-height:1.1;
+}
+.del-meta{
+  font-family:'DM Mono',monospace;font-size:10px;color:var(--text3);
+  letter-spacing:.1em;text-align:right;line-height:1.9;
+}
+
+.del-list{display:flex;flex-direction:column;gap:10px;}
+
+.dcard{
+  display:grid;grid-template-columns:70px 1fr 56px;
+  align-items:stretch;background:var(--surface);
+  border:1px solid var(--border);border-radius:14px;
+  overflow:hidden;text-decoration:none;color:inherit;
+  transition:border-color .25s,background .25s,transform .2s,box-shadow .25s;
+  position:relative;
+}
+.dcard::before{
+  content:'';position:absolute;left:0;top:0;bottom:0;width:3px;
+  background:var(--g);opacity:0;transition:opacity .25s;
+}
+.dcard:hover{
+  border-color:rgba(35,196,94,.28);background:var(--surface2);
+  transform:translateX(5px);
+  box-shadow:0 4px 32px rgba(0,0,0,.3);
+}
+.dcard:hover::before{opacity:1;}
+
+.dc-num-wrap{
+  display:flex;align-items:center;justify-content:center;
+  border-right:1px solid var(--border);
+}
+.dc-num{
+  font-family:'Playfair Display',serif;font-size:30px;font-weight:900;
+  color:var(--text3);transition:color .25s;
+}
+.dcard:hover .dc-num{color:var(--g);}
+
+.dc-body{padding:22px 26px;}
+.dc-top{display:flex;align-items:center;gap:10px;margin-bottom:8px;}
+.dc-badge{
+  font-family:'DM Mono',monospace;font-size:9px;text-transform:uppercase;
+  letter-spacing:.1em;padding:3px 9px;border-radius:4px;
+  background:var(--gdim);color:var(--g);border:1px solid rgba(35,196,94,.15);
+}
+.dc-fmt{font-family:'DM Mono',monospace;font-size:9px;letter-spacing:.08em;text-transform:uppercase;color:var(--text3);}
+.dc-title{font-size:17px;font-weight:700;color:var(--text);margin-bottom:6px;line-height:1.3;}
+.dc-desc{font-size:13px;color:var(--text3);line-height:1.72;font-weight:300;margin-bottom:14px;max-width:600px;}
+.dc-tags{display:flex;gap:5px;flex-wrap:wrap;}
+.dc-tag{
+  font-family:'DM Mono',monospace;font-size:9px;padding:3px 8px;border-radius:4px;
+  background:rgba(255,255,255,.04);color:var(--text3);border:1px solid var(--border);
+  letter-spacing:.04em;
+}
+
+.dc-arrow-wrap{
+  display:flex;align-items:center;justify-content:center;
+  border-left:1px solid var(--border);
+}
+.dc-arrow{
+  width:34px;height:34px;border-radius:50%;border:1px solid var(--border2);
+  display:flex;align-items:center;justify-content:center;
+  color:var(--text3);font-size:16px;
+  transition:all .25s;
+}
+.dcard:hover .dc-arrow{background:var(--g);border-color:var(--g);color:var(--bg);transform:rotate(45deg);}
+
+/* TERMINAL */
+.terminal-section{padding:0 56px 100px;max-width:1140px;margin:0 auto;}
+.terminal{
+  background:var(--bg2);border:1px solid var(--border);
+  border-radius:16px;overflow:hidden;
+  box-shadow:0 20px 80px rgba(0,0,0,.4);
+}
+.tbar{
+  background:var(--surface);padding:13px 20px;
+  display:flex;align-items:center;gap:8px;border-bottom:1px solid var(--border);
+}
+.tdot{width:10px;height:10px;border-radius:50%;}
+.td-r{background:#ff5f57;}.td-y{background:#febc2e;}.td-g{background:#28c840;}
+.ttitle{margin-left:10px;font-family:'DM Mono',monospace;font-size:11px;color:var(--text3);}
+.tbody{padding:30px 36px;}
+.tl{font-family:'DM Mono',monospace;font-size:13px;line-height:2.1;color:var(--text3);}
+.tl .pr{color:var(--g);}
+.tl .cm{color:var(--text2);}
+.tl .out{padding-left:20px;}
+.tl .hi{color:var(--g);}
+.tl .dim{opacity:.45;}
+.cursor{display:inline-block;width:8px;height:14px;background:var(--g);vertical-align:middle;animation:blink 1.2s step-end infinite;}
+@keyframes blink{0%,100%{opacity:1;}50%{opacity:0;}}
+
+/* PHILOSOPHY */
+.phil-section{
+  border-top:1px solid var(--border);
+  padding:100px 56px;
+}
+.phil-inner{max-width:1140px;margin:0 auto;}
+.phil-h{
+  font-family:'Playfair Display',serif;font-size:44px;font-weight:700;
+  letter-spacing:-.025em;color:var(--text);margin-bottom:0;line-height:1.1;
+}
+.phil-grid{
+  display:grid;grid-template-columns:repeat(3,1fr);
+  gap:1px;background:var(--border);
+  border-radius:16px;overflow:hidden;margin-top:52px;
+}
+.pcard{background:var(--bg2);padding:38px 34px;transition:background .2s;}
+.pcard:hover{background:var(--surface);}
+.pcard-n{
+  font-family:'Playfair Display',serif;font-size:60px;font-weight:900;
+  color:var(--g3);line-height:1;margin-bottom:22px;transition:color .2s;
+}
+.pcard:hover .pcard-n{color:var(--g2);}
+.pcard-t{font-size:16px;font-weight:700;color:var(--text);margin-bottom:10px;line-height:1.3;}
+.pcard-b{font-size:13px;color:var(--text3);line-height:1.78;font-weight:300;}
+
+/* FOOTER */
+footer{
+  border-top:1px solid var(--border);padding:34px 56px;
+  display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px;
+}
+.foot-brand{font-family:'DM Mono',monospace;font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:var(--text3);}
+.foot-note{font-size:12px;color:var(--text3);}
+.foot-conf{font-family:'DM Mono',monospace;font-size:9px;letter-spacing:.1em;color:var(--text3);text-transform:uppercase;}
+
+/* REVEAL */
+.reveal{opacity:0;transform:translateY(36px);transition:opacity .75s ease,transform .75s ease;}
+.reveal.visible{opacity:1;transform:translateY(0);}
+.rd1{transition-delay:.1s;}.rd2{transition-delay:.2s;}.rd3{transition-delay:.3s;}
+
+@media(max-width:800px){
+  nav{padding:16px 24px;}
+  .nav-links{display:none;}
+  .hero,.section,.del-section,.terminal-section,.phil-section,.phil-inner{padding-left:24px;padding-right:24px;}
+  .hero-headline{font-size:52px;}
+  .hero-stats{flex-wrap:wrap;gap:28px;}
+  .hstat{border:none;padding:0;flex-basis:45%;}
+  .brief-grid{grid-template-columns:1fr;gap:40px;}
+  .phil-grid{grid-template-columns:1fr;}
+  .dcard{grid-template-columns:56px 1fr;}
+  .dc-arrow-wrap{display:none;}
+  .del-top{flex-direction:column;align-items:flex-start;gap:12px;}
+  footer{padding:24px;flex-direction:column;align-items:flex-start;}
+}
+</style>
+</head>
+<body>
+
+<div class="grid-bg"></div>
+<div class="orb orb1"></div>
+<div class="orb orb2"></div>
+<div class="orb orb3"></div>
+
+<nav id="nav">
+  <div class="nav-brand"><div class="nav-dot"></div>Calibrax.ai</div>
+  <div class="nav-links">
+    <a class="nav-link" href="#brief">The Brief</a>
+    <a class="nav-link" href="#deliverables">Deliverables</a>
+    <a class="nav-link" href="#philosophy">Approach</a>
+  </div>
+  <a class="nav-cta" href="#deliverables">View Work ↗</a>
+</nav>
+
+<div class="page">
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-tag"><div class="htag-dot"></div>AI PM · Case Study · FreshChoice Group</div>
+
+  <h1 class="hero-headline">
+    <span class="hl1">The</span>
+    <span class="hl2">Intelligence</span>
+    <span class="hl3">Control Tower.</span>
+  </h1>
+
+  <div class="hero-rule"></div>
+
+  <p class="hero-sub">A complete 14-day pitch sprint for FreshChoice Group — diagnosing the <em>$2.4B decision latency problem</em>, building the prototype, and scripting the demo that closes the deal.</p>
+
+  <div class="hero-actions">
+    <a class="btn-primary" href="#deliverables">Explore the deliverables <span class="btn-arrow">→</span></a>
+    <a class="btn-ghost" href="#brief">Read the brief ↓</a>
+  </div>
+
+  <div class="hero-stats">
+    <div class="hstat"><div class="hstat-n">$2.4B</div><div class="hstat-l">Revenue held back by<br>a 2-day intelligence lag</div></div>
+    <div class="hstat"><div class="hstat-n">14</div><div class="hstat-l">Days to build<br>a working prototype</div></div>
+    <div class="hstat"><div class="hstat-n">5</div><div class="hstat-l">Deliverables — every one<br>a working artefact</div></div>
+    <div class="hstat"><div class="hstat-n">1</div><div class="hstat-l">Wow moment engineered<br>to close the room</div></div>
+  </div>
+</section>
+
+<!-- BRIEF -->
+<section class="section" id="brief">
+  <div class="eyebrow">The Brief</div>
+  <div class="brief-grid">
+    <div class="reveal">
+      <h2 class="brief-h">A $2.4B business<br>running on <em>2-day-old</em><br>answers.</h2>
+      <div class="pullquote">
+        <p>"I want to ask a question and get an answer — like I'm talking to my smartest analyst who has access to everything. I want a control tower for my business."</p>
+        <cite>— James Whitfield, CEO · FreshChoice Group</cite>
+      </div>
+      <p class="brief-p">FreshChoice Group operates 280+ stores across Australia, New Zealand, and Singapore. Every question the CEO asks triggers a 1–2 day human relay chain: CEO → CFO → finance team → SAP extract → Excel → email back.</p>
+      <p class="brief-p">Data lives in five disconnected silos. A previous Tableau modernisation attempt failed. The internal champion has pushed for enterprise AI for 12 months without budget. The CEO will only move on a live demonstration — not another slide deck.</p>
+    </div>
+    <div class="prob-stack reveal rd2">
+      <div class="prob-card"><div class="pc-ic ic-a">⚡</div><div><div class="pc-t">Fragmented data architecture</div><div class="pc-d">SAP ERP · Salesforce CRM · Proprietary POS · Legacy WMS · Excel + Teams/WhatsApp. No unified layer. No API mesh.</div></div></div>
+      <div class="prob-card"><div class="pc-ic ic-g">⟳</div><div><div class="pc-t">Human bottleneck in the query chain</div><div class="pc-d">Every business question routes through 4 human handoffs before an answer arrives. Decision latency is structural, not incidental.</div></div></div>
+      <div class="prob-card"><div class="pc-ic ic-b">◎</div><div><div class="pc-t">No qualitative signal aggregation</div><div class="pc-d">Regional escalations, supplier issues, ops priorities — all invisible in WhatsApp groups and email threads.</div></div></div>
+      <div class="prob-card"><div class="pc-ic ic-r">△</div><div><div class="pc-t">Trust deficit from prior failure</div><div class="pc-d">The Tableau rollout is a live wound. Only a running prototype — not a concept deck — will move this CEO.</div></div></div>
+    </div>
+  </div>
+</section>
+
+<!-- DELIVERABLES -->
+<section class="del-section" id="deliverables">
+  <div class="del-top reveal">
+    <h2 class="del-h">Five deliverables.<br>One pitch sprint.</h2>
+    <div class="del-meta">14 DAYS · 3-PERSON SQUAD<br>AI PM · DATA SCIENTIST · ENGINEER</div>
+  </div>
+
+  <div class="del-list">
+    <a class="dcard reveal" href="deliverable1_solution_analysis.html">
+      <div class="dc-num-wrap"><div class="dc-num">01</div></div>
+      <div class="dc-body">
+        <div class="dc-top"><span class="dc-badge">Solution Analysis</span><span class="dc-fmt">Strategic Memo · HTML</span></div>
+        <div class="dc-title">Solution Analysis &amp; Prototype Recommendation</div>
+        <div class="dc-desc">Full diagnosis of the FreshChoice intelligence gap — problem framing, root causes, user landscape across all 4 personas, competitive market scan across 7 products, whitespace identification, and the prototype recommendation with full rationale for why it wins the room.</div>
+        <div class="dc-tags"><span class="dc-tag">Problem framing</span><span class="dc-tag">User landscape</span><span class="dc-tag">Market scan</span><span class="dc-tag">Wow moment design</span><span class="dc-tag">Commercial close</span></div>
+      </div>
+      <div class="dc-arrow-wrap"><div class="dc-arrow">↗</div></div>
+    </a>
+
+    <a class="dcard reveal rd1" href="deliverable2_prd_lite.html">
+      <div class="dc-num-wrap"><div class="dc-num">02</div></div>
+      <div class="dc-body">
+        <div class="dc-top"><span class="dc-badge">PRD-Lite</span><span class="dc-fmt">Product Spec · HTML</span></div>
+        <div class="dc-title">Product Requirements Document</div>
+        <div class="dc-desc">Lightweight spec the data scientist and engineer can build against immediately. Problem statement, scope boundaries, 8 prioritised user stories, data requirements per source, system architecture overview, success metrics, and open questions for Day 1 standup.</div>
+        <div class="dc-tags"><span class="dc-tag">User stories</span><span class="dc-tag">Data requirements</span><span class="dc-tag">Architecture</span><span class="dc-tag">Success metrics</span><span class="dc-tag">Scope boundaries</span></div>
+      </div>
+      <div class="dc-arrow-wrap"><div class="dc-arrow">↗</div></div>
+    </a>
+
+    <a class="dcard reveal rd2" href="deliverable3_ui_mockup.html">
+      <div class="dc-num-wrap"><div class="dc-num">03</div></div>
+      <div class="dc-body">
+        <div class="dc-top"><span class="dc-badge">UI Mockup</span><span class="dc-fmt">Interactive Prototype · HTML</span></div>
+        <div class="dc-title">FreshChoice Intelligence Hub — High-Fidelity Mockup</div>
+        <div class="dc-desc">Demo-ready interface of the CEO Command Console. Three fully annotated screens: structured data Q&amp;A with sourced data cards, the cross-signal synthesis wow moment joining SAP + Teams, and the escalation aggregation view. Looks like a real product running in a browser.</div>
+        <div class="dc-tags"><span class="dc-tag">High fidelity</span><span class="dc-tag">3 screens</span><span class="dc-tag">Annotated</span><span class="dc-tag">Demo-ready</span><span class="dc-tag">Source attribution UI</span></div>
+      </div>
+      <div class="dc-arrow-wrap"><div class="dc-arrow">↗</div></div>
+    </a>
+
+    <a class="dcard reveal rd1" href="deliverable4_sprint_plan.html">
+      <div class="dc-num-wrap"><div class="dc-num">04</div></div>
+      <div class="dc-body">
+        <div class="dc-top"><span class="dc-badge">Sprint Plan</span><span class="dc-fmt">Gantt Chart · HTML</span></div>
+        <div class="dc-title">14-Day Sprint Plan — Gantt by Role</div>
+        <div class="dc-desc">Full colour-coded Gantt for the 3-person squad across three phases: Problem &amp; Architecture (Days 1–4), Build &amp; Integrate (Days 5–10), Polish &amp; Pitch (Days 11–14). Role-mapped tasks, two milestone gates, a deliverable checklist with definitions of done, and a 4-item risk register.</div>
+        <div class="dc-tags"><span class="dc-tag">Gantt chart</span><span class="dc-tag">3 phases</span><span class="dc-tag">Role-mapped</span><span class="dc-tag">Milestone gates</span><span class="dc-tag">Risk register</span></div>
+      </div>
+      <div class="dc-arrow-wrap"><div class="dc-arrow">↗</div></div>
+    </a>
+
+    <a class="dcard reveal rd2" href="deliverable5_demo_script.html">
+      <div class="dc-num-wrap"><div class="dc-num">05</div></div>
+      <div class="dc-body">
+        <div class="dc-top"><span class="dc-badge">Demo Script</span><span class="dc-fmt">Scene-by-Scene · HTML</span></div>
+        <div class="dc-title">Demo Run-Through — Scene-by-Scene Pitch Script</div>
+        <div class="dc-desc">Five scenes across 16–18 minutes. What you show → what you say → the reaction you're engineering. Pre-meeting setup, structured query opening, escalation layer reveal, synthesis wow moment, platform vision, and the paid discovery close. Includes objection handling for 4 likely CEO pushbacks.</div>
+        <div class="dc-tags"><span class="dc-tag">5 scenes</span><span class="dc-tag">16–18 min</span><span class="dc-tag">Objection handling</span><span class="dc-tag">Close script</span><span class="dc-tag">Tone notes</span></div>
+      </div>
+      <div class="dc-arrow-wrap"><div class="dc-arrow">↗</div></div>
+    </a>
+  </div>
+</section>
+
+<!-- TERMINAL -->
+<section class="terminal-section reveal">
+  <div class="terminal">
+    <div class="tbar">
+      <div class="tdot td-r"></div><div class="tdot td-y"></div><div class="tdot td-g"></div>
+      <div class="ttitle">freshchoice-intelligence-hub — live demo query</div>
+    </div>
+    <div class="tbody">
+      <div class="tl"><span class="pr">CEO  →</span> <span class="cm">"How did our fresh produce margins perform in NZ last month vs Q3?"</span></div>
+      <div class="tl out"><span class="hi">Hub  →</span> NZ fresh produce margin: <span class="hi">18.4%</span> in March, down <span class="hi">3.2pp</span> from Q3 avg of 21.6%.</div>
+      <div class="tl out"><span class="dim">       Sources: SAP NZ P&amp;L · March 2024 · POS store-level data</span></div>
+      <div class="tl">&nbsp;</div>
+      <div class="tl"><span class="pr">CEO  →</span> <span class="cm">"Are the NZ margin issues connected to anything the regional team flagged?"</span></div>
+      <div class="tl out"><span class="hi">Hub  →</span> <span class="hi">Yes — direct operational link confirmed.</span> Auckland DC delay flagged</div>
+      <div class="tl out"><span class="dim">       by Marcus Reid (NZ Ops) on 10 Mar. $0.9M expedited freight costs in COGS.</span></div>
+      <div class="tl out"><span class="dim">       Sources: SAP Finance · Teams Regional Ops · WMS Auckland DC log</span></div>
+      <div class="tl">&nbsp;</div>
+      <div class="tl"><span class="pr">CEO  →</span> <span class="hi">"I want this."</span> <span class="cursor"></span></div>
+    </div>
+  </div>
+</section>
+
+<!-- PHILOSOPHY -->
+<section class="phil-section" id="philosophy">
+  <div class="phil-inner">
+    <div class="eyebrow reveal">Approach</div>
+    <h2 class="phil-h reveal">Three principles<br>behind every deliverable.</h2>
+    <div class="phil-grid reveal rd1">
+      <div class="pcard">
+        <div class="pcard-n">01</div>
+        <div class="pcard-t">The CEO's exact words, made real</div>
+        <div class="pcard-b">Every prototype decision, demo query, and commercial framing traces directly to Whitfield's SDR briefing. No assumed requirements. No generic enterprise AI narrative. His words are the spec.</div>
+      </div>
+      <div class="pcard">
+        <div class="pcard-n">02</div>
+        <div class="pcard-t">Substance before slides — always</div>
+        <div class="pcard-b">The failed Tableau rollout is the brief's hidden instruction. Every deliverable produces a working artefact, not a concept. The prototype runs before any deck opens. That is the single most powerful signal.</div>
+      </div>
+      <div class="pcard">
+        <div class="pcard-n">03</div>
+        <div class="pcard-t">Close the discovery, not the platform</div>
+        <div class="pcard-b">The target is a 4–8 week paid discovery. Not a multi-year contract. The prototype engineers the question — "what would it take to connect our real data?" — and that question is the close.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="foot-brand">Calibrax.ai · AI PM Case Study</div>
+  <div class="foot-note">FreshChoice Group · 5 Deliverables · Pitch Sprint</div>
+  <div class="foot-conf">Confidential · Do not distribute</div>
+</footer>
+
+</div>
+
+<script>
+const nav=document.getElementById('nav');
+window.addEventListener('scroll',()=>nav.classList.toggle('scrolled',scrollY>40));
+const obs=new IntersectionObserver(entries=>{
+  entries.forEach(e=>{if(e.isIntersecting){e.target.classList.add('visible');obs.unobserve(e.target);}});
+},{threshold:.08,rootMargin:'0px 0px -40px 0px'});
+document.querySelectorAll('.reveal').forEach(el=>obs.observe(el));
+</script>
+</body>
+</html>
