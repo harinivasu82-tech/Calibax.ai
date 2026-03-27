@@ -57,8 +57,12 @@ nav.scrolled{background:rgba(11,15,11,.88);border-color:var(--border);backdrop-f
   background:var(--g);border:none;border-radius:6px;
   padding:8px 18px;cursor:pointer;letter-spacing:.04em;
   text-decoration:none;transition:all .2s;font-family:'Cabinet Grotesk',sans-serif;
+  display:flex;align-items:center;gap:7px;
 }
-.nav-cta:hover{background:#1fa84f;transform:translateY(-1px);box-shadow:0 6px 20px rgba(35,196,94,.25);}
+.nav-cta-dots{display:flex;gap:3px;align-items:center;}
+.nav-cta-dot{width:4px;height:4px;border-radius:50%;background:var(--bg);opacity:.5;}
+.nav-cta-dot:first-child{opacity:1;}
+.nav-cta:hover{background:#1aa84f;transform:translateY(-1px);box-shadow:0 6px 20px rgba(35,196,94,.25);}
 
 /* HERO */
 .hero{min-height:100vh;display:flex;flex-direction:column;justify-content:center;padding:130px 56px 80px;max-width:1140px;margin:0 auto;}
@@ -295,6 +299,29 @@ nav.scrolled{background:rgba(11,15,11,.88);border-color:var(--border);backdrop-f
 .pcard-t{font-size:16px;font-weight:700;color:var(--text);margin-bottom:10px;line-height:1.3;}
 .pcard-b{font-size:13px;color:var(--text3);line-height:1.78;font-weight:300;}
 
+/* SYSTEM STRIP */
+.system-strip{
+  border-top:1px solid var(--border);
+  padding:20px 56px;
+  display:flex;align-items:center;justify-content:space-between;
+  background:var(--bg2);
+}
+.ss-left{
+  font-family:'DM Mono',monospace;font-size:10px;letter-spacing:.1em;
+  text-transform:uppercase;color:var(--text3);
+  display:flex;align-items:center;gap:10px;
+}
+.ss-left::before{content:'';width:20px;height:1px;background:var(--text3);}
+.ss-pills{display:flex;gap:6px;align-items:center;}
+.ss-pill{
+  font-family:'DM Mono',monospace;font-size:9px;letter-spacing:.07em;
+  text-transform:uppercase;padding:4px 10px;border-radius:3px;
+  border:1px solid var(--border2);color:var(--text3);
+  transition:border-color .2s,color .2s;
+}
+.ss-pill:hover{border-color:var(--g);color:var(--g);}
+.ss-pill.ss-active{border-color:rgba(35,196,94,.3);color:var(--g);background:rgba(35,196,94,.06);}
+
 /* FOOTER */
 footer{
   border-top:1px solid var(--border);padding:34px 56px;
@@ -504,6 +531,17 @@ footer{
     </div>
   </div>
 </section>
+
+<div class="system-strip">
+  <div class="ss-left">FreshChoice Group · Pitch Sprint · 5 Deliverables</div>
+  <div class="ss-pills">
+    <span class="ss-pill ss-active">D1 · Analysis</span>
+    <span class="ss-pill">D2 · PRD</span>
+    <span class="ss-pill">D3 · Mockup</span>
+    <span class="ss-pill">D4 · Sprint</span>
+    <span class="ss-pill">D5 · Demo</span>
+  </div>
+</div>
 
 <footer>
   <div class="foot-brand">Calibrax.ai · AI PM Case Study</div>
