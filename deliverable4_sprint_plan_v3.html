@@ -1,0 +1,798 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Deliverable 4 — Sprint Plan · Nexus Command Console</title>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,200;0,9..144,400;0,9..144,600;1,9..144,200;1,9..144,400&family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+:root{
+  --bg:#f2f0e9;--bg2:#ede9e0;--surface:#ffffff;--surface2:#f7f4ed;--surface3:#ede9e0;
+  --border:rgba(0,0,0,0.065);--border-md:rgba(0,0,0,0.11);--border-hi:rgba(0,0,0,0.18);
+  --text:#17160f;--text2:#52503f;--text3:#97937f;--text4:#c4c0ae;
+  --g:#14582e;--g-mid:#1c7840;--g-acc:#23c45e;--g-bg:#e2f2e9;--g-bg2:#c6e8d4;
+  --a:#6e3a00;--a-mid:#b86000;--a-acc:#d97c00;--a-bg:#fdf0dc;
+  --r:#801a1a;--r-mid:#b83030;--r-bg:#fceaea;
+  --b:#142c6a;--b-mid:#1e48a8;--b-bg:#e4ecfb;
+  --p:#30207a;--p-mid:#5240b8;--p-bg:#edeafb;
+  --nav-bg:#0b0f0b;--nav-border:rgba(255,255,255,.07);
+}
+html{font-size:15px;scroll-behavior:smooth;}
+body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);line-height:1.7;-webkit-font-smoothing:antialiased;padding-top:52px;}
+body::before{content:'';position:fixed;inset:0;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='300'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='.028'/%3E%3C/svg%3E");pointer-events:none;z-index:0;}
+.page{position:relative;z-index:1;max-width:960px;margin:0 auto;padding:56px 48px 120px;}
+
+/* NAV */
+.doc-nav{position:fixed;top:0;left:0;right:0;z-index:200;height:52px;background:var(--nav-bg);border-bottom:1px solid var(--nav-border);display:flex;align-items:center;justify-content:space-between;padding:0 48px;backdrop-filter:blur(16px);}
+.doc-nav-left{display:flex;align-items:center;gap:20px;}
+.doc-nav-back{display:flex;align-items:center;gap:7px;font-family:'DM Mono',monospace;font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:rgba(255,255,255,.32);text-decoration:none;transition:color .2s;}
+.doc-nav-back:hover{color:var(--g-acc);}
+.doc-nav-divider{width:1px;height:18px;background:rgba(255,255,255,.09);}
+.doc-nav-brand{display:flex;align-items:center;gap:7px;font-family:'DM Mono',monospace;font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--g-acc);}
+.doc-nav-dot{width:6px;height:6px;border-radius:50%;background:var(--g-acc);animation:navdot 2.5s infinite;}
+@keyframes navdot{0%,100%{opacity:1;transform:scale(1);}50%{opacity:.3;transform:scale(.7);}}
+.doc-nav-right{display:flex;align-items:center;gap:16px;}
+.doc-nav-label{font-family:'DM Mono',monospace;font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:rgba(255,255,255,.2);}
+.doc-nav-pills{display:flex;gap:4px;}
+.doc-nav-pill{width:20px;height:3px;border-radius:2px;background:rgba(255,255,255,.08);}
+.doc-nav-pill.done{background:rgba(35,196,94,.32);}
+.doc-nav-pill.active{background:var(--g-acc);}
+
+/* HEADER */
+.header{margin-bottom:48px;padding:40px 44px 36px;background:var(--text);border-radius:16px;position:relative;overflow:hidden;}
+.header::before{content:'';position:absolute;top:-80px;right:-60px;width:300px;height:300px;border-radius:50%;background:radial-gradient(circle,rgba(35,196,94,.18) 0%,transparent 70%);pointer-events:none;}
+.header::after{content:'';position:absolute;inset:0;background-image:linear-gradient(rgba(255,255,255,.03) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.03) 1px,transparent 1px);background-size:40px 40px;pointer-events:none;}
+.header > *{position:relative;z-index:1;}
+.doc-eyebrow{font-family:'DM Mono',monospace;font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:var(--g-acc);margin-bottom:14px;display:flex;align-items:center;gap:10px;}
+.doc-eyebrow::before{content:'';width:20px;height:1px;background:var(--g-acc);}
+.doc-title{font-family:'Fraunces',serif;font-size:44px;font-weight:200;line-height:1.08;letter-spacing:-.02em;color:#fff;margin-bottom:8px;}
+.doc-title em{font-style:italic;color:#6dd49a;}
+.doc-subtitle{font-size:14px;color:rgba(255,255,255,.45);margin-bottom:20px;font-weight:300;}
+.meta-row{display:flex;flex-wrap:wrap;gap:6px;margin-top:16px;}
+.meta-pill{font-family:'DM Mono',monospace;font-size:10px;padding:4px 10px;border-radius:3px;border:1px solid rgba(255,255,255,.12);color:rgba(255,255,255,.45);letter-spacing:.04em;}
+.meta-pill.accent{border-color:rgba(35,196,94,.35);color:var(--g-acc);background:rgba(35,196,94,.1);}
+.meta-pill.red{border-color:rgba(220,80,80,.3);color:#e07070;background:rgba(196,48,48,.1);}
+
+/* SECTIONS */
+.section{margin-bottom:64px;scroll-margin-top:70px;opacity:0;transform:translateY(18px);transition:opacity .6s ease,transform .6s ease;}
+.section.visible{opacity:1;transform:translateY(0);}
+.section-hd{display:flex;align-items:center;gap:14px;margin-bottom:24px;padding-bottom:14px;border-bottom:1px solid var(--border-md);position:relative;overflow:hidden;}
+.section-hd::after{content:'';position:absolute;bottom:-1px;left:0;width:40px;height:2px;background:var(--g-acc);transition:width .45s cubic-bezier(.25,.46,.45,.94);}
+.section:hover .section-hd::after{width:100%;}
+.sn{font-family:'DM Mono',monospace;font-size:10px;background:var(--surface3);color:var(--text3);border:1px solid var(--border-md);border-radius:4px;padding:2px 7px;letter-spacing:.08em;flex-shrink:0;transition:background .2s,color .2s,border-color .2s;}
+.section:hover .sn{background:var(--g-bg);color:var(--g);border-color:rgba(35,196,94,.3);}
+.st{font-family:'Fraunces',serif;font-size:24px;font-weight:200;color:var(--text);letter-spacing:-.015em;line-height:1.2;}
+.st em{font-style:italic;color:var(--g);}
+.section-line{flex:1;height:1px;background:var(--border);}
+.prose{font-size:14px;color:var(--text2);line-height:1.85;margin-bottom:14px;max-width:700px;}
+.prose strong{color:var(--text);font-weight:500;}
+
+/* ── LEGEND ── */
+.legend{display:flex;flex-wrap:wrap;gap:7px;margin-bottom:24px;}
+.legend-item{display:flex;align-items:center;gap:6px;font-family:'DM Mono',monospace;font-size:10px;letter-spacing:.04em;color:var(--text2);background:var(--surface);border:1px solid var(--border-md);border-radius:4px;padding:4px 9px;}
+.legend-swatch{width:10px;height:10px;border-radius:2px;flex-shrink:0;}
+
+/* ── PHASE TIMELINE STRIP ── */
+.phase-strip{background:var(--surface);border:1px solid var(--border-md);border-radius:12px;padding:20px 24px 16px;margin-bottom:28px;}
+.phase-strip-title{font-family:'DM Mono',monospace;font-size:9px;letter-spacing:.12em;text-transform:uppercase;color:var(--text3);margin-bottom:12px;}
+.timeline-track{position:relative;display:flex;align-items:flex-start;padding-bottom:32px;}
+.timeline-line{position:absolute;top:10px;left:0;right:0;height:2px;background:var(--border-md);}
+.timeline-phases{display:flex;width:100%;position:relative;z-index:1;}
+.t-phase{flex:1;display:flex;flex-direction:column;align-items:center;gap:6px;}
+.t-phase-node{width:20px;height:20px;border-radius:50%;border:2px solid var(--bg);flex-shrink:0;position:relative;z-index:2;}
+.t-phase-label{font-family:'DM Mono',monospace;font-size:9px;letter-spacing:.06em;text-transform:uppercase;color:var(--text3);text-align:center;line-height:1.3;white-space:nowrap;}
+.t-phase-days{font-size:11px;color:var(--text2);text-align:center;font-weight:500;}
+.timeline-gates{display:flex;width:100%;position:absolute;top:2px;left:0;pointer-events:none;}
+.t-gate-slot{flex:1;display:flex;justify-content:center;}
+.t-gate{width:16px;height:16px;transform:rotate(45deg);border:2px solid var(--bg);position:relative;z-index:3;flex-shrink:0;}
+.t-gate-label{position:absolute;top:22px;left:50%;transform:translateX(-50%) rotate(-45deg);font-family:'DM Mono',monospace;font-size:8px;color:var(--text3);white-space:nowrap;}
+
+/* ── PHASE DETAIL CARDS ── */
+.phase-cards{display:flex;flex-direction:column;gap:8px;}
+.phase-card{border:1px solid var(--border-md);border-radius:12px;overflow:hidden;transition:box-shadow .2s,transform .2s;cursor:default;}
+.phase-card:hover{transform:translateY(-2px);box-shadow:0 6px 24px rgba(0,0,0,.07);}
+.phase-card-hd{display:grid;grid-template-columns:4px 1fr;background:var(--surface2);}
+.phase-accent{width:4px;}
+.phase-hd-inner{padding:12px 18px;display:flex;align-items:center;justify-content:space-between;gap:12px;}
+.phase-name{font-size:14px;font-weight:500;color:var(--text);}
+.phase-meta{display:flex;align-items:center;gap:8px;flex-shrink:0;}
+.phase-days-badge{font-family:'DM Mono',monospace;font-size:9px;letter-spacing:.08em;padding:2px 7px;border-radius:3px;border:1px solid var(--border-md);color:var(--text3);}
+.gate-badge{font-family:'DM Mono',monospace;font-size:9px;letter-spacing:.06em;padding:2px 7px;border-radius:3px;font-weight:500;}
+.gate-crit{background:var(--r-bg);color:var(--r-mid);border:1px solid rgba(184,48,48,.22);}
+.gate-warn{background:var(--a-bg);color:var(--a-mid);border:1px solid rgba(184,96,0,.2);}
+.gate-ok{background:var(--g-bg);color:var(--g-mid);border:1px solid rgba(28,120,64,.22);}
+
+.phase-card-body{padding:14px 18px;background:var(--surface);}
+.task-rows{display:flex;flex-direction:column;gap:5px;}
+.task-row{display:grid;grid-template-columns:36px 1fr;gap:10px;align-items:start;}
+.task-owner{font-family:'DM Mono',monospace;font-size:9px;letter-spacing:.06em;text-transform:uppercase;padding:2px 5px;border-radius:3px;font-weight:500;text-align:center;align-self:start;margin-top:2px;white-space:nowrap;}
+.own-pm{background:var(--p-bg);color:var(--p-mid);}
+.own-ds{background:var(--b-bg);color:var(--b-mid);}
+.own-eng{background:var(--g-bg);color:var(--g-mid);}
+.own-all{background:var(--a-bg);color:var(--a-mid);}
+.task-content{font-size:13px;color:var(--text2);line-height:1.55;padding-top:2px;}
+.task-content strong{color:var(--text);font-weight:500;}
+.task-content .task-note{font-size:11px;color:var(--text3);margin-top:2px;font-family:'DM Mono',monospace;}
+.task-divider{height:1px;background:var(--border);margin:6px 0;}
+
+/* gate checkpoint inside card */
+.gate-checkpoint{background:var(--surface2);border-top:1px solid var(--border);padding:10px 18px;display:flex;align-items:flex-start;gap:10px;}
+.gate-icon{width:20px;height:20px;border-radius:3px;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-family:'DM Mono',monospace;font-size:9px;font-weight:500;margin-top:1px;}
+.gc-crit{background:var(--r-bg);color:var(--r-mid);}
+.gc-warn{background:var(--a-bg);color:var(--a-mid);}
+.gc-ok{background:var(--g-bg);color:var(--g-mid);}
+.gate-text{font-size:12px;color:var(--text2);line-height:1.6;}
+.gate-text strong{color:var(--text);font-weight:500;}
+.gate-text .escalation{font-size:11px;color:var(--r-mid);margin-top:3px;display:block;}
+.gate-text .escalation-warn{font-size:11px;color:var(--a-mid);margin-top:3px;display:block;}
+.gate-text .escalation-ok{font-size:11px;color:var(--g-mid);margin-top:3px;display:block;}
+
+/* ── OPERATING RHYTHM ── */
+.rhythm-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-top:4px;}
+.rhythm-card{background:var(--surface);border:1px solid var(--border-md);border-radius:10px;padding:16px 18px;transition:transform .2s,box-shadow .2s;}
+.rhythm-card:hover{transform:translateY(-2px);box-shadow:0 4px 16px rgba(0,0,0,.06);}
+.rhythm-title{font-family:'DM Mono',monospace;font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:var(--text3);margin-bottom:10px;display:flex;align-items:center;gap:7px;}
+.rhythm-dot{width:7px;height:7px;border-radius:50%;flex-shrink:0;}
+.rhythm-items{display:flex;flex-direction:column;gap:4px;}
+.rhythm-item{font-size:12px;color:var(--text2);line-height:1.55;padding-left:12px;position:relative;}
+.rhythm-item::before{content:'→';position:absolute;left:0;color:var(--text4);font-size:10px;top:2px;}
+
+/* ── SQUAD COMMITMENTS ── */
+.commit-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:4px;}
+.commit-block{background:var(--surface);border:1px solid var(--border-md);border-radius:12px;padding:20px 22px;position:relative;overflow:hidden;transition:box-shadow .2s,transform .2s;cursor:default;}
+.commit-block::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;transform:scaleX(0);transform-origin:left;transition:transform .35s cubic-bezier(.25,.46,.45,.94);}
+.commit-block:hover::before{transform:scaleX(1);}
+.commit-block:hover{box-shadow:0 5px 24px rgba(0,0,0,.07);transform:translateY(-2px);}
+.cb-pm::before{background:var(--p-mid);}
+.cb-ds::before{background:var(--b-mid);}
+.cb-eng::before{background:var(--g-mid);}
+.cb-all::before{background:var(--a-acc);}
+.commit-hd{display:flex;align-items:center;gap:8px;margin-bottom:14px;}
+.commit-role-badge{font-family:'DM Mono',monospace;font-size:9px;letter-spacing:.08em;text-transform:uppercase;padding:2px 7px;border-radius:3px;}
+.crb-pm{background:var(--p-bg);color:var(--p-mid);}
+.crb-ds{background:var(--b-bg);color:var(--b-mid);}
+.crb-eng{background:var(--g-bg);color:var(--g-mid);}
+.crb-all{background:var(--a-bg);color:var(--a-mid);}
+.commit-person{font-size:13px;font-weight:500;color:var(--text);}
+.commit-item{display:flex;align-items:flex-start;gap:8px;font-size:12px;color:var(--text2);line-height:1.6;margin-bottom:7px;padding:4px 7px;border-radius:4px;transition:background .15s,color .15s;}
+.commit-item:last-child{margin-bottom:0;}
+.commit-item:hover{background:var(--surface2);color:var(--text);}
+.commit-item::before{content:'—';color:var(--text4);flex-shrink:0;font-family:'DM Mono',monospace;font-size:11px;margin-top:1px;}
+
+/* ── ESCALATION MATRIX ── */
+.esc-table{width:100%;border-collapse:collapse;border:1px solid var(--border-md);border-radius:12px;overflow:hidden;box-shadow:0 1px 3px rgba(0,0,0,.04);}
+.esc-table thead tr{background:var(--text);}
+.esc-table th{font-family:'DM Mono',monospace;font-size:9px;letter-spacing:.12em;text-transform:uppercase;color:rgba(255,255,255,.4);text-align:left;padding:10px 16px;}
+.esc-table tbody tr{border-bottom:1px solid var(--border);transition:background .15s;cursor:default;}
+.esc-table tbody tr:last-child{border-bottom:none;}
+.esc-table tbody tr:hover{background:var(--surface2);}
+.esc-table td{padding:12px 16px;font-size:12.5px;color:var(--text2);vertical-align:top;line-height:1.65;}
+.esc-table td:first-child{font-weight:500;color:var(--text);white-space:nowrap;font-family:'DM Mono',monospace;font-size:11px;}
+.esc-table td strong{color:var(--text);font-weight:500;}
+.esc-table .pass-text{font-size:12px;color:var(--g-mid);}
+.esc-table .fail-text{font-size:12px;color:var(--r-mid);margin-top:5px;display:block;border-top:1px dashed rgba(184,48,48,.2);padding-top:5px;}
+.esc-table .fail-text-warn{font-size:12px;color:var(--a-mid);margin-top:5px;display:block;border-top:1px dashed rgba(184,96,0,.2);padding-top:5px;}
+.esc-table .fail-text-ok{font-size:12px;color:var(--g-mid);margin-top:5px;display:block;border-top:1px dashed rgba(28,120,64,.2);padding-top:5px;}
+.badge{font-family:'DM Mono',monospace;font-size:9px;font-weight:500;padding:2px 7px;border-radius:3px;letter-spacing:.06em;text-transform:uppercase;white-space:nowrap;}
+.badge-crit{background:var(--r-bg);color:var(--r-mid);border:1px solid rgba(184,48,48,.22);}
+.badge-warn{background:var(--a-bg);color:var(--a-mid);border:1px solid rgba(184,96,0,.2);}
+.badge-ok{background:var(--g-bg);color:var(--g-mid);border:1px solid rgba(28,120,64,.22);}
+
+/* FOOTER */
+.doc-footer{margin-top:80px;padding:22px 0;border-top:1px solid var(--border-md);display:flex;justify-content:space-between;align-items:center;}
+.footer-l{font-family:'DM Mono',monospace;font-size:10px;letter-spacing:.1em;color:var(--text3);text-transform:uppercase;}
+.footer-r{font-family:'DM Mono',monospace;font-size:10px;color:var(--text3);letter-spacing:.06em;}
+
+@media(max-width:700px){
+  .page{padding:36px 18px 80px;}
+  .doc-title{font-size:32px;}
+  .rhythm-grid{grid-template-columns:1fr;}
+  .phase-hd-inner{flex-direction:column;align-items:flex-start;}
+}
+</style>
+</head>
+<body>
+
+<nav class="doc-nav">
+  <div class="doc-nav-left">
+    <a class="doc-nav-back" href="#">← Back to overview</a>
+    <div class="doc-nav-divider"></div>
+    <div class="doc-nav-brand"><div class="doc-nav-dot"></div>Calibrax.ai</div>
+  </div>
+  <div class="doc-nav-right">
+    <div class="doc-nav-label">Deliverable 4 of 5</div>
+    <div class="doc-nav-pills">
+      <div class="doc-nav-pill done"></div>
+      <div class="doc-nav-pill done"></div>
+      <div class="doc-nav-pill done"></div>
+      <div class="doc-nav-pill active"></div>
+      <div class="doc-nav-pill"></div>
+    </div>
+  </div>
+</nav>
+
+<div class="page">
+
+<div class="header">
+  <div class="doc-eyebrow">Calibrax Internal · Pitch Sprint Document · Deliverable 4 of 5</div>
+  <div class="doc-title">14-Day <em>Sprint Plan</em></div>
+  <div class="doc-subtitle">Squad operating plan — 1 AI PM · 1 Data Scientist · 1 Engineer · Pitch on Day 15</div>
+  <div class="meta-row">
+    <span class="meta-pill accent">v1.0 — Final</span>
+    <span class="meta-pill">Client: FreshChoice Group</span>
+    <span class="meta-pill">5 phases · 6 gates</span>
+    <span class="meta-pill red">3 critical gates</span>
+  </div>
+</div>
+
+
+<!-- ══ 01: SPRINT PLAN ══ -->
+<div class="section" id="s1">
+  <div class="section-hd">
+    <span class="sn">01</span>
+    <span class="st">Sprint plan — <em>phase overview + task detail</em></span>
+    <div class="section-line"></div>
+  </div>
+
+  <p class="prose">Five phases. Three roles running in parallel from Day 3. Six gate checkpoints — each with a binary pass/fail and a pre-defined escalation action. The plan is designed to front-load risk: the hardest dependency (data consistency between structured and unstructured corpus) is resolved by Day 4, before the engineer has wired anything to it.</p>
+
+  <div class="legend">
+    <div class="legend-item"><div class="legend-swatch" style="background:#5240b8;"></div>PM</div>
+    <div class="legend-item"><div class="legend-swatch" style="background:#1e48a8;"></div>Data scientist</div>
+    <div class="legend-item"><div class="legend-swatch" style="background:#1c7840;"></div>Engineer</div>
+    <div class="legend-item"><div class="legend-swatch" style="background:#b86000;"></div>All squad</div>
+    <div class="legend-item"><div class="legend-swatch" style="background:#b83030;"></div>Critical gate</div>
+    <div class="legend-item"><div class="legend-swatch" style="background:#d97c00;"></div>Warning gate</div>
+    <div class="legend-item"><div class="legend-swatch" style="background:#1c7840;"></div>Code freeze</div>
+  </div>
+
+  <!-- Phase timeline strip — SVG for precise layout, no clipping -->
+  <div class="phase-strip">
+    <div class="phase-strip-title">Phase timeline — 14 days to pitch · ◆ = gate checkpoint</div>
+    <svg viewBox="0 0 860 210" xmlns="http://www.w3.org/2000/svg" style="width:100%;display:block;" font-family="'DM Mono',monospace">
+
+      <!-- Day tick marks along top -->
+      <!-- 14 days, each cell = 860/14 ≈ 61.4px wide. Day n centre = (n-0.5)*61.4 -->
+
+      <!-- Phase bands (filled rects behind everything) -->
+      <!-- Foundation D1-D2: x=0, w=2*61.4=122.9 -->
+      <rect x="0"   y="18" width="122" height="8" rx="4" fill="#5240b8" opacity="0.18"/>
+      <!-- Build D3-D6: x=122.9, w=4*61.4=245.7 -->
+      <rect x="123" y="18" width="245" height="8" rx="4" fill="#1e48a8" opacity="0.18"/>
+      <!-- Integration D7-D9: x=368.6, w=3*61.4=184.3 -->
+      <rect x="369" y="18" width="184" height="8" rx="4" fill="#1c7840" opacity="0.18"/>
+      <!-- Validation D10-D12: x=552.9, w=3*61.4=184.3 -->
+      <rect x="554" y="18" width="184" height="8" rx="4" fill="#b86000" opacity="0.18"/>
+      <!-- Lock D13-D14: x=737.1, w=2*61.4=122.9 -->
+      <rect x="739" y="18" width="121" height="8" rx="4" fill="#b83030" opacity="0.18"/>
+
+      <!-- Phase labels above band -->
+      <text x="61"  y="13" text-anchor="middle" font-size="9" fill="#5240b8" letter-spacing="0.08em">FOUNDATION</text>
+      <text x="245" y="13" text-anchor="middle" font-size="9" fill="#1e48a8" letter-spacing="0.08em">BUILD</text>
+      <text x="461" y="13" text-anchor="middle" font-size="9" fill="#1c7840" letter-spacing="0.08em">INTEGRATION</text>
+      <text x="646" y="13" text-anchor="middle" font-size="9" fill="#b86000" letter-spacing="0.08em">VALIDATION</text>
+      <text x="800" y="13" text-anchor="middle" font-size="9" fill="#b83030" letter-spacing="0.08em">LOCK</text>
+
+      <!-- Day numbers row -->
+      <!-- each day centre: x = (d - 0.5) * (860/14) -->
+      <text x="31"  y="38" text-anchor="middle" font-size="9" fill="#97937f">D1</text>
+      <text x="92"  y="38" text-anchor="middle" font-size="9" fill="#97937f">D2</text>
+      <text x="153" y="38" text-anchor="middle" font-size="9" fill="#97937f">D3</text>
+      <text x="215" y="38" text-anchor="middle" font-size="9" fill="#97937f">D4</text>
+      <text x="276" y="38" text-anchor="middle" font-size="9" fill="#97937f">D5</text>
+      <text x="338" y="38" text-anchor="middle" font-size="9" fill="#97937f">D6</text>
+      <text x="399" y="38" text-anchor="middle" font-size="9" fill="#97937f">D7</text>
+      <text x="461" y="38" text-anchor="middle" font-size="9" fill="#c4c0ae">D8</text>
+      <text x="522" y="38" text-anchor="middle" font-size="9" fill="#c4c0ae">D9</text>
+      <text x="584" y="38" text-anchor="middle" font-size="9" fill="#97937f">D10</text>
+      <text x="645" y="38" text-anchor="middle" font-size="9" fill="#97937f">D11</text>
+      <text x="707" y="38" text-anchor="middle" font-size="9" fill="#97937f">D12</text>
+      <text x="768" y="38" text-anchor="middle" font-size="9" fill="#97937f">D13</text>
+      <text x="830" y="38" text-anchor="middle" font-size="9" fill="#97937f">D14</text>
+
+      <!-- Weekend shading D8, D9 -->
+      <rect x="430" y="42" width="61" height="6" rx="0" fill="#c4c0ae" opacity="0.2"/>
+      <rect x="491" y="42" width="61" height="6" rx="0" fill="#c4c0ae" opacity="0.2"/>
+
+      <!-- Main timeline axis -->
+      <line x1="0" y1="55" x2="860" y2="55" stroke="#c4c0ae" stroke-width="1.5"/>
+
+      <!-- ── GATE DIAMONDS on the axis line ── -->
+      <!-- Gate diamond helper: rotate(45) rect centred on x,55 size 10x10 -->
+
+      <!-- G1 End D1 · x=61 · critical -->
+      <rect x="54" y="48" width="14" height="14" transform="rotate(45,61,55)" fill="#b83030"/>
+      <!-- G2 End D2 · x=122 · critical -->
+      <rect x="115" y="48" width="14" height="14" transform="rotate(45,122,55)" fill="#b83030"/>
+      <!-- G3 End D4 · x=245 · warning -->
+      <rect x="238" y="48" width="14" height="14" transform="rotate(45,245,55)" fill="#d97c00"/>
+      <!-- G4 End D7 · x=399 · warning -->
+      <rect x="392" y="48" width="14" height="14" transform="rotate(45,399,55)" fill="#d97c00"/>
+      <!-- G5 End D12 · x=707 · critical -->
+      <rect x="700" y="48" width="14" height="14" transform="rotate(45,707,55)" fill="#b83030"/>
+      <!-- G6 End D13 · x=768 · green / code freeze -->
+      <rect x="761" y="48" width="14" height="14" transform="rotate(45,768,55)" fill="#1c7840"/>
+
+      <!-- ── GATE LABEL BLOCKS ── -->
+      <!-- Strategy: each box is 130px wide, centred on the diamond x-position where possible,
+           but clamped so left edge ≥ 2 and right edge ≤ 858.
+           G1 centre=61 → box x=2..132 (centre at 67)
+           G2 centre=122 → box x=57..187 (centre at 122), drops LONG
+           G3 centre=245 → box x=180..310 (centre at 245)
+           G4 centre=399 → box x=334..464 (centre at 399)
+           G5 centre=707 → box x=585..715 (centre at 650), drops LONG — kept left to avoid right edge
+           G6 centre=768 → box x=728..858 (centre at 793) -->
+
+      <!-- G1 — short drop -->
+      <line x1="61" y1="62" x2="61" y2="72" stroke="#b83030" stroke-width="1"/>
+      <rect x="2" y="72" width="130" height="44" rx="3" fill="#fceaea" stroke="#b83030" stroke-width="0.5"/>
+      <text x="67" y="84" text-anchor="middle" font-size="9" font-weight="500" fill="#801a1a">Gate 1 · End Day 1</text>
+      <text x="67" y="96" text-anchor="middle" font-size="8" fill="#b83030">5 Qs locked · keys live</text>
+      <text x="67" y="108" text-anchor="middle" font-size="8" fill="#b83030">DS-2 named · sprint starts</text>
+
+      <!-- G2 — long drop to clear G1 box -->
+      <line x1="122" y1="62" x2="122" y2="126" stroke="#b83030" stroke-width="1" stroke-dasharray="3,2"/>
+      <rect x="57" y="126" width="130" height="44" rx="3" fill="#fceaea" stroke="#b83030" stroke-width="0.5"/>
+      <text x="122" y="138" text-anchor="middle" font-size="9" font-weight="500" fill="#801a1a">Gate 2 · End Day 2</text>
+      <text x="122" y="150" text-anchor="middle" font-size="8" fill="#b83030">API schema signed off</text>
+      <text x="122" y="162" text-anchor="middle" font-size="8" fill="#b83030">by DS + ENG in writing</text>
+
+      <!-- G3 — short drop -->
+      <line x1="245" y1="62" x2="245" y2="72" stroke="#d97c00" stroke-width="1"/>
+      <rect x="180" y="72" width="130" height="44" rx="3" fill="#fdf0dc" stroke="#d97c00" stroke-width="0.5"/>
+      <text x="245" y="84" text-anchor="middle" font-size="9" font-weight="500" fill="#6e3a00">Gate 3 · End Day 4</text>
+      <text x="245" y="96" text-anchor="middle" font-size="8" fill="#b86000">Lookup JSON complete</text>
+      <text x="245" y="108" text-anchor="middle" font-size="8" fill="#b86000">RAG ingestion started</text>
+
+      <!-- G4 — short drop -->
+      <line x1="399" y1="62" x2="399" y2="72" stroke="#d97c00" stroke-width="1"/>
+      <rect x="334" y="72" width="130" height="44" rx="3" fill="#fdf0dc" stroke="#d97c00" stroke-width="0.5"/>
+      <text x="399" y="84" text-anchor="middle" font-size="9" font-weight="500" fill="#6e3a00">Gate 4 · End Day 7</text>
+      <text x="399" y="96" text-anchor="middle" font-size="8" fill="#b86000">≥3 of 5 questions</text>
+      <text x="399" y="108" text-anchor="middle" font-size="8" fill="#b86000">passing end-to-end</text>
+
+      <!-- G5 — long drop, box left-shifted to stay inside SVG -->
+      <line x1="707" y1="62" x2="707" y2="126" stroke="#b83030" stroke-width="1" stroke-dasharray="3,2"/>
+      <rect x="585" y="126" width="130" height="44" rx="3" fill="#fceaea" stroke="#b83030" stroke-width="0.5"/>
+      <text x="650" y="138" text-anchor="middle" font-size="9" font-weight="500" fill="#801a1a">Gate 5 · End Day 12</text>
+      <text x="650" y="150" text-anchor="middle" font-size="8" fill="#b83030">Pitch go/no-go · 5/5 pass</text>
+      <text x="650" y="162" text-anchor="middle" font-size="8" fill="#b83030">0 errors · 0 hallucinations</text>
+
+      <!-- G6 — short drop, right-anchored at 858 -->
+      <line x1="768" y1="62" x2="768" y2="72" stroke="#1c7840" stroke-width="1"/>
+      <rect x="728" y="72" width="130" height="44" rx="3" fill="#e2f2e9" stroke="#1c7840" stroke-width="0.5"/>
+      <text x="793" y="84" text-anchor="middle" font-size="9" font-weight="500" fill="#14582e">Gate 6 · End Day 13</text>
+      <text x="793" y="96" text-anchor="middle" font-size="8" fill="#1c7840">Code freeze · env locked</text>
+      <text x="793" y="108" text-anchor="middle" font-size="8" fill="#1c7840">tested on pitch laptop</text>
+
+      <!-- Weekend label -->
+      <text x="461" y="195" text-anchor="middle" font-size="9" fill="#c4c0ae" font-style="italic">D8–D9 weekend — work continues at reduced pace</text>
+
+    </svg>
+  </div>
+
+  <!-- Phase detail cards -->
+  <div class="phase-cards">
+
+    <!-- FOUNDATION -->
+    <div class="phase-card">
+      <div class="phase-card-hd">
+        <div class="phase-accent" style="background:#5240b8;"></div>
+        <div class="phase-hd-inner">
+          <span class="phase-name">Phase 1 · Foundation</span>
+          <div class="phase-meta">
+            <span class="phase-days-badge">Days 1–2</span>
+            <span class="gate-badge gate-crit">G1 · End D1</span>
+            <span class="gate-badge gate-crit">G2 · End D2</span>
+          </div>
+        </div>
+      </div>
+      <div class="phase-card-body">
+        <div class="task-rows">
+          <div class="task-row">
+            <span class="task-owner own-pm">PM</span>
+            <div class="task-content"><strong>5 demo questions locked and delivered to DS before 9am Day 1.</strong> Questions are derived directly from James Whitfield's words in the SDR memo. They drive the entire data design — data cannot start until these exist.
+              <div class="task-note">Deliverable: written question list + data authoring template in squad channel before first standup</div>
+            </div>
+          </div>
+          <div class="task-divider"></div>
+          <div class="task-row">
+            <span class="task-owner own-ds">DS</span>
+            <div class="task-content"><strong>Data authoring begins Day 1.</strong> Sales &amp; margin fixture (500–800 rows), supply chain incident log, Teams/email corpus. Internally consistent — the Auckland DC delay in the WMS log must match the NZ margin dip in the sales fixture.
+              <div class="task-note">Risk: this is the sprint's highest-risk task. It must start before anything else.</div>
+            </div>
+          </div>
+          <div class="task-divider"></div>
+          <div class="task-row">
+            <span class="task-owner own-eng">ENG</span>
+            <div class="task-content"><strong>React/Next.js scaffold + chat UI shell.</strong> Message history, input area, design tokens, send button. Builds against the stub API until schema is agreed on Day 2.</div>
+          </div>
+          <div class="task-divider"></div>
+          <div class="task-row">
+            <span class="task-owner own-all">All</span>
+            <div class="task-content"><strong>API schema agreed and locked by end of Day 2.</strong> PM chairs, TL present. Schema defines the SSE event structure (token, done, citation object). No ENG UI work continues until schema is signed off. Written to squad channel.</div>
+          </div>
+        </div>
+      </div>
+      <div class="gate-checkpoint">
+        <div class="gate-icon gc-crit">G1</div>
+        <div class="gate-text">
+          <strong>Pass:</strong> 5 questions locked, template delivered, LLM API keys live, DS-2 named as contingency.
+          <span class="escalation">Fail: PM escalates to Calibrax leadership same day. Sprint pauses until resolved.</span>
+        </div>
+      </div>
+      <div class="gate-checkpoint" style="border-top:1px solid var(--border);">
+        <div class="gate-icon gc-crit">G2</div>
+        <div class="gate-text">
+          <strong>Pass:</strong> API schema signed off by DS + ENG. Written confirmation in squad channel.
+          <span class="escalation">Fail: TL chairs emergency session Day 3 AM. No ENG component work until schema locked.</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- BUILD -->
+    <div class="phase-card">
+      <div class="phase-card-hd">
+        <div class="phase-accent" style="background:#1e48a8;"></div>
+        <div class="phase-hd-inner">
+          <span class="phase-name">Phase 2 · Build</span>
+          <div class="phase-meta">
+            <span class="phase-days-badge">Days 3–6 · parallel tracks</span>
+            <span class="gate-badge gate-warn">G3 · End D4</span>
+          </div>
+        </div>
+      </div>
+      <div class="phase-card-body">
+        <div class="task-rows">
+          <div class="task-row">
+            <span class="task-owner own-ds">DS</span>
+            <div class="task-content"><strong>RAG pipeline complete by end of Day 6.</strong> Corpus chunked at 200–350 tokens with 40-token overlap, embedded with text-embedding-3-small, stored in ChromaDB locally. k=4 retrieval. All unstructured documents ingested.
+              <div class="task-note">Checkpoint: ChromaDB ingestion must be started by end of Day 4 (G3).</div>
+            </div>
+          </div>
+          <div class="task-divider"></div>
+          <div class="task-row">
+            <span class="task-owner own-ds">DS</span>
+            <div class="task-content"><strong>Query classifier + system prompt + numeric guardrail.</strong> Keyword-based routing (~30 lines). Structured queries → lookup table. Unstructured → RAG. Ambiguous → both. System prompt receives lookup data + RAG chunks + query, returns blended prose with citations. Guardrail post-processor verifies every number in the response exists verbatim in the source context.</div>
+          </div>
+          <div class="task-divider"></div>
+          <div class="task-row">
+            <span class="task-owner own-eng">ENG</span>
+            <div class="task-content"><strong>SSE streaming renderer.</strong> Consumes token events from FastAPI, appends token-by-token to message in real time. No visible chunking. Builds against stub until DS endpoint is live Day 7.
+              <div class="task-note">No model switching after Day 3 — system prompt tuning is model-specific and costs 1–2 days to re-tune.</div>
+            </div>
+          </div>
+          <div class="task-divider"></div>
+          <div class="task-row">
+            <span class="task-owner own-eng">ENG</span>
+            <div class="task-content"><strong>Question chips, source attribution panel, Demo Mode, graceful failure UI.</strong> 5 chips above input — click populates field, CEO presses Enter. Collapsible citation panel renders from done event. Demo Mode (?demo=true param) serves pre-cached responses for 5 scripted questions with simulated streaming. Fallback UI: calm message, zero stack traces, zero raw error strings.</div>
+          </div>
+          <div class="task-divider"></div>
+          <div class="task-row">
+            <span class="task-owner own-pm">PM</span>
+            <div class="task-content"><strong>Pitch deck and commercial ask.</strong> Problem framing, solution vision, prototype walkthrough narrative, paid discovery close. Runs in parallel to technical build — not a squad task.</div>
+          </div>
+        </div>
+      </div>
+      <div class="gate-checkpoint">
+        <div class="gate-icon gc-warn">G3</div>
+        <div class="gate-text">
+          <strong>Pass:</strong> Lookup JSON complete (40+ query variants). ChromaDB ingestion started.
+          <span class="escalation-warn">Fail: Second DS activated for Days 5–8. No grace period. PM notifies leadership immediately.</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- INTEGRATION -->
+    <div class="phase-card">
+      <div class="phase-card-hd">
+        <div class="phase-accent" style="background:#1c7840;"></div>
+        <div class="phase-hd-inner">
+          <span class="phase-name">Phase 3 · Integration</span>
+          <div class="phase-meta">
+            <span class="phase-days-badge">Days 7–9 · D8–9 weekend</span>
+            <span class="gate-badge gate-warn">G4 · End D7</span>
+          </div>
+        </div>
+      </div>
+      <div class="phase-card-body">
+        <div class="task-rows">
+          <div class="task-row">
+            <span class="task-owner own-ds">DS</span>
+            <div class="task-content"><strong>FastAPI SSE endpoint live by end of Day 7.</strong> POST /api/query streaming token events then done event with citation JSON. Unit tests covering guardrail pass and fail cases. All DS-side components wired together and tested in isolation before handing to ENG.</div>
+          </div>
+          <div class="task-divider"></div>
+          <div class="task-row">
+            <span class="task-owner own-eng">ENG</span>
+            <div class="task-content"><strong>Full end-to-end integration.</strong> React front-end wired to live DS endpoint. All 5 scripted questions smoke tested end-to-end. Latency measured on demo hardware — first token must appear within 2 seconds.
+              <div class="task-note">D8–D9 are weekend days. DS integration QA and ENG smoke testing continue. PM reachable for scope decisions.</div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="gate-checkpoint">
+        <div class="gate-icon gc-warn">G4</div>
+        <div class="gate-text">
+          <strong>Pass:</strong> ≥3 of 5 scripted questions returning passing answers end-to-end by end of Day 7.
+          <span class="escalation-warn">Fail (&lt;3 pass): all nice-to-haves cancelled. Fail (&lt;2 pass): leadership escalation, scope review same day.</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- VALIDATION -->
+    <div class="phase-card">
+      <div class="phase-card-hd">
+        <div class="phase-accent" style="background:#b86000;"></div>
+        <div class="phase-hd-inner">
+          <span class="phase-name">Phase 4 · Validation</span>
+          <div class="phase-meta">
+            <span class="phase-days-badge">Days 10–12</span>
+            <span class="gate-badge gate-crit">G5 · End D12 · pitch go/no-go</span>
+          </div>
+        </div>
+      </div>
+      <div class="phase-card-body">
+        <div class="task-rows">
+          <div class="task-row">
+            <span class="task-owner own-pm">PM</span>
+            <div class="task-content"><strong>15-query red-team on Days 11–12.</strong> PM runs a predetermined adversarial query set. Covers: edge cases, unusual phrasings, multi-part questions, off-topic queries, and numeric stress tests. Pass/fail logged per query. All failures briefed to DS + ENG immediately.
+              <div class="task-note">Target: ≥10 of 15 off-script queries return plausible, non-embarrassing responses.</div>
+            </div>
+          </div>
+          <div class="task-divider"></div>
+          <div class="task-row">
+            <span class="task-owner own-ds">DS</span>
+            <div class="task-content"><strong>Red-team fixes and guardrail stress testing.</strong> All numeric failures from red-team patched. Guardrail tested to confirm zero hallucinated numbers escape to UI under adversarial conditions.</div>
+          </div>
+          <div class="task-divider"></div>
+          <div class="task-row">
+            <span class="task-owner own-eng">ENG</span>
+            <div class="task-content"><strong>UI polish, visual QA, and Demo Mode final cache.</strong> Feedback from red-team observations incorporated. Demo Mode pre-cached responses updated to match any data changes made during validation. Streaming cadence confirmed visually identical between live and cached.</div>
+          </div>
+        </div>
+      </div>
+      <div class="gate-checkpoint">
+        <div class="gate-icon gc-crit">G5</div>
+        <div class="gate-text">
+          <strong>Pass:</strong> 5/5 scripted questions pass. Zero visible errors. Zero hallucinated numbers. ≥10/15 off-script plausible.
+          <span class="escalation">Fail: Day 13 used for emergency fixes. PM makes pitch go/no-go call. If no-go: PM contacts FreshChoice to reschedule.</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- LOCK -->
+    <div class="phase-card">
+      <div class="phase-card-hd">
+        <div class="phase-accent" style="background:#b83030;"></div>
+        <div class="phase-hd-inner">
+          <span class="phase-name">Phase 5 · Lock &amp; prep</span>
+          <div class="phase-meta">
+            <span class="phase-days-badge">Days 13–14</span>
+            <span class="gate-badge gate-ok">G6 · End D13 · code freeze</span>
+          </div>
+        </div>
+      </div>
+      <div class="phase-card-body">
+        <div class="task-rows">
+          <div class="task-row">
+            <span class="task-owner own-eng">ENG</span>
+            <div class="task-content"><strong>Code freeze end of Day 13.</strong> No changes after this point without joint TL + PM written sign-off. Demo environment locked. ENG confirms app runs cleanly on pitch venue hardware — no surprises on the day.</div>
+          </div>
+          <div class="task-divider"></div>
+          <div class="task-row">
+            <span class="task-owner own-pm">PM</span>
+            <div class="task-content"><strong>Full dress rehearsal on pitch laptop Day 13.</strong> PM walks through the complete demo script while ENG operates the machine. All 5 scripted questions triggered in demo order. Timing measured. Narrative transitions practised.</div>
+          </div>
+          <div class="task-divider"></div>
+          <div class="task-row">
+            <span class="task-owner own-pm">PM</span>
+            <div class="task-content"><strong>Day 14: final prep and travel.</strong> Final review of pitch materials. Confirm ENG is physically on-site at venue for Day 15. Demo Mode tested on venue WiFi — confirm offline fallback if needed.</div>
+          </div>
+        </div>
+      </div>
+      <div class="gate-checkpoint">
+        <div class="gate-icon gc-ok">G6</div>
+        <div class="gate-text">
+          <strong>Pass:</strong> Code frozen. Demo tested on pitch laptop. ENG confirms venue hardware clean.
+          <span class="escalation-ok">Any post-freeze change: TL + PM written sign-off required. Risk flagged immediately.</span>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+
+<!-- ══ 02: OPERATING RHYTHM ══ -->
+<div class="section" id="s2">
+  <div class="section-hd">
+    <span class="sn">02</span>
+    <span class="st">Operating rhythm</span>
+    <div class="section-line"></div>
+  </div>
+  <p class="prose">Three ceremonies. One escalation rule. Under 14-day pressure, anything more is overhead.</p>
+  <div class="rhythm-grid">
+    <div class="rhythm-card">
+      <div class="rhythm-title"><div class="rhythm-dot" style="background:var(--g-acc);"></div>Daily standup · 9am · 15 min</div>
+      <div class="rhythm-items">
+        <div class="rhythm-item">What shipped yesterday?</div>
+        <div class="rhythm-item">What ships today?</div>
+        <div class="rhythm-item">What is blocked — what does PM need to decide?</div>
+        <div class="rhythm-item">PM resolves blockers within 2 hours, not at tomorrow's standup</div>
+        <div class="rhythm-item">Async update in squad channel if anyone is remote</div>
+      </div>
+    </div>
+    <div class="rhythm-card">
+      <div class="rhythm-title"><div class="rhythm-dot" style="background:var(--b-mid);"></div>Gate reviews · on gate day · 30 min</div>
+      <div class="rhythm-items">
+        <div class="rhythm-item">PM chairs, TL present</div>
+        <div class="rhythm-item">Gate criteria checked — binary pass/fail, not a discussion</div>
+        <div class="rhythm-item">Escalation action fires immediately on failure — not deferred</div>
+        <div class="rhythm-item">Written record posted to squad channel within 1 hour</div>
+      </div>
+    </div>
+    <div class="rhythm-card">
+      <div class="rhythm-title"><div class="rhythm-dot" style="background:var(--a-mid);"></div>Async rules · always on</div>
+      <div class="rhythm-items">
+        <div class="rhythm-item">All tasks tracked on shared board (Notion / Linear)</div>
+        <div class="rhythm-item">No undisclosed blockers — surface immediately to PM</div>
+        <div class="rhythm-item">API schema changes need PM written approval after Day 6</div>
+        <div class="rhythm-item">No unilateral scope additions — PM decides</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<!-- ══ 03: SQUAD COMMITMENTS ══ -->
+<div class="section" id="s3">
+  <div class="section-hd">
+    <span class="sn">03</span>
+    <span class="st">Squad commitments</span>
+    <div class="section-line"></div>
+  </div>
+  <p class="prose">These are operating conditions each squad member commits to at the start of the sprint — not aspirations. Non-performance on any item triggers an immediate PM escalation, not a conversation at the next standup.</p>
+
+  <div class="commit-grid">
+    <div class="commit-block cb-pm">
+      <div class="commit-hd">
+        <span class="commit-role-badge crb-pm">PM</span>
+        <span class="commit-person">Deal Captain</span>
+      </div>
+      <div class="commit-item">Deliver 5 demo questions + data template to DS before 9am Day 1 — no exceptions</div>
+      <div class="commit-item">Reachable within 2 hours for any blocker — every day including weekends</div>
+      <div class="commit-item">Make scope and priority calls on the day — never defer to tomorrow's standup</div>
+      <div class="commit-item">Run 15-query adversarial red-team on Days 11–12, log every pass/fail, brief squad on failures same day</div>
+      <div class="commit-item">Own pitch narrative, deck, and commercial ask entirely — not a squad task</div>
+      <div class="commit-item">Make the pitch go/no-go call at Day 12. If going: PM presents, ENG operates the machine</div>
+    </div>
+
+    <div class="commit-block cb-ds">
+      <div class="commit-hd">
+        <span class="commit-role-badge crb-ds">DS</span>
+        <span class="commit-person">Data Scientist</span>
+      </div>
+      <div class="commit-item">Data authoring complete by end of Day 4 — lookup JSON done, ChromaDB ingestion started</div>
+      <div class="commit-item">FastAPI SSE endpoint live, all 5 questions passing on DS side by end of Day 7</div>
+      <div class="commit-item">Numeric guardrail post-processor unit-tested before wiring to engineer</div>
+      <div class="commit-item">No model switching after Day 3 — system prompt is model-specific, re-tuning costs 2 days</div>
+      <div class="commit-item">Attend all gate reviews with a written pass/fail assessment of own workstream</div>
+      <div class="commit-item">Flag data consistency risks to PM the day they are identified — not the day they block</div>
+    </div>
+
+    <div class="commit-block cb-eng">
+      <div class="commit-hd">
+        <span class="commit-role-badge crb-eng">ENG</span>
+        <span class="commit-person">Engineer</span>
+      </div>
+      <div class="commit-item">Build all UI components against agreed API schema from Day 3 — no unilateral changes</div>
+      <div class="commit-item">Demo Mode live and tested against pre-cached responses by end of Day 5</div>
+      <div class="commit-item">Zero Python tracebacks or raw error strings ever visible in the UI — no exceptions</div>
+      <div class="commit-item">Full E2E integration and all 5 questions passing by end of Day 9</div>
+      <div class="commit-item">Physically present at pitch venue on Day 15, operating the demo machine</div>
+      <div class="commit-item">Code freeze respected from Day 13 — any exception flagged and documented with PM</div>
+    </div>
+
+    <div class="commit-block cb-all">
+      <div class="commit-hd">
+        <span class="commit-role-badge crb-all">All</span>
+        <span class="commit-person">Whole squad</span>
+      </div>
+      <div class="commit-item">Attend daily standup at 9am. If remote: async update in squad channel before 9am</div>
+      <div class="commit-item">No scope additions without PM written approval — nice-to-haves cancelled if any gate is at risk</div>
+      <div class="commit-item">Surface blockers immediately — never hold a blocker overnight without flagging it</div>
+      <div class="commit-item">Treat gate failure as a team event — escalate to Calibrax leadership same day</div>
+      <div class="commit-item">Weekend availability (D8–D9): a few hours each day for QA and integration — not a full day</div>
+    </div>
+  </div>
+</div>
+
+
+<!-- ══ 04: ESCALATION MATRIX ══ -->
+<div class="section" id="s4">
+  <div class="section-hd">
+    <span class="sn">04</span>
+    <span class="st">Escalation matrix — <em>pass criteria &amp; failure actions</em></span>
+    <div class="section-line"></div>
+  </div>
+  <p class="prose">Every gate has a binary pass condition and a pre-defined escalation action. The PM makes the call on the day — there is no "let's revisit tomorrow." Ambiguity at a gate checkpoint is itself a failure state.</p>
+
+  <table class="esc-table">
+    <thead>
+      <tr>
+        <th style="width:7%">Gate</th>
+        <th style="width:9%">Day</th>
+        <th style="width:11%">Severity</th>
+        <th style="width:36%">Pass condition</th>
+        <th>If gate fails — escalation action</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>G1</td>
+        <td>End D1</td>
+        <td><span class="badge badge-crit">Critical</span></td>
+        <td><span class="pass-text">5 demo questions locked and delivered to DS. LLM API keys working. DS-2 named as contingency. Data template in squad channel before 9am.</span></td>
+        <td><span class="fail-text" style="margin-top:0;border-top:none;padding-top:0;">PM escalates to Calibrax leadership same day. Sprint pauses until all conditions are met. No data work begins on assumptions.</span></td>
+      </tr>
+      <tr>
+        <td>G2</td>
+        <td>End D2</td>
+        <td><span class="badge badge-crit">Critical</span></td>
+        <td><span class="pass-text">API response schema agreed and signed off by DS + ENG. Written to squad channel. TL has reviewed.</span></td>
+        <td><span class="fail-text" style="margin-top:0;border-top:none;padding-top:0;">TL chairs emergency session Day 3 AM. No ENG UI work continues until schema is locked. Any work done on wrong schema is discarded.</span></td>
+      </tr>
+      <tr>
+        <td>G3</td>
+        <td>End D4</td>
+        <td><span class="badge badge-warn">Warning</span></td>
+        <td><span class="pass-text">Lookup JSON complete with 40+ query variants. ChromaDB ingestion started. At least 50% of corpus chunked and embedded.</span></td>
+        <td><span class="fail-text-warn" style="margin-top:0;border-top:none;padding-top:0;">Second DS activated immediately for Days 5–8, no grace period. PM notifies Calibrax leadership. No further scope additions permitted.</span></td>
+      </tr>
+      <tr>
+        <td>G4</td>
+        <td>End D7</td>
+        <td><span class="badge badge-warn">Warning</span></td>
+        <td><span class="pass-text">At least 3 of 5 scripted questions passing end-to-end through the fully wired system. First-token latency ≤ 2 seconds on demo hardware.</span></td>
+        <td><span class="fail-text-warn" style="margin-top:0;border-top:none;padding-top:0;">If 2 pass: nice-to-haves cancelled, scope reviewed same day. If fewer than 2 pass: leadership escalation, emergency scope reduction, second DS extended.</span></td>
+      </tr>
+      <tr>
+        <td>G5</td>
+        <td>End D12</td>
+        <td><span class="badge badge-crit">Critical</span></td>
+        <td><span class="pass-text">All 5 scripted questions pass. Zero visible errors. Zero hallucinated numbers. At least 10 of 15 off-script queries return plausible, non-embarrassing responses.</span></td>
+        <td><span class="fail-text" style="margin-top:0;border-top:none;padding-top:0;">Day 13 used for emergency fixes. PM makes pitch go/no-go call by end of Day 13. If no-go: contact FreshChoice to reschedule. Partial (4/5): adjust demo script, pitch with 4 questions.</span></td>
+      </tr>
+      <tr>
+        <td>G6</td>
+        <td>End D13</td>
+        <td><span class="badge badge-ok">Freeze</span></td>
+        <td><span class="pass-text">Code frozen. Demo Mode tested on pitch laptop. ENG confirms app runs cleanly on venue hardware. All 5 cached responses streaming correctly.</span></td>
+        <td><span class="fail-text-ok" style="margin-top:0;border-top:none;padding-top:0;">Any post-freeze change requires joint TL + PM written sign-off. Change is logged. Risk flagged to PM immediately — no silent hotfixes.</span></td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+
+
+<div class="doc-footer">
+  <div class="footer-l">Calibrax Internal — Confidential · Sprint Plan v1.0 Final</div>
+  <div class="footer-r">Nexus Command Console · FreshChoice Pitch Sprint · D4 of 5</div>
+</div>
+
+</div>
+
+<script>
+const obs = new IntersectionObserver(entries => {
+  entries.forEach(e => {
+    if(e.isIntersecting){e.target.classList.add('visible');obs.unobserve(e.target);}
+  });
+},{threshold:0.05,rootMargin:'0px 0px -30px 0px'});
+document.querySelectorAll('.section').forEach((el,i)=>{
+  el.style.transitionDelay=`${i*0.06}s`;
+  obs.observe(el);
+});
+</script>
+</body>
+</html>
