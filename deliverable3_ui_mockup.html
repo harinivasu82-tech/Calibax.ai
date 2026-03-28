@@ -1,0 +1,842 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Deliverable 3 — UI Mockup · FreshChoice Intelligence Hub</title>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,200;0,9..144,400;1,9..144,200;1,9..144,400&family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+:root{
+  --bg:#f2f0e9;--surface:#fff;--surface2:#f0ede6;--surface3:#e8e4db;
+  --border:rgba(0,0,0,.065);--border-md:rgba(0,0,0,.11);
+  --text:#17160f;--text2:#52503f;--text3:#97937f;--text4:#c4c0ae;
+  --g:#14582e;--g-mid:#1c7840;--g-acc:#23c45e;--g-bg:#e2f2e9;
+  --a:#6e3a00;--a-mid:#b86000;--a-bg:#fdf0dc;
+  --r:#801a1a;--r-mid:#b83030;--r-bg:#fceaea;
+  --b:#142c6a;--b-mid:#1e48a8;--b-bg:#e4ecfb;
+  --nav-bg:#0b0f0b;--nav-border:rgba(255,255,255,.07);
+}
+html{scroll-behavior:smooth;font-size:15px;}
+body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);line-height:1.7;-webkit-font-smoothing:antialiased;padding-top:52px;}
+body::before{content:'';position:fixed;inset:0;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='300'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='.028'/%3E%3C/svg%3E");pointer-events:none;z-index:0;}
+.page{position:relative;z-index:1;max-width:1080px;margin:0 auto;padding:56px 48px 120px;}
+.doc-nav{position:fixed;top:0;left:0;right:0;z-index:200;height:52px;background:var(--nav-bg);border-bottom:1px solid var(--nav-border);display:flex;align-items:center;justify-content:space-between;padding:0 48px;backdrop-filter:blur(16px);}
+.doc-nav-left{display:flex;align-items:center;gap:20px;}
+.doc-nav-back{display:flex;align-items:center;gap:7px;font-family:'DM Mono',monospace;font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:rgba(255,255,255,.32);text-decoration:none;transition:color .2s,gap .18s;}
+.doc-nav-back:hover{color:var(--g-acc);gap:11px;}
+.doc-nav-back-arrow{font-size:13px;transition:transform .2s;display:inline-block;}
+.doc-nav-back:hover .doc-nav-back-arrow{transform:translateX(-3px);}
+.doc-nav-divider{width:1px;height:18px;background:rgba(255,255,255,.09);}
+.doc-nav-brand{display:flex;align-items:center;gap:7px;font-family:'DM Mono',monospace;font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--g-acc);}
+.doc-nav-dot{width:6px;height:6px;border-radius:50%;background:var(--g-acc);animation:navdot 2.5s infinite;}
+@keyframes navdot{0%,100%{opacity:1;transform:scale(1);}50%{opacity:.3;transform:scale(.7);}}
+.doc-nav-right{display:flex;align-items:center;gap:16px;}
+.doc-nav-label{font-family:'DM Mono',monospace;font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:rgba(255,255,255,.2);}
+.doc-nav-pills{display:flex;gap:4px;}
+.doc-nav-pill{width:20px;height:3px;border-radius:2px;background:rgba(255,255,255,.08);transition:background .2s;}
+.doc-nav-pill.done{background:rgba(35,196,94,.32);}
+.doc-nav-pill.active{background:var(--g-acc);}
+.header{margin-bottom:52px;padding:40px 44px 36px;background:var(--text);border-radius:16px;position:relative;overflow:hidden;}
+.header::before{content:'';position:absolute;top:-80px;right:-60px;width:300px;height:300px;border-radius:50%;background:radial-gradient(circle,rgba(35,196,94,.18) 0%,transparent 70%);pointer-events:none;}
+.header::after{content:'';position:absolute;inset:0;background-image:linear-gradient(rgba(255,255,255,.03) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.03) 1px,transparent 1px);background-size:40px 40px;pointer-events:none;}
+.header>*{position:relative;z-index:1;}
+.doc-eyebrow{font-family:'DM Mono',monospace;font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:var(--g-acc);margin-bottom:14px;display:flex;align-items:center;gap:10px;}
+.doc-eyebrow::before{content:'';width:20px;height:1px;background:var(--g-acc);}
+.doc-title{font-family:'Fraunces',serif;font-size:40px;font-weight:200;line-height:1.08;letter-spacing:-.02em;color:#fff;margin-bottom:8px;}
+.doc-title em{font-style:italic;color:#6dd49a;}
+.doc-subtitle{font-size:14px;color:rgba(255,255,255,.45);margin-bottom:20px;font-weight:300;max-width:560px;line-height:1.65;}
+.meta-row{display:flex;flex-wrap:wrap;gap:6px;margin-top:16px;}
+.meta-pill{font-family:'DM Mono',monospace;font-size:10px;padding:4px 10px;border-radius:3px;border:1px solid rgba(255,255,255,.12);color:rgba(255,255,255,.45);letter-spacing:.04em;}
+.meta-pill.accent{border-color:rgba(35,196,94,.35);color:var(--g-acc);background:rgba(35,196,94,.1);}
+.framing{background:var(--surface);border:1px solid var(--border-md);border-left:4px solid var(--g-acc);border-radius:0 12px 12px 0;padding:20px 24px;margin-bottom:56px;box-shadow:0 1px 3px rgba(0,0,0,.04),0 4px 16px rgba(0,0,0,.03);}
+.framing-title{font-family:'DM Mono',monospace;font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:var(--g-mid);margin-bottom:10px;}
+.framing-body{font-size:13.5px;color:var(--text2);line-height:1.75;max-width:700px;margin-bottom:14px;}
+.framing-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-top:14px;}
+.layer-card{background:var(--surface2);border-radius:8px;padding:12px 14px;border:1px solid var(--border);}
+.layer-badge{font-family:'DM Mono',monospace;font-size:9px;letter-spacing:.08em;text-transform:uppercase;padding:2px 7px;border-radius:3px;display:inline-block;margin-bottom:6px;font-weight:500;}
+.lb-proto{background:var(--g-bg);color:var(--g);border:1px solid rgba(28,120,64,.22);}
+.lb-disc{background:var(--a-bg);color:var(--a-mid);border:1px solid rgba(184,96,0,.2);}
+.lb-vision{background:var(--b-bg);color:var(--b-mid);border:1px solid rgba(30,72,168,.2);}
+.layer-title{font-size:12.5px;font-weight:500;color:var(--text);margin-bottom:3px;}
+.layer-desc{font-size:11.5px;color:var(--text3);line-height:1.6;}
+.section{margin-bottom:72px;opacity:0;transform:translateY(18px);transition:opacity .65s ease,transform .65s ease;}
+.section.visible{opacity:1;transform:translateY(0);}
+.section-hd{display:flex;align-items:center;gap:14px;margin-bottom:28px;padding-bottom:14px;border-bottom:1px solid var(--border-md);position:relative;overflow:hidden;}
+.section-hd::after{content:'';position:absolute;bottom:-1px;left:0;width:40px;height:2px;background:var(--g-acc);transition:width .45s cubic-bezier(.25,.46,.45,.94);}
+.section:hover .section-hd::after{width:100%;}
+.sn{font-family:'DM Mono',monospace;font-size:10px;background:var(--surface3);color:var(--text3);border:1px solid var(--border-md);border-radius:4px;padding:2px 7px;letter-spacing:.08em;flex-shrink:0;transition:background .2s,color .2s,border-color .2s;}
+.section:hover .sn{background:var(--g-bg);color:var(--g);border-color:rgba(35,196,94,.3);}
+.st{font-family:'Fraunces',serif;font-size:26px;font-weight:200;color:var(--text);letter-spacing:-.015em;line-height:1.2;}
+.st em{font-style:italic;color:var(--g);}
+.section-line{flex:1;height:1px;background:var(--border);}
+.screen-meta{margin-bottom:16px;}
+.screen-label{font-family:'DM Mono',monospace;font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:var(--text3);margin-bottom:6px;display:flex;align-items:center;gap:8px;}
+.scope-tag{font-family:'DM Mono',monospace;font-size:9px;padding:2px 8px;border-radius:3px;font-weight:500;letter-spacing:.06em;text-transform:uppercase;}
+.st-proto{background:var(--g-bg);color:var(--g);border:1px solid rgba(28,120,64,.22);}
+.screen-title{font-family:'Fraunces',serif;font-size:20px;font-weight:200;color:var(--text);margin-bottom:4px;}
+.screen-desc{font-size:13.5px;color:var(--text2);line-height:1.7;max-width:700px;margin-bottom:16px;}
+.browser{background:#1a1d1a;border-radius:14px;overflow:hidden;box-shadow:0 24px 64px rgba(0,0,0,.38),0 4px 16px rgba(0,0,0,.22),0 0 0 1px rgba(255,255,255,.04);transition:box-shadow .3s;}
+.browser:hover{box-shadow:0 32px 80px rgba(0,0,0,.45),0 8px 24px rgba(0,0,0,.25),0 0 0 1px rgba(35,196,94,.1);}
+.browser-bar{background:#111411;padding:10px 16px;display:flex;align-items:center;gap:10px;border-bottom:1px solid rgba(255,255,255,.05);}
+.browser-dots{display:flex;gap:6px;}
+.bd{width:11px;height:11px;border-radius:50%;}
+.bd-r{background:#ff5f57;}.bd-y{background:#febc2e;}.bd-g{background:#28c840;}
+.browser-url{flex:1;background:#0a0c0a;border-radius:5px;padding:5px 12px;font-family:'DM Mono',monospace;font-size:11px;color:rgba(255,255,255,.25);margin:0 8px;}
+.browser-url span{color:rgba(255,255,255,.45);}
+.screen-frame{width:100%;height:700px;border:none;display:block;background:#0d0f0d;}
+.screen-frame.tall{height:820px;}
+.annotations{margin-top:20px;display:grid;grid-template-columns:repeat(3,1fr);gap:10px;}
+.anno{background:var(--surface);border:1px solid var(--border-md);border-radius:10px;padding:14px 16px;display:flex;gap:12px;align-items:flex-start;transition:border-color .2s,transform .2s,box-shadow .2s;cursor:default;}
+.anno:hover{border-color:rgba(35,196,94,.28);transform:translateY(-2px);box-shadow:0 4px 20px rgba(0,0,0,.08);}
+.anno-num{width:22px;height:22px;border-radius:50%;background:var(--g-acc);color:#fff;font-family:'DM Mono',monospace;font-size:10px;font-weight:500;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:1px;}
+.anno-title{font-size:12.5px;font-weight:500;color:var(--text);margin-bottom:3px;}
+.anno-body{font-size:12px;color:var(--text3);line-height:1.6;}
+.us-tag{font-family:'DM Mono',monospace;font-size:9px;background:var(--g-bg);color:var(--g-mid);border:1px solid rgba(28,120,64,.2);border-radius:3px;padding:1px 5px;margin-left:3px;letter-spacing:.04em;}
+.ds-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin:20px 0;}
+.ds-card{background:var(--surface);border:1px solid var(--border-md);border-radius:10px;padding:18px 20px;transition:box-shadow .2s,transform .2s;}
+.ds-card:hover{box-shadow:0 4px 18px rgba(0,0,0,.07);transform:translateY(-2px);}
+.ds-card-title{font-family:'DM Mono',monospace;font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:var(--text3);margin-bottom:12px;}
+.color-row{display:flex;align-items:center;gap:10px;margin-bottom:7px;font-family:'DM Mono',monospace;font-size:12px;}
+.color-swatch{width:16px;height:16px;border-radius:3px;flex-shrink:0;}
+.source-pills{display:flex;gap:6px;flex-wrap:wrap;margin-top:8px;}
+.source-pill{font-family:'DM Mono',monospace;font-size:10px;padding:3px 8px;border-radius:4px;}
+.prose{font-size:14px;color:var(--text2);line-height:1.85;margin-bottom:14px;max-width:700px;}
+.prose strong{color:var(--text);font-weight:500;}
+.doc-footer{margin-top:80px;padding:22px 0;border-top:1px solid var(--border-md);display:flex;justify-content:space-between;align-items:center;}
+.footer-l{font-family:'DM Mono',monospace;font-size:10px;letter-spacing:.1em;color:var(--text3);text-transform:uppercase;}
+.footer-r{font-family:'DM Mono',monospace;font-size:10px;color:var(--text3);letter-spacing:.06em;}
+</style>
+</head>
+<body>
+
+<nav class="doc-nav">
+  <div class="doc-nav-left">
+    <a class="doc-nav-back" href="index.html"><span class="doc-nav-back-arrow">&#8592;</span> Back to overview</a>
+    <div class="doc-nav-divider"></div>
+    <div class="doc-nav-brand"><div class="doc-nav-dot"></div>Calibrax.ai</div>
+  </div>
+  <div class="doc-nav-right">
+    <div class="doc-nav-label">Deliverable 3 of 5</div>
+    <div class="doc-nav-pills">
+      <div class="doc-nav-pill done"></div>
+      <div class="doc-nav-pill done"></div>
+      <div class="doc-nav-pill active"></div>
+      <div class="doc-nav-pill"></div>
+      <div class="doc-nav-pill"></div>
+    </div>
+  </div>
+</nav>
+
+<div class="page">
+
+<div class="header">
+  <div class="doc-eyebrow">Calibrax &#183; Pitch Sprint &#183; Deliverable 3 of 5</div>
+  <div class="doc-title">UI Mockup &#8212; <em>FreshChoice Intelligence Hub</em></div>
+  <div class="doc-subtitle">High-fidelity screens of the Nexus Command Console prototype. Purpose: give the technical team a clear build spec showing what the user sees, how they interact, and what the outputs look like.</div>
+  <div class="meta-row">
+    <span class="meta-pill accent">3 Screens &#183; Prototype Scope</span>
+    <span class="meta-pill">Primary User: James Whitfield, CEO</span>
+    <span class="meta-pill">Viewport: 1280 &#215; 800px</span>
+    <span class="meta-pill">Tool: Stitch (Google)</span>
+    <span class="meta-pill">Stack: Tailwind &#183; Fraunces &#183; DM Sans &#183; DM Mono</span>
+  </div>
+</div>
+
+<div class="framing">
+  <div class="framing-title">How to read these screens &#8212; annotation guide</div>
+  <div class="framing-body">Each screen below is a live rendered prototype, not a screenshot. Every element is annotated with its PRD reference (US-01 through US-05). Three scope layers apply:</div>
+  <div class="framing-grid">
+    <div class="layer-card">
+      <div class="layer-badge lb-proto">Prototype scope</div>
+      <div class="layer-title">14-day sprint build</div>
+      <div class="layer-desc">Every element the DS and engineer must deliver. Directly maps to a must-have in PRD v0.3.</div>
+    </div>
+    <div class="layer-card">
+      <div class="layer-badge lb-disc">Discovery scope</div>
+      <div class="layer-title">Phase 1 &#8212; Weeks 1&#8211;8</div>
+      <div class="layer-desc">Designed but not built. Live connectors, proactive alerts, role switcher. Ready for the paid engagement.</div>
+    </div>
+    <div class="layer-card">
+      <div class="layer-badge lb-vision">Vision only</div>
+      <div class="layer-title">Full platform future state</div>
+      <div class="layer-desc">Navigation beyond Command Console, multi-market dashboards, mobile channel. Not in any current scope.</div>
+    </div>
+  </div>
+</div>
+
+
+<!-- SCREEN 1 -->
+<div class="section" id="s1">
+  <div class="section-hd">
+    <span class="sn">01</span>
+    <span class="st">Command Console &#8212; <em>idle state</em></span>
+    <div class="section-line"></div>
+  </div>
+  <div class="screen-meta">
+    <div class="screen-label"><span class="scope-tag st-proto">Prototype scope</span>Screen 1 of 3 &#183; Home / Empty State</div>
+    <div class="screen-title">The first thing James Whitfield sees</div>
+    <p class="screen-desc">No login, no onboarding. The interface loads directly here. Intelligence is already surfacing in the alert strip before the CEO has typed a single character. The five question chips are pre-validated and serve as the demo safety net.</p>
+  </div>
+  <div class="browser">
+    <div class="browser-bar">
+      <div class="browser-dots"><div class="bd bd-r"></div><div class="bd bd-y"></div><div class="bd bd-g"></div></div>
+      <div class="browser-url"><span>hub.freshchoice.internal</span>/intelligence</div>
+    </div>
+    <iframe class="screen-frame" srcdoc="<!DOCTYPE html>
+
+<html class=&quot;dark&quot; lang=&quot;en&quot;><head>
+<meta charset=&quot;utf-8&quot;/>
+<meta content=&quot;width=device-width, initial-scale=1.0&quot; name=&quot;viewport&quot;/>
+<title>FreshChoice Intelligence Hub — Command Console</title>
+<script src=&quot;https://cdn.tailwindcss.com?plugins=forms,container-queries&quot;></script>
+<link href=&quot;https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@1,9..144,100..900&amp;family=DM+Sans:ital,wght@0,100..1000;1,100..1000&amp;family=DM+Mono:ital,wght@0,300;0,400;0,500;1,300;1,400;1,500&amp;display=swap&quot; rel=&quot;stylesheet&quot;/>
+<link href=&quot;https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap&quot; rel=&quot;stylesheet&quot;/>
+<script id=&quot;tailwind-config&quot;>
+        tailwind.config = {
+            darkMode: &quot;class&quot;,
+            theme: {
+                extend: {
+                    colors: {
+                        &quot;on-secondary-container&quot;: &quot;#cbddff&quot;,&quot;on-primary-fixed-variant&quot;: &quot;#005322&quot;,&quot;inverse-surface&quot;: &quot;#e3e3df&quot;,&quot;on-background&quot;: &quot;#e3e3df&quot;,&quot;outline-variant&quot;: &quot;#3d4a3d&quot;,&quot;on-secondary&quot;: &quot;#003061&quot;,&quot;secondary&quot;: &quot;#a7c8ff&quot;,&quot;surface-container-lowest&quot;: &quot;#0d0f0d&quot;,&quot;primary&quot;: &quot;#4ce177&quot;,&quot;background&quot;: &quot;#121412&quot;,&quot;surface-dim&quot;: &quot;#121412&quot;,&quot;surface-variant&quot;: &quot;#333533&quot;,&quot;tertiary-container&quot;: &quot;#e49d1c&quot;,&quot;tertiary-fixed&quot;: &quot;#ffddb2&quot;,&quot;tertiary&quot;: &quot;#ffb94c&quot;,&quot;surface-container-highest&quot;: &quot;#333533&quot;,&quot;on-surface&quot;: &quot;#e3e3df&quot;,&quot;inverse-primary&quot;: &quot;#006e2f&quot;,&quot;surface-container&quot;: &quot;#1e201e&quot;,&quot;on-error&quot;: &quot;#690005&quot;,&quot;error-container&quot;: &quot;#93000a&quot;,&quot;on-tertiary-fixed&quot;: &quot;#291800&quot;,&quot;primary-fixed-dim&quot;: &quot;#4ce177&quot;,&quot;on-error-container&quot;: &quot;#ffdad6&quot;,&quot;on-tertiary&quot;: &quot;#442b00&quot;,&quot;on-primary-fixed&quot;: &quot;#002109&quot;,&quot;secondary-fixed-dim&quot;: &quot;#a7c8ff&quot;,&quot;on-secondary-fixed&quot;: &quot;#001b3c&quot;,&quot;on-secondary-fixed-variant&quot;: &quot;#004788&quot;,&quot;surface-tint&quot;: &quot;#4ce177&quot;,&quot;surface-bright&quot;: &quot;#383a37&quot;,&quot;on-surface-variant&quot;: &quot;#bccbb9&quot;,&quot;tertiary-fixed-dim&quot;: &quot;#ffb94c&quot;,&quot;error&quot;: &quot;#ffb4ab&quot;,&quot;on-primary-container&quot;: &quot;#004a1d&quot;,&quot;secondary-fixed&quot;: &quot;#d5e3ff&quot;,&quot;secondary-container&quot;: &quot;#0061b7&quot;,&quot;surface-container-low&quot;: &quot;#1a1c1a&quot;,&quot;on-tertiary-container&quot;: &quot;#583900&quot;,&quot;surface-container-high&quot;: &quot;#292a28&quot;,&quot;outline&quot;: &quot;#869585&quot;,&quot;on-tertiary-fixed-variant&quot;: &quot;#624000&quot;,&quot;primary-fixed&quot;: &quot;#6cfe90&quot;,&quot;inverse-on-surface&quot;: &quot;#2f312e&quot;,&quot;primary-container&quot;: &quot;#23c45e&quot;,&quot;on-primary&quot;: &quot;#003915&quot;,&quot;surface&quot;: &quot;#121412&quot;
+                    },
+                    fontFamily: {&quot;headline&quot;: [&quot;Fraunces&quot;, &quot;serif&quot;],&quot;body&quot;: [&quot;DM Sans&quot;, &quot;sans-serif&quot;],&quot;label&quot;: [&quot;DM Sans&quot;, &quot;sans-serif&quot;],&quot;mono&quot;: [&quot;DM Mono&quot;, &quot;monospace&quot;]},
+                    borderRadius: {&quot;DEFAULT&quot;: &quot;0.125rem&quot;, &quot;lg&quot;: &quot;0.25rem&quot;, &quot;xl&quot;: &quot;0.5rem&quot;, &quot;full&quot;: &quot;0.75rem&quot;},
+                },
+            },
+        }
+    </script>
+<style>
+        .material-symbols-outlined { font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24; }
+        body { font-family: 'DM Sans', sans-serif; background-color: #0d0f0d; color: #e3e3df; }
+        .fraunces-italic { font-family: 'Fraunces', serif; font-style: italic; }
+        .dm-mono { font-family: 'DM Mono', monospace; }
+        ::-webkit-scrollbar { width: 4px; }
+        ::-webkit-scrollbar-track { background: transparent; }
+        ::-webkit-scrollbar-thumb { background: #333533; border-radius: 10px; }
+    </style>
+</head>
+<body class=&quot;overflow-hidden&quot;>
+<aside class=&quot;fixed left-0 top-0 h-full w-[220px] z-50 bg-[#141714] flex flex-col py-6&quot;>
+<div class=&quot;px-6 mb-8&quot;>
+<div class=&quot;flex items-center gap-2 text-[13px] font-medium text-slate-100&quot;>
+<span class=&quot;material-symbols-outlined text-primary&quot;>terminal</span>
+<span class=&quot;font-bold tracking-tight&quot;>FRESHCHOICE</span>
+</div>
+<div class=&quot;text-[10px] font-mono text-slate-500 mt-0.5 pl-7&quot;>Intelligence Platform</div>
+</div>
+<nav class=&quot;flex-1 space-y-1&quot;>
+<a class=&quot;flex items-center gap-3 text-[#23c45e] border-l-[3px] border-[#23c45e] bg-[#1c201c] pl-3 py-2 transition-all&quot; href=&quot;#&quot;><span class=&quot;material-symbols-outlined text-[20px]&quot;>terminal</span><span class=&quot;text-[13px] font-medium&quot;>Command Console</span></a>
+<a class=&quot;flex items-center gap-3 text-slate-400 pl-[15px] py-2 transition-all hover:bg-[#1c201c] hover:text-[#23c45e]&quot; href=&quot;#&quot;><span class=&quot;material-symbols-outlined text-[20px]&quot;>auto_stories</span><span class=&quot;text-[13px] font-medium&quot;>Weekly Digest</span><span class=&quot;ml-auto mr-4 text-[10px] bg-surface-container px-1.5 py-0.5 rounded text-slate-400&quot;>3</span></a>
+<a class=&quot;flex items-center gap-3 text-slate-400 pl-[15px] py-2 transition-all hover:bg-[#1c201c] hover:text-[#23c45e]&quot; href=&quot;#&quot;><span class=&quot;material-symbols-outlined text-[20px]&quot;>warning</span><span class=&quot;text-[13px] font-medium&quot;>Escalations</span><span class=&quot;ml-auto mr-4 text-[10px] bg-error/20 text-error px-1.5 py-0.5 rounded&quot;>7</span></a>
+<a class=&quot;flex items-center gap-3 text-slate-400 pl-[15px] py-2 transition-all hover:bg-[#1c201c] hover:text-[#23c45e]&quot; href=&quot;#&quot;><span class=&quot;material-symbols-outlined text-[20px]&quot;>monitoring</span><span class=&quot;text-[13px] font-medium&quot;>Performance</span></a>
+<a class=&quot;flex items-center gap-3 text-slate-400 pl-[15px] py-2 transition-all hover:bg-[#1c201c] hover:text-[#23c45e]&quot; href=&quot;#&quot;><span class=&quot;material-symbols-outlined text-[20px]&quot;>inventory_2</span><span class=&quot;text-[13px] font-medium&quot;>Supply Chain</span></a>
+<a class=&quot;flex items-center gap-3 text-slate-400 pl-[15px] py-2 transition-all hover:bg-[#1c201c] hover:text-[#23c45e]&quot; href=&quot;#&quot;><span class=&quot;material-symbols-outlined text-[20px]&quot;>shopping_cart</span><span class=&quot;text-[13px] font-medium&quot;>E-Commerce</span></a>
+</nav>
+<div class=&quot;px-6 mt-auto&quot;>
+<div class=&quot;p-3 bg-surface-container rounded-lg mb-4 border border-white/5&quot;>
+<div class=&quot;flex items-center gap-3 mb-3&quot;>
+<div class=&quot;w-8 h-8 rounded bg-primary-container flex items-center justify-center text-on-primary font-bold text-xs&quot;>JW</div>
+<div><div class=&quot;text-[13px] font-medium text-slate-100&quot;>James Whitfield</div><div class=&quot;text-[10px] text-slate-500 uppercase tracking-wider dm-mono&quot;>CEO · All Markets</div></div>
+</div>
+<div class=&quot;flex gap-1&quot;>
+<span class=&quot;flex-1 text-center text-[10px] font-bold py-1 bg-primary/10 border border-primary/20 rounded text-primary dm-mono&quot;>AU</span>
+<span class=&quot;flex-1 text-center text-[10px] font-bold py-1 bg-primary/10 border border-primary/20 rounded text-primary dm-mono&quot;>NZ</span>
+<span class=&quot;flex-1 text-center text-[10px] font-bold py-1 bg-primary/10 border border-primary/20 rounded text-primary dm-mono&quot;>SG</span>
+</div>
+</div>
+</div>
+</aside>
+<main class=&quot;ml-[220px] w-[calc(100%-220px)] h-screen flex flex-col bg-[#0d0f0d]&quot;>
+<header class=&quot;h-16 flex justify-between items-center px-8 w-full bg-[#0d0f0d]/80 backdrop-blur-xl border-b border-white/5 z-40&quot;>
+<div class=&quot;flex items-center gap-4&quot;>
+<h1 class=&quot;fraunces-italic text-xl text-slate-100&quot;>Command Console</h1>
+<div class=&quot;flex items-center gap-1.5 px-2 py-0.5 rounded bg-primary/10 border border-primary/20&quot;>
+<span class=&quot;w-1.5 h-1.5 bg-primary rounded-full animate-pulse&quot;></span>
+<span class=&quot;dm-mono text-[9px] text-primary font-bold tracking-tighter uppercase&quot;>Live</span>
+</div>
+</div>
+<div class=&quot;flex items-center gap-3&quot;>
+<div class=&quot;flex items-center gap-2 text-sm text-slate-300 font-medium cursor-pointer hover:text-white&quot;><span>All Markets</span><span class=&quot;material-symbols-outlined text-[16px]&quot;>expand_more</span></div>
+<button class=&quot;px-4 py-1.5 border border-white/10 hover:bg-white/5 transition-all rounded text-xs font-bold text-slate-300 uppercase tracking-widest&quot;>Export</button>
+</div>
+</header>
+<div class=&quot;px-8 py-3 bg-[#121412] flex items-center gap-3 overflow-x-auto whitespace-nowrap border-b border-white/5&quot;>
+<span class=&quot;dm-mono text-[10px] text-slate-500 uppercase font-bold tracking-widest border-r border-white/10 pr-4 flex-shrink-0&quot;>Intelligence Feed</span>
+<div class=&quot;flex items-center gap-2 px-3 py-1.5 bg-amber-500/5 border border-amber-500/20 rounded flex-shrink-0&quot;><span class=&quot;w-2 h-2 rounded-full bg-amber-500 shadow-[0_0_8px_rgba(245,158,11,0.5)]&quot;></span><span class=&quot;text-xs font-medium text-amber-200/80&quot;>NZ Margin Alert</span><span class=&quot;dm-mono text-xs font-bold text-amber-500&quot;>–3.2%</span></div>
+<div class=&quot;flex items-center gap-2 px-3 py-1.5 bg-error/5 border border-error/20 rounded flex-shrink-0&quot;><span class=&quot;w-2 h-2 rounded-full bg-error shadow-[0_0_8px_rgba(255,180,171,0.5)]&quot;></span><span class=&quot;text-xs font-medium text-red-300&quot;>Auckland DC Delay</span><span class=&quot;dm-mono text-xs font-bold text-error&quot;>4 stores at risk</span></div>
+<div class=&quot;flex items-center gap-2 px-3 py-1.5 bg-secondary-container/5 border border-secondary-container/20 rounded flex-shrink-0&quot;><span class=&quot;w-2 h-2 rounded-full bg-secondary shadow-[0_0_8px_rgba(167,200,255,0.5)]&quot;></span><span class=&quot;text-xs font-medium text-secondary&quot;>E-Commerce</span><span class=&quot;dm-mono text-xs font-bold text-secondary&quot;>SG +18% WoW</span></div>
+<div class=&quot;flex items-center gap-2 px-3 py-1.5 bg-primary/5 border border-primary/20 rounded flex-shrink-0&quot;><span class=&quot;w-2 h-2 rounded-full bg-primary shadow-[0_0_8px_rgba(76,225,119,0.5)]&quot;></span><span class=&quot;text-xs font-medium text-on-surface-variant&quot;>AU Hypermarkets</span><span class=&quot;dm-mono text-xs font-bold text-primary&quot;>On track</span></div>
+</div>
+<div class=&quot;flex-1 flex flex-col items-center justify-center px-8 relative overflow-hidden&quot;>
+<div class=&quot;absolute inset-0 flex items-center justify-center opacity-[0.02] pointer-events-none&quot;><span class=&quot;material-symbols-outlined text-[600px]&quot;>terminal</span></div>
+<div class=&quot;max-w-[960px] w-full text-center z-10&quot;>
+<div class=&quot;mb-8 inline-flex items-center justify-center w-20 h-20 bg-[#1c201c] rounded-2xl border border-white/5 shadow-2xl&quot;>
+<span class=&quot;material-symbols-outlined text-[42px] text-primary/40&quot; style=&quot;font-variation-settings: 'FILL' 1;&quot;>terminal</span>
+</div>
+<h2 class=&quot;fraunces-italic text-3xl text-slate-200 mb-4&quot;>Ask anything about your business</h2>
+<p class=&quot;text-slate-500 text-sm max-w-md mx-auto mb-12&quot;>Query real-time supply chain data, margin performance, or regional logistics escalations across all markets.</p>
+<div class=&quot;flex flex-wrap justify-center gap-3&quot;>
+<button class=&quot;px-5 py-2.5 bg-surface-container-low border border-white/5 hover:border-primary/40 hover:bg-[#1c201c] transition-all rounded-xl text-sm text-slate-300&quot;>How did NZ fresh produce margins perform last month?</button>
+<button class=&quot;px-5 py-2.5 bg-surface-container-low border border-white/5 hover:border-primary/40 hover:bg-[#1c201c] transition-all rounded-xl text-sm text-slate-300&quot;>What are the top 3 regional escalations this week?</button>
+<button class=&quot;px-5 py-2.5 bg-surface-container-low border border-white/5 hover:border-primary/40 hover:bg-[#1c201c] transition-all rounded-xl text-sm text-slate-300&quot;>Which stores are at risk of missing weekly target?</button>
+<button class=&quot;px-5 py-2.5 bg-surface-container-low border border-white/5 hover:border-primary/40 hover:bg-[#1c201c] transition-all rounded-xl text-sm text-slate-300&quot;>What's driving margin compression in SG convenience?</button>
+<button class=&quot;px-5 py-2.5 bg-surface-container-low border border-white/5 hover:border-primary/40 hover:bg-[#1c201c] transition-all rounded-xl text-sm text-slate-300&quot;>Summarise supplier issues flagged in the last 7 days</button>
+</div>
+</div>
+</div>
+<footer class=&quot;px-8 pb-8 pt-4&quot;>
+<div class=&quot;max-w-[960px] mx-auto&quot;>
+<div class=&quot;relative group&quot;>
+<div class=&quot;absolute -inset-0.5 bg-gradient-to-r from-primary/20 to-secondary/20 rounded-xl blur opacity-30 group-focus-within:opacity-100 transition duration-1000&quot;></div>
+<div class=&quot;relative bg-[#141714] border border-white/10 rounded-xl flex items-end p-2 min-h-[56px] shadow-2xl&quot;>
+<textarea class=&quot;flex-1 bg-transparent border-none focus:ring-0 text-slate-100 placeholder-slate-600 py-3 px-4 resize-none h-auto overflow-hidden text-sm&quot; placeholder=&quot;Ask anything about your business…&quot; rows=&quot;1&quot;></textarea>
+<div class=&quot;flex items-center gap-2 p-1.5&quot;><button class=&quot;w-10 h-10 flex items-center justify-center bg-[#23c45e] text-[#003915] rounded-lg hover:scale-[0.98] active:scale-95 transition-all&quot;><span class=&quot;material-symbols-outlined&quot;>arrow_forward</span></button></div>
+</div>
+</div>
+<div class=&quot;mt-3 flex items-center justify-between&quot;>
+<div class=&quot;dm-mono text-[10px] text-slate-600 tracking-tight flex items-center gap-2&quot;><span class=&quot;w-1 h-1 bg-slate-600 rounded-full&quot;></span>5 questions pre-validated · Demo Mode ready</div>
+</div>
+</div>
+</footer>
+</main>
+</body></html>
+" title="Screen 1 &#8212; Idle State"></iframe>
+  </div>
+  <div class="annotations">
+    <div class="anno"><div class="anno-num">1</div><div><div class="anno-title">Proactive alert strip</div><div class="anno-body">Four intelligence chips surface automatically before the CEO types anything &#8212; NZ margin alert, Auckland DC delay, SG e-commerce, AU hypermarkets.<span class="us-tag">US-05</span></div></div></div>
+    <div class="anno"><div class="anno-num">2</div><div><div class="anno-title">5 pre-validated question chips</div><div class="anno-body">Each chip maps to a confirmed passing demo answer. Click populates the input &#8212; CEO presses Enter, keeping him in control of the interaction.<span class="us-tag">US-05</span></div></div></div>
+    <div class="anno"><div class="anno-num">3</div><div><div class="anno-title">Live badge + Demo Mode footer</div><div class="anno-body">&#8220;Live&#8221; badge confirms system is active. &#8220;5 questions pre-validated &#183; Demo Mode ready&#8221; footer signals to the engineer that the safety net is armed.</div></div></div>
+  </div>
+</div>
+
+
+<!-- SCREEN 2 -->
+<div class="section" id="s2">
+  <div class="section-hd">
+    <span class="sn">02</span>
+    <span class="st">Structured data response &#8212; <em>US-01</em></span>
+    <div class="section-line"></div>
+  </div>
+  <div class="screen-meta">
+    <div class="screen-label"><span class="scope-tag st-proto">Prototype scope</span>Screen 2 of 3 &#183; Structured Query Response</div>
+    <div class="screen-title">Layer 1: Financial data Q&amp;A with source attribution</div>
+    <p class="screen-desc">The CEO asks a margin question. The system returns blended prose and three data cards (March margin, Q3 average, variance) with a collapsed source attribution panel. The input shows the follow-up being typed &#8212; contextual chips replace idle chips.</p>
+  </div>
+  <div class="browser">
+    <div class="browser-bar">
+      <div class="browser-dots"><div class="bd bd-r"></div><div class="bd bd-y"></div><div class="bd bd-g"></div></div>
+      <div class="browser-url"><span>hub.freshchoice.internal</span>/intelligence</div>
+    </div>
+    <iframe class="screen-frame" srcdoc="<!DOCTYPE html>
+<html class=&quot;dark&quot; lang=&quot;en&quot;><head>
+<meta charset=&quot;utf-8&quot;/>
+<meta content=&quot;width=device-width, initial-scale=1.0&quot; name=&quot;viewport&quot;/>
+<title>Intelligence Hub - Command Console</title>
+<script src=&quot;https://cdn.tailwindcss.com?plugins=forms,container-queries&quot;></script>
+<link href=&quot;https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@1,9..144,100..900&amp;family=DM+Sans:ital,wght@0,100..1000;1,100..1000&amp;family=DM+Mono:ital,wght@0,300;0,400;0,500;1,300;1,400;1,500&amp;display=swap&quot; rel=&quot;stylesheet&quot;/>
+<link href=&quot;https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap&quot; rel=&quot;stylesheet&quot;/>
+<script id=&quot;tailwind-config&quot;>
+        tailwind.config = {
+            darkMode: &quot;class&quot;,
+            theme: {
+                extend: {
+                    colors: {
+                        &quot;on-secondary-container&quot;: &quot;#cbddff&quot;,&quot;on-primary-fixed-variant&quot;: &quot;#005322&quot;,&quot;inverse-surface&quot;: &quot;#e3e3df&quot;,&quot;on-background&quot;: &quot;#e3e3df&quot;,&quot;outline-variant&quot;: &quot;#3d4a3d&quot;,&quot;on-secondary&quot;: &quot;#003061&quot;,&quot;secondary&quot;: &quot;#a7c8ff&quot;,&quot;surface-container-lowest&quot;: &quot;#0d0f0d&quot;,&quot;primary&quot;: &quot;#4ce177&quot;,&quot;background&quot;: &quot;#121412&quot;,&quot;surface-dim&quot;: &quot;#121412&quot;,&quot;surface-variant&quot;: &quot;#333533&quot;,&quot;tertiary-container&quot;: &quot;#e49d1c&quot;,&quot;tertiary-fixed&quot;: &quot;#ffddb2&quot;,&quot;tertiary&quot;: &quot;#ffb94c&quot;,&quot;surface-container-highest&quot;: &quot;#333533&quot;,&quot;on-surface&quot;: &quot;#e3e3df&quot;,&quot;inverse-primary&quot;: &quot;#006e2f&quot;,&quot;surface-container&quot;: &quot;#1e201e&quot;,&quot;on-error&quot;: &quot;#690005&quot;,&quot;error-container&quot;: &quot;#93000a&quot;,&quot;on-tertiary-fixed&quot;: &quot;#291800&quot;,&quot;primary-fixed-dim&quot;: &quot;#4ce177&quot;,&quot;on-error-container&quot;: &quot;#ffdad6&quot;,&quot;on-tertiary&quot;: &quot;#442b00&quot;,&quot;on-primary-fixed&quot;: &quot;#002109&quot;,&quot;secondary-fixed-dim&quot;: &quot;#a7c8ff&quot;,&quot;on-secondary-fixed&quot;: &quot;#001b3c&quot;,&quot;on-secondary-fixed-variant&quot;: &quot;#004788&quot;,&quot;surface-tint&quot;: &quot;#4ce177&quot;,&quot;surface-bright&quot;: &quot;#383a37&quot;,&quot;on-surface-variant&quot;: &quot;#bccbb9&quot;,&quot;tertiary-fixed-dim&quot;: &quot;#ffb94c&quot;,&quot;error&quot;: &quot;#ffb4ab&quot;,&quot;on-primary-container&quot;: &quot;#004a1d&quot;,&quot;secondary-fixed&quot;: &quot;#d5e3ff&quot;,&quot;secondary-container&quot;: &quot;#0061b7&quot;,&quot;surface-container-low&quot;: &quot;#1a1c1a&quot;,&quot;on-tertiary-container&quot;: &quot;#583900&quot;,&quot;surface-container-high&quot;: &quot;#292a28&quot;,&quot;outline&quot;: &quot;#869585&quot;,&quot;on-tertiary-fixed-variant&quot;: &quot;#624000&quot;,&quot;primary-fixed&quot;: &quot;#6cfe90&quot;,&quot;inverse-on-surface&quot;: &quot;#2f312e&quot;,&quot;primary-container&quot;: &quot;#23c45e&quot;,&quot;on-primary&quot;: &quot;#003915&quot;,&quot;surface&quot;: &quot;#121412&quot;
+                    },
+                    fontFamily: {&quot;headline&quot;: [&quot;Fraunces&quot;, &quot;serif&quot;],&quot;body&quot;: [&quot;DM Sans&quot;, &quot;sans-serif&quot;],&quot;label&quot;: [&quot;DM Sans&quot;, &quot;sans-serif&quot;],&quot;mono&quot;: [&quot;DM Mono&quot;, &quot;monospace&quot;]},
+                    borderRadius: { &quot;DEFAULT&quot;: &quot;0.125rem&quot;, &quot;lg&quot;: &quot;0.25rem&quot;, &quot;xl&quot;: &quot;0.5rem&quot;, &quot;full&quot;: &quot;0.75rem&quot; },
+                },
+            },
+        }
+    </script>
+<style>
+        .material-symbols-outlined { font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24; vertical-align: middle; }
+        body { background-color: #0d0f0d; color: #e3e3df; font-family: 'DM Sans', sans-serif; }
+        .fraunces-italic { font-family: 'Fraunces', serif; font-style: italic; }
+        .dm-mono { font-family: 'DM Mono', monospace; }
+        .glass-sidebar { background: rgba(20, 23, 20, 0.8); backdrop-filter: blur(20px); }
+        .custom-scrollbar::-webkit-scrollbar { width: 4px; }
+        .custom-scrollbar::-webkit-scrollbar-track { background: transparent; }
+        .custom-scrollbar::-webkit-scrollbar-thumb { background: #3d4a3d; border-radius: 10px; }
+    </style>
+</head>
+<body class=&quot;bg-surface-container-lowest text-on-background overflow-hidden&quot;>
+<aside class=&quot;fixed left-0 top-0 h-full w-[220px] z-50 flex flex-col h-screen py-6 bg-[#141714] dark:bg-[#141714] shadow-none&quot;>
+<div class=&quot;px-6 mb-8&quot;>
+<div class=&quot;flex items-center gap-2&quot;>
+<span class=&quot;w-2 h-2 bg-[#23c45e] rounded-full animate-pulse&quot;></span>
+<span class=&quot;text-[13px] font-medium text-slate-100&quot;>FreshChoice</span>
+</div>
+<div class=&quot;text-[10px] font-mono text-slate-500 mt-0.5 pl-4&quot;>Intelligence Platform</div>
+</div>
+<nav class=&quot;flex-1 space-y-1&quot;>
+<a class=&quot;flex items-center gap-3 text-[#23c45e] border-l-[3px] border-[#23c45e] bg-[#1c201c] pl-3 py-2 transition-all group&quot; href=&quot;#&quot;>
+<span class=&quot;material-symbols-outlined text-[20px]&quot;>terminal</span>
+<span class=&quot;text-[13px] font-medium uppercase tracking-tight&quot;>Command Console</span>
+</a>
+<a class=&quot;flex items-center gap-3 text-slate-400 pl-[15px] py-2 transition-all hover:bg-[#1c201c] hover:text-[#23c45e] group&quot; href=&quot;#&quot;>
+<span class=&quot;material-symbols-outlined text-[20px]&quot;>auto_stories</span>
+<span class=&quot;text-[13px] font-medium uppercase tracking-tight&quot;>Weekly Digest</span>
+</a>
+<a class=&quot;flex items-center gap-3 text-slate-400 pl-[15px] py-2 transition-all hover:bg-[#1c201c] hover:text-[#23c45e] group&quot; href=&quot;#&quot;>
+<span class=&quot;material-symbols-outlined text-[20px]&quot;>warning</span>
+<span class=&quot;text-[13px] font-medium uppercase tracking-tight&quot;>Escalations</span>
+</a>
+<a class=&quot;flex items-center gap-3 text-slate-400 pl-[15px] py-2 transition-all hover:bg-[#1c201c] hover:text-[#23c45e] group&quot; href=&quot;#&quot;>
+<span class=&quot;material-symbols-outlined text-[20px]&quot;>monitoring</span>
+<span class=&quot;text-[13px] font-medium uppercase tracking-tight&quot;>Performance</span>
+</a>
+<a class=&quot;flex items-center gap-3 text-slate-400 pl-[15px] py-2 transition-all hover:bg-[#1c201c] hover:text-[#23c45e] group&quot; href=&quot;#&quot;>
+<span class=&quot;material-symbols-outlined text-[20px]&quot;>inventory_2</span>
+<span class=&quot;text-[13px] font-medium uppercase tracking-tight&quot;>Supply Chain</span>
+</a>
+<a class=&quot;flex items-center gap-3 text-slate-400 pl-[15px] py-2 transition-all hover:bg-[#1c201c] hover:text-[#23c45e] group&quot; href=&quot;#&quot;>
+<span class=&quot;material-symbols-outlined text-[20px]&quot;>shopping_cart</span>
+<span class=&quot;text-[13px] font-medium uppercase tracking-tight&quot;>E-Commerce</span>
+</a>
+</nav>
+<div class=&quot;mt-auto px-6 pt-6 border-t border-white/5 space-y-4&quot;>
+<div class=&quot;flex flex-col gap-1&quot;>
+<span class=&quot;fraunces-italic text-slate-100 text-sm&quot;>James Whitfield</span>
+<span class=&quot;dm-mono text-[10px] text-slate-500&quot;>CEO · All Markets</span>
+</div>
+</div>
+</aside>
+<header class=&quot;fixed top-0 right-0 w-[calc(100%-220px)] h-16 z-40 flex justify-between items-center px-8 bg-[#0d0f0d]/80 backdrop-blur-xl border-b border-white/5&quot;>
+<div class=&quot;flex items-center gap-4&quot;>
+<h1 class=&quot;fraunces-italic text-xl text-slate-100&quot;>Command Console</h1>
+<span class=&quot;px-2 py-0.5 rounded bg-surface-container-high border border-white/10 text-[10px] dm-mono text-primary animate-pulse&quot;>LIVE STREAM</span>
+</div>
+<div class=&quot;flex items-center gap-6&quot;>
+<div class=&quot;flex gap-4 items-center&quot;>
+<button class=&quot;text-slate-400 hover:text-slate-100 transition-colors&quot;>
+<span class=&quot;material-symbols-outlined&quot;>search</span>
+</button>
+</div>
+<div class=&quot;h-6 w-[1px] bg-white/10&quot;></div>
+<div class=&quot;flex items-center gap-3&quot;>
+<button class=&quot;px-3 py-1.5 bg-white/5 hover:bg-white/10 text-slate-100 text-[12px] font-medium rounded-lg transition-all&quot;>All Markets</button>
+<button class=&quot;px-3 py-1.5 bg-primary text-on-primary text-[12px] font-medium rounded-lg transition-all hover:brightness-110&quot;>Export</button>
+</div>
+</div>
+</header>
+<main class=&quot;ml-[220px] pt-16 h-screen flex flex-col relative&quot;>
+<div class=&quot;bg-surface-container-high px-8 py-2 border-b border-white/5 flex items-center justify-between&quot;>
+<div class=&quot;flex items-center gap-3&quot;>
+<span class=&quot;material-symbols-outlined text-tertiary text-sm&quot;>warning</span>
+<p class=&quot;text-[11px] dm-mono text-on-surface-variant&quot;>CRITICAL: Auckland DC fresh produce delay — 4 NZ stores at replenishment risk</p>
+</div>
+<button class=&quot;text-[10px] uppercase font-bold text-primary tracking-widest hover:underline&quot;>View Details</button>
+</div>
+<div class=&quot;flex-1 overflow-y-auto custom-scrollbar px-8 pb-32&quot;>
+<div class=&quot;max-w-[960px] mx-auto py-12 space-y-10&quot;>
+<div class=&quot;flex justify-end&quot;>
+<div class=&quot;max-w-[70%] bg-[#1c201c] rounded-xl px-5 py-3 border border-white/5&quot;>
+<p class=&quot;text-sm text-on-surface leading-relaxed&quot;>How did our fresh produce margins perform in New Zealand last month versus the quarter before?</p>
+</div>
+</div>
+<div class=&quot;space-y-6&quot;>
+<div class=&quot;flex items-center gap-3&quot;>
+<div class=&quot;w-8 h-8 rounded-lg bg-primary/10 flex items-center justify-center border border-primary/20&quot;>
+<span class=&quot;material-symbols-outlined text-primary text-lg&quot;>memory</span>
+</div>
+<div class=&quot;flex items-baseline gap-2&quot;>
+<span class=&quot;fraunces-italic text-lg text-slate-100&quot;>Intelligence Hub</span>
+<span class=&quot;dm-mono text-[10px] text-slate-500&quot;>9:14 AM · ~4 sec response</span>
+</div>
+</div>
+<div class=&quot;bg-[#141714] border border-white/5 rounded-xl overflow-hidden shadow-2xl&quot;>
+<div class=&quot;p-6 space-y-6&quot;>
+<div class=&quot;prose prose-invert max-w-none&quot;>
+<p class=&quot;text-on-surface-variant text-sm leading-relaxed&quot;>NZ fresh produce margins came in at <span class=&quot;text-slate-100 font-medium&quot;>18.4% in March</span>, marking a significant deviation from the previous operational baseline. This represents a softening of <span class=&quot;text-error font-medium&quot;>3.2 percentage points</span> compared to the Q3 average of 21.6%. The decline is concentrated in leafy greens (&amp;#8211;5.1pp) and stone fruits (&amp;#8211;4.4pp). Dairy and packaged produce held flat.</p>
+</div>
+<div class=&quot;grid grid-cols-3 gap-4&quot;>
+<div class=&quot;bg-surface-container-lowest p-4 rounded-lg border border-white/5 hover:bg-[#1c201c] hover:border-white/20 transition-all cursor-default&quot;>
+<span class=&quot;dm-mono text-[10px] text-slate-300 block mb-1 uppercase tracking-wider&quot;>March margin</span>
+<div class=&quot;flex items-baseline gap-2&quot;>
+<span class=&quot;dm-mono text-2xl font-bold text-error&quot;>18.4%</span>
+<span class=&quot;material-symbols-outlined text-error text-sm&quot; style=&quot;font-variation-settings: 'FILL' 1;&quot;>trending_down</span>
+</div>
+<span class=&quot;text-[11px] text-on-surface-variant mt-1 block&quot;>&amp;#8211;3.2pp vs Q3 avg</span>
+</div>
+<div class=&quot;bg-surface-container-lowest p-4 rounded-lg border border-white/5 hover:bg-[#1c201c] hover:border-white/20 transition-all cursor-default&quot;>
+<span class=&quot;dm-mono text-[10px] text-slate-300 block mb-1 uppercase tracking-wider&quot;>Q3 average</span>
+<div class=&quot;flex items-baseline gap-2&quot;>
+<span class=&quot;dm-mono text-2xl font-bold text-slate-100&quot;>21.6%</span>
+</div>
+<span class=&quot;text-[11px] text-on-surface-variant mt-1 block&quot;>Jul&amp;#8211;Sep baseline</span>
+</div>
+<div class=&quot;bg-surface-container-lowest p-4 rounded-lg border border-white/5 hover:bg-[#1c201c] hover:border-white/20 transition-all cursor-default&quot;>
+<span class=&quot;dm-mono text-[10px] text-slate-300 block mb-1 uppercase tracking-wider&quot;>Variance</span>
+<div class=&quot;flex items-baseline gap-2&quot;>
+<span class=&quot;dm-mono text-2xl font-bold text-error&quot;>&amp;#8722;$1.2M</span>
+</div>
+<span class=&quot;text-[11px] text-on-surface-variant mt-1 block&quot;>vs Q3 run-rate</span>
+</div>
+</div>
+<div class=&quot;pt-4 border-t border-white/5&quot;>
+<button class=&quot;flex items-center gap-2 group w-full&quot;>
+<span class=&quot;material-symbols-outlined text-slate-500 group-hover:text-primary transition-colors&quot;>description</span>
+<span class=&quot;text-[11px] dm-mono text-slate-400 group-hover:text-slate-100 transition-colors&quot;>Sources</span>
+<div class=&quot;px-1.5 py-0.5 rounded bg-surface-container-high text-[10px] dm-mono text-slate-500&quot;>3 sources</div>
+<span class=&quot;material-symbols-outlined text-slate-500 ml-auto transition-transform group-hover:translate-y-0.5&quot;>expand_more</span>
+</button>
+</div>
+</div>
+</div>
+<div class=&quot;flex flex-wrap gap-2 pt-2&quot;>
+<button class=&quot;px-4 py-2 bg-surface-container-high border border-white/5 rounded-full text-xs text-on-surface-variant hover:border-primary/40 hover:text-primary transition-all flex items-center gap-2&quot;>Which stores were most affected?<span class=&quot;material-symbols-outlined text-sm&quot;>arrow_outward</span></button>
+<button class=&quot;px-4 py-2 bg-surface-container-high border border-white/5 rounded-full text-xs text-on-surface-variant hover:border-primary/40 hover:text-primary transition-all flex items-center gap-2&quot;>Show me the full category breakdown<span class=&quot;material-symbols-outlined text-sm&quot;>bar_chart</span></button>
+<button class=&quot;px-4 py-2 bg-surface-container-high border border-white/5 rounded-full text-xs text-on-surface-variant hover:border-primary/40 hover:text-primary transition-all flex items-center gap-2&quot;>Compare to AU margins same period<span class=&quot;material-symbols-outlined text-sm&quot;>compare_arrows</span></button>
+</div>
+</div>
+</div>
+</div>
+<div class=&quot;absolute bottom-0 left-0 w-full p-8 bg-gradient-to-t from-[#0d0f0d] via-[#0d0f0d] to-transparent&quot;>
+<div class=&quot;max-w-[960px] mx-auto relative group&quot;>
+<div class=&quot;absolute inset-0 bg-primary/5 blur-2xl rounded-full opacity-0 group-focus-within:opacity-100 transition-opacity&quot;></div>
+<div class=&quot;relative bg-[#1c201c] border border-white/10 rounded-2xl p-2 flex items-center gap-4 shadow-2xl&quot;>
+<div class=&quot;flex-1 flex items-center px-4&quot;>
+<span class=&quot;text-on-surface text-sm&quot;>Are the NZ margin issues connected to</span>
+<span class=&quot;w-2 h-5 bg-primary/40 ml-0.5 animate-pulse&quot;></span>
+</div>
+<div class=&quot;flex items-center gap-2 pr-2&quot;>
+<button class=&quot;w-10 h-10 bg-primary text-on-primary rounded-xl flex items-center justify-center shadow-[0_0_20px_rgba(76,225,119,0.3)]&quot;>
+<span class=&quot;material-symbols-outlined&quot; style=&quot;font-variation-settings: 'FILL' 1;&quot;>send</span>
+</button>
+</div>
+</div>
+<div class=&quot;flex justify-center mt-3&quot;>
+<p class=&quot;dm-mono text-[9px] text-slate-600 uppercase tracking-[0.2em]&quot;>5 questions pre-validated · Demo Mode ready</p>
+</div>
+</div>
+</div>
+</main>
+</body></html>
+" title="Screen 2 &#8212; Structured Data Response"></iframe>
+  </div>
+  <div class="annotations">
+    <div class="anno"><div class="anno-num">1</div><div><div class="anno-title">Data cards &#8212; structured answer</div><div class="anno-body">Three metric cards: 18.4% &#8595; (March), 21.6% (Q3 baseline), &#8722;$1.2M (variance). Values come from the pre-computed lookup fixture, verified by the numeric guardrail.<span class="us-tag">US-01</span></div></div></div>
+    <div class="anno"><div class="anno-num">2</div><div><div class="anno-title">Source panel &#8212; collapsed default</div><div class="anno-body">&#8220;Sources &#183; 3 sources&#8221; is collapsed by default. CEO expands on click. Never zero sources on a successful response. This is the trust signal that addresses the Tableau failure.<span class="us-tag">US-04</span></div></div></div>
+    <div class="anno"><div class="anno-num">3</div><div><div class="anno-title">~4 sec response timestamp</div><div class="anno-body">&#8220;9:14 AM &#183; ~4 sec response&#8221; meets the NFR streaming threshold. Blinking cursor in input shows the CEO typing the follow-up &#8212; demonstrating natural conversational flow.</div></div></div>
+  </div>
+</div>
+
+
+<!-- SCREEN 3 -->
+<div class="section" id="s3">
+  <div class="section-hd">
+    <span class="sn">03</span>
+    <span class="st">Cross-signal synthesis &#8212; <em>the wow moment</em></span>
+    <div class="section-line"></div>
+  </div>
+  <div class="screen-meta">
+    <div class="screen-label"><span class="scope-tag st-proto">Prototype scope</span>Screen 3 of 3 &#183; Blended Cross-Source Response</div>
+    <div class="screen-title">SAP + Teams + Email joined in one response</div>
+    <p class="screen-desc">The centrepiece of the demo. The CEO asks whether the NZ margin issues are connected to regional team signals. The system returns one blended response joining SAP financial data with a Teams escalation, cites Marcus Reid by name, and shows 4 expanded source pills. No competitor produces this response format.</p>
+  </div>
+  <div class="browser">
+    <div class="browser-bar">
+      <div class="browser-dots"><div class="bd bd-r"></div><div class="bd bd-y"></div><div class="bd bd-g"></div></div>
+      <div class="browser-url"><span>hub.freshchoice.internal</span>/intelligence</div>
+    </div>
+    <iframe class="screen-frame tall" srcdoc="<!DOCTYPE html>
+<html class=&quot;dark&quot; lang=&quot;en&quot;><head>
+<meta charset=&quot;utf-8&quot;/>
+<meta content=&quot;width=device-width, initial-scale=1.0&quot; name=&quot;viewport&quot;/>
+<title>FreshChoice Intelligence Hub — Cross-Signal Synthesis</title>
+<script src=&quot;https://cdn.tailwindcss.com?plugins=forms,container-queries&quot;></script>
+<link href=&quot;https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@1,9..144,100..900&amp;family=DM+Sans:wght@400;500;700&amp;family=DM+Mono:wght@400;500&amp;display=swap&quot; rel=&quot;stylesheet&quot;/>
+<link href=&quot;https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap&quot; rel=&quot;stylesheet&quot;/>
+<script id=&quot;tailwind-config&quot;>
+        tailwind.config = {
+            darkMode: &quot;class&quot;,
+            theme: {
+                extend: {
+                    colors: {
+                        &quot;on-secondary-container&quot;: &quot;#cbddff&quot;,&quot;on-primary-fixed-variant&quot;: &quot;#005322&quot;,&quot;inverse-surface&quot;: &quot;#e3e3df&quot;,&quot;on-background&quot;: &quot;#e3e3df&quot;,&quot;outline-variant&quot;: &quot;#3d4a3d&quot;,&quot;on-secondary&quot;: &quot;#003061&quot;,&quot;secondary&quot;: &quot;#a7c8ff&quot;,&quot;surface-container-lowest&quot;: &quot;#0d0f0d&quot;,&quot;primary&quot;: &quot;#4ce177&quot;,&quot;background&quot;: &quot;#121412&quot;,&quot;surface-dim&quot;: &quot;#121412&quot;,&quot;surface-variant&quot;: &quot;#333533&quot;,&quot;tertiary-container&quot;: &quot;#e49d1c&quot;,&quot;tertiary-fixed&quot;: &quot;#ffddb2&quot;,&quot;tertiary&quot;: &quot;#ffb94c&quot;,&quot;surface-container-highest&quot;: &quot;#333533&quot;,&quot;on-surface&quot;: &quot;#e3e3df&quot;,&quot;inverse-primary&quot;: &quot;#006e2f&quot;,&quot;surface-container&quot;: &quot;#1e201e&quot;,&quot;on-error&quot;: &quot;#690005&quot;,&quot;error-container&quot;: &quot;#93000a&quot;,&quot;on-tertiary-fixed&quot;: &quot;#291800&quot;,&quot;primary-fixed-dim&quot;: &quot;#4ce177&quot;,&quot;on-error-container&quot;: &quot;#ffdad6&quot;,&quot;on-tertiary&quot;: &quot;#442b00&quot;,&quot;on-primary-fixed&quot;: &quot;#002109&quot;,&quot;secondary-fixed-dim&quot;: &quot;#a7c8ff&quot;,&quot;on-secondary-fixed&quot;: &quot;#001b3c&quot;,&quot;on-secondary-fixed-variant&quot;: &quot;#004788&quot;,&quot;surface-tint&quot;: &quot;#4ce177&quot;,&quot;surface-bright&quot;: &quot;#383a37&quot;,&quot;on-surface-variant&quot;: &quot;#bccbb9&quot;,&quot;tertiary-fixed-dim&quot;: &quot;#ffb94c&quot;,&quot;error&quot;: &quot;#ffb4ab&quot;,&quot;on-primary-container&quot;: &quot;#004a1d&quot;,&quot;secondary-fixed&quot;: &quot;#d5e3ff&quot;,&quot;secondary-container&quot;: &quot;#0061b7&quot;,&quot;surface-container-low&quot;: &quot;#1a1c1a&quot;,&quot;on-tertiary-container&quot;: &quot;#583900&quot;,&quot;surface-container-high&quot;: &quot;#292a28&quot;,&quot;outline&quot;: &quot;#869585&quot;,&quot;on-tertiary-fixed-variant&quot;: &quot;#624000&quot;,&quot;primary-fixed&quot;: &quot;#6cfe90&quot;,&quot;inverse-on-surface&quot;: &quot;#2f312e&quot;,&quot;primary-container&quot;: &quot;#23c45e&quot;,&quot;on-primary&quot;: &quot;#003915&quot;,&quot;surface&quot;: &quot;#121412&quot;
+                    },
+                    fontFamily: {&quot;headline&quot;: [&quot;Fraunces&quot;, &quot;serif&quot;],&quot;body&quot;: [&quot;DM Sans&quot;, &quot;sans-serif&quot;],&quot;label&quot;: [&quot;DM Sans&quot;, &quot;sans-serif&quot;],&quot;mono&quot;: [&quot;DM Mono&quot;, &quot;monospace&quot;]},
+                    borderRadius: { &quot;DEFAULT&quot;: &quot;0.125rem&quot;, &quot;lg&quot;: &quot;0.25rem&quot;, &quot;xl&quot;: &quot;0.5rem&quot;, &quot;full&quot;: &quot;0.75rem&quot; },
+                },
+            },
+        }
+    </script>
+<style>
+        .material-symbols-outlined { font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24; vertical-align: middle; }
+        body { background-color: #0d0f0d; color: #e3e3df; font-family: 'DM Sans', sans-serif; }
+        .fraunces-italic { font-family: 'Fraunces', serif; font-style: italic; }
+        .dm-mono { font-family: 'DM Mono', monospace; }
+        .glass-sidebar { backdrop-filter: blur(20px); }
+    </style>
+</head>
+<body class=&quot;flex overflow-hidden&quot;>
+<aside class=&quot;fixed left-0 top-0 h-full w-[220px] z-50 bg-[#141714] flex flex-col py-6 glass-sidebar border-r border-white/5&quot;>
+<div class=&quot;px-6 mb-10&quot;>
+<span class=&quot;fraunces-italic text-lg tracking-tight text-slate-100&quot;>FreshChoice</span>
+<div class=&quot;text-[10px] font-mono text-slate-500 mt-0.5&quot;>Intelligence Platform</div>
+</div>
+<nav class=&quot;flex-1 space-y-1&quot;>
+<div class=&quot;text-[#23c45e] border-l-[3px] border-[#23c45e] bg-[#1c201c] pl-3 py-2 transition-all flex items-center gap-3 cursor-pointer&quot;>
+<span class=&quot;material-symbols-outlined text-sm&quot;>terminal</span>
+<span class=&quot;text-[13px] font-medium&quot;>Command Console</span>
+</div>
+<div class=&quot;text-slate-400 pl-[15px] py-2 transition-all hover:bg-[#1c201c] hover:text-[#23c45e] flex items-center gap-3 cursor-pointer&quot;>
+<span class=&quot;material-symbols-outlined text-sm&quot;>auto_stories</span>
+<span class=&quot;text-[13px] font-medium&quot;>Weekly Digest</span>
+</div>
+<div class=&quot;text-slate-400 pl-[15px] py-2 transition-all hover:bg-[#1c201c] hover:text-[#23c45e] flex items-center gap-3 cursor-pointer&quot;>
+<span class=&quot;material-symbols-outlined text-sm&quot;>warning</span>
+<span class=&quot;text-[13px] font-medium&quot;>Escalations</span>
+</div>
+<div class=&quot;text-slate-400 pl-[15px] py-2 transition-all hover:bg-[#1c201c] hover:text-[#23c45e] flex items-center gap-3 cursor-pointer&quot;>
+<span class=&quot;material-symbols-outlined text-sm&quot;>monitoring</span>
+<span class=&quot;text-[13px] font-medium&quot;>Performance</span>
+</div>
+<div class=&quot;text-slate-400 pl-[15px] py-2 transition-all hover:bg-[#1c201c] hover:text-[#23c45e] flex items-center gap-3 cursor-pointer&quot;>
+<span class=&quot;material-symbols-outlined text-sm&quot;>inventory_2</span>
+<span class=&quot;text-[13px] font-medium&quot;>Supply Chain</span>
+</div>
+<div class=&quot;text-slate-400 pl-[15px] py-2 transition-all hover:bg-[#1c201c] hover:text-[#23c45e] flex items-center gap-3 cursor-pointer&quot;>
+<span class=&quot;material-symbols-outlined text-sm&quot;>shopping_cart</span>
+<span class=&quot;text-[13px] font-medium&quot;>E-Commerce</span>
+</div>
+</nav>
+<div class=&quot;px-6 mt-auto&quot;>
+<div class=&quot;flex items-center gap-3 mb-6 p-2 rounded-lg bg-surface-container-low border border-white/5&quot;>
+<div class=&quot;w-8 h-8 rounded-full bg-primary-container flex items-center justify-center text-[10px] font-bold text-on-primary-container&quot;>JW</div>
+<div class=&quot;overflow-hidden&quot;>
+<p class=&quot;text-[11px] font-bold text-slate-100 truncate&quot;>James Whitfield</p>
+<p class=&quot;text-[9px] text-slate-500 dm-mono uppercase tracking-tighter&quot;>CEO · All Markets</p>
+</div>
+</div>
+</div>
+</aside>
+<main class=&quot;flex-1 ml-[220px] h-screen overflow-y-auto bg-surface-container-lowest&quot;>
+<header class=&quot;fixed top-0 right-0 w-[calc(100%-220px)] h-16 z-40 bg-[#0d0f0d]/80 backdrop-blur-xl flex justify-between items-center px-8 border-b border-white/5&quot;>
+<div class=&quot;flex items-center gap-4&quot;>
+<h1 class=&quot;fraunces-italic text-xl text-slate-100 flex items-center gap-2 before:w-2 before:h-2 before:bg-[#23c45e] before:rounded-full before:animate-pulse&quot;>Command Console</h1>
+</div>
+<div class=&quot;flex items-center gap-6&quot;>
+<div class=&quot;flex gap-4&quot;>
+<button class=&quot;text-slate-400 hover:text-white transition-colors&quot;><span class=&quot;material-symbols-outlined&quot;>search</span></button>
+<button class=&quot;text-slate-400 hover:text-white transition-colors relative&quot;>
+<span class=&quot;material-symbols-outlined&quot;>notifications</span>
+<span class=&quot;absolute -top-1 -right-1 w-2 h-2 bg-primary rounded-full&quot;></span>
+</button>
+</div>
+<div class=&quot;h-6 w-[1px] bg-white/10&quot;></div>
+<button class=&quot;px-4 py-1.5 bg-surface-container-high border border-white/10 rounded-[10px] text-[12px] font-medium text-slate-100 hover:bg-white/5 transition-all&quot;>AU NZ SG</button>
+<button class=&quot;px-4 py-1.5 bg-primary-container text-on-primary-container rounded-[10px] text-[12px] font-bold hover:opacity-90 transition-all&quot;>Export</button>
+</div>
+</header>
+<div class=&quot;max-w-[960px] mx-auto pt-24 pb-32 px-6&quot;>
+<div class=&quot;space-y-8&quot;>
+<div class=&quot;flex flex-col items-end&quot;>
+<div class=&quot;bg-surface-container-high p-4 rounded-xl rounded-tr-none border border-white/5 max-w-[80%]&quot;>
+<p class=&quot;text-sm text-slate-200&quot;>How did our fresh produce margins perform in NZ last month vs Q3?</p>
+</div>
+<span class=&quot;text-[10px] dm-mono text-slate-500 mt-1 uppercase tracking-widest&quot;>User · 9:15 AM</span>
+</div>
+<div class=&quot;flex flex-col items-start&quot;>
+<div class=&quot;flex items-center gap-3 mb-2&quot;>
+<div class=&quot;w-6 h-6 rounded-full bg-[#1c201c] flex items-center justify-center border border-primary/20&quot;>
+<span class=&quot;material-symbols-outlined text-[14px] text-primary&quot;>analytics</span>
+</div>
+<span class=&quot;text-[10px] dm-mono text-primary uppercase tracking-widest&quot;>Intelligence Summary</span>
+</div>
+<div class=&quot;bg-surface-container-low/50 p-3 rounded-xl rounded-tl-none border border-white/5 max-w-[85%]&quot;>
+<p class=&quot;text-[13px] text-slate-400 italic&quot;>NZ fresh produce margins: 18.4% in March, down 3.2pp from Q3 avg of 21.6%. <span class=&quot;text-primary cursor-pointer hover:underline&quot;>View details</span></p>
+</div>
+</div>
+<div class=&quot;flex flex-col items-end&quot;>
+<div class=&quot;bg-surface-container-high p-4 rounded-xl rounded-tr-none border border-white/5 max-w-[80%]&quot;>
+<p class=&quot;text-sm text-slate-200&quot;>Are the NZ margin issues connected to anything my regional team has flagged recently?</p>
+</div>
+<span class=&quot;text-[10px] dm-mono text-slate-500 mt-1 uppercase tracking-widest&quot;>User · 9:16 AM</span>
+</div>
+<div class=&quot;flex flex-col items-start&quot;>
+<div class=&quot;flex justify-between items-center w-full mb-3&quot;>
+<div class=&quot;flex items-center gap-3&quot;>
+<div class=&quot;w-8 h-8 rounded-full bg-primary-container flex items-center justify-center&quot;>
+<span class=&quot;material-symbols-outlined text-on-primary-container&quot;>psychology</span>
+</div>
+<div>
+<h2 class=&quot;fraunces-italic text-lg text-slate-100 leading-none&quot;>Intelligence Hub</h2>
+<p class=&quot;text-[10px] dm-mono text-slate-500 mt-1&quot;>9:17 AM · ~6 SEC PROCESSING</p>
+</div>
+</div>
+<div class=&quot;flex gap-2&quot;>
+<button class=&quot;p-1.5 text-slate-500 hover:text-white&quot;><span class=&quot;material-symbols-outlined text-sm&quot;>share</span></button>
+<button class=&quot;p-1.5 text-slate-500 hover:text-white&quot;><span class=&quot;material-symbols-outlined text-sm&quot;>bookmark</span></button>
+</div>
+</div>
+<div class=&quot;w-full space-y-6&quot;>
+<p class=&quot;text-lg text-slate-100 font-medium&quot;>Yes &amp;#8212; there is a direct operational link.</p>
+<div class=&quot;bg-primary/5 rounded-xl p-6 border border-primary/10 relative overflow-hidden group&quot;>
+<div class=&quot;absolute top-0 right-0 p-4 opacity-20&quot;>
+<span class=&quot;material-symbols-outlined text-4xl text-primary&quot;>hub</span>
+</div>
+<div class=&quot;flex items-center gap-2 mb-4&quot;>
+<span class=&quot;text-[10px] dm-mono text-primary font-bold uppercase tracking-[0.2em]&quot;>Cross-signal synthesis · SAP + Teams + Email</span>
+<div class=&quot;h-[1px] flex-1 bg-primary/20&quot;></div>
+</div>
+<div class=&quot;flex items-center gap-3 mb-6&quot;>
+<div class=&quot;px-3 py-1 bg-surface-container-lowest border border-white/10 rounded-full flex items-center gap-2&quot;>
+<span class=&quot;w-1.5 h-1.5 bg-blue-400 rounded-full&quot;></span>
+<span class=&quot;text-[10px] dm-mono text-slate-300&quot;>SAP · Finance</span>
+</div>
+<div class=&quot;w-8 h-[1px] bg-primary/40 relative&quot;>
+<div class=&quot;absolute -top-1 left-1/2 -translate-x-1/2 w-2 h-2 border-t border-r border-primary/40 rotate-45&quot;></div>
+</div>
+<div class=&quot;px-3 py-1 bg-surface-container-lowest border border-white/10 rounded-full flex items-center gap-2&quot;>
+<span class=&quot;w-1.5 h-1.5 bg-purple-400 rounded-full&quot;></span>
+<span class=&quot;text-[10px] dm-mono text-slate-300&quot;>Teams · Regional Ops</span>
+</div>
+</div>
+<div class=&quot;prose prose-invert max-w-none&quot;>
+<p class=&quot;text-slate-200 leading-relaxed text-[15px]&quot;>The Northland supplier delay flagged by <span class=&quot;text-primary font-medium underline decoration-primary/30 underline-offset-4 cursor-pointer&quot;>Marcus Reid</span> (NZ Regional Ops Lead) on 10 March caused a 6-day replenishment gap for leafy greens across 4 Auckland stores. This gap coincides precisely with the margin decline window. The delay added an estimated <span class=&quot;text-primary font-medium&quot;>$0.9M</span> in expedited freight costs booked in March COGS &amp;#8212; accounting for ~75% of the observed variance.</p>
+</div>
+</div>
+<div class=&quot;border-l-2 border-white/5 pl-6 py-1&quot;>
+<p class=&quot;text-slate-400 text-[14px] leading-relaxed&quot;>The escalation thread has 7 messages across Teams and email since 10 March. As of yesterday, Marcus confirmed the Northland supplier resumed normal delivery schedules. Partial margin recovery is expected in the first two weeks of April.</p>
+</div>
+<div class=&quot;pt-4 border-t border-white/5&quot;>
+<div class=&quot;flex items-center justify-between mb-4&quot;>
+<h3 class=&quot;text-[11px] dm-mono text-slate-500 uppercase tracking-widest flex items-center gap-2&quot;>
+<span class=&quot;material-symbols-outlined text-sm&quot;>verified</span> Verified Sources (4)
+</h3>
+<button class=&quot;text-[10px] text-primary hover:underline&quot;>Collapse</button>
+</div>
+<div class=&quot;grid grid-cols-2 gap-3&quot;>
+<div class=&quot;flex items-start gap-3 p-3 bg-surface-container-low rounded-lg border border-white/5 hover:border-white/10 transition-all cursor-pointer&quot;>
+<div class=&quot;w-8 h-8 rounded bg-blue-900/30 flex items-center justify-center text-blue-400&quot;>
+<span class=&quot;material-symbols-outlined text-[18px]&quot;>database</span>
+</div>
+<div>
+<p class=&quot;text-[12px] font-bold text-slate-200&quot;>NZ COGS detail · March</p>
+<p class=&quot;text-[10px] dm-mono text-slate-500 uppercase&quot;>SAP Finance</p>
+</div>
+</div>
+<div class=&quot;flex items-start gap-3 p-3 bg-surface-container-low rounded-lg border border-white/5 hover:border-white/10 transition-all cursor-pointer&quot;>
+<div class=&quot;w-8 h-8 rounded bg-purple-900/30 flex items-center justify-center text-purple-400&quot;>
+<span class=&quot;material-symbols-outlined text-[18px]&quot;>forum</span>
+</div>
+<div>
+<p class=&quot;text-[12px] font-bold text-slate-200&quot;>NZ Regional Ops · 10&amp;#8211;22 Mar</p>
+<p class=&quot;text-[10px] dm-mono text-slate-500 uppercase&quot;>MS Teams Thread</p>
+</div>
+</div>
+<div class=&quot;flex items-start gap-3 p-3 bg-surface-container-low rounded-lg border border-white/5 hover:border-white/10 transition-all cursor-pointer&quot;>
+<div class=&quot;w-8 h-8 rounded bg-yellow-900/30 flex items-center justify-center text-yellow-400&quot;>
+<span class=&quot;material-symbols-outlined text-[18px]&quot;>mail</span>
+</div>
+<div>
+<p class=&quot;text-[12px] font-bold text-slate-200&quot;>M. Reid &amp;#8594; J. Chen · 22 Mar</p>
+<p class=&quot;text-[10px] dm-mono text-slate-500 uppercase&quot;>Outlook Email</p>
+</div>
+</div>
+<div class=&quot;flex items-start gap-3 p-3 bg-surface-container-low rounded-lg border border-white/5 hover:border-white/10 transition-all cursor-pointer&quot;>
+<div class=&quot;w-8 h-8 rounded bg-green-900/30 flex items-center justify-center text-green-400&quot;>
+<span class=&quot;material-symbols-outlined text-[18px]&quot;>inventory</span>
+</div>
+<div>
+<p class=&quot;text-[12px] font-bold text-slate-200&quot;>Auckland DC delivery log</p>
+<p class=&quot;text-[10px] dm-mono text-slate-500 uppercase&quot;>WMS System</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class=&quot;fixed bottom-0 right-0 w-[calc(100%-220px)] p-6 bg-gradient-to-t from-background via-background to-transparent pointer-events-none&quot;>
+<div class=&quot;max-w-[800px] mx-auto pointer-events-auto&quot;>
+<div class=&quot;flex flex-wrap gap-2 mb-4 justify-center&quot;>
+<button class=&quot;px-4 py-1.5 rounded-full bg-surface-container-high border border-white/5 text-[11px] text-slate-300 hover:bg-white/5 hover:text-white transition-all&quot;>What&amp;#8217;s Marcus&amp;#8217;s latest status update?</button>
+<button class=&quot;px-4 py-1.5 rounded-full bg-surface-container-high border border-white/5 text-[11px] text-slate-300 hover:bg-white/5 hover:text-white transition-all&quot;>Which other markets have similar supply risks?</button>
+<button class=&quot;px-4 py-1.5 rounded-full bg-surface-container-high border border-white/5 text-[11px] text-slate-300 hover:bg-white/5 hover:text-white transition-all&quot;>Show full April recovery forecast</button>
+</div>
+<div class=&quot;relative group&quot;>
+<input class=&quot;w-full bg-surface-container p-4 pr-32 rounded-xl border border-white/5 focus:ring-1 focus:ring-primary focus:border-primary placeholder-slate-600 text-sm transition-all shadow-2xl&quot; placeholder=&quot;Synthesize additional signals or ask for a recovery plan...&quot; type=&quot;text&quot;/>
+<div class=&quot;absolute right-2 top-2 bottom-2 flex items-center gap-1&quot;>
+<button class=&quot;p-2 text-slate-500 hover:text-white&quot;><span class=&quot;material-symbols-outlined text-xl&quot;>mic</span></button>
+<button class=&quot;p-2 text-slate-500 hover:text-white&quot;><span class=&quot;material-symbols-outlined text-xl&quot;>attach_file</span></button>
+<button class=&quot;ml-2 w-10 h-10 rounded-lg bg-primary text-on-primary flex items-center justify-center&quot;>
+<span class=&quot;material-symbols-outlined&quot;>arrow_upward</span>
+</button>
+</div>
+</div>
+<p class=&quot;text-[10px] text-slate-600 text-center mt-3 dm-mono uppercase tracking-widest&quot;>FreshChoice Intelligence Hub · Nexus Command Console</p>
+</div>
+</div>
+</main>
+</body></html>
+" title="Screen 3 &#8212; Cross-Signal Synthesis"></iframe>
+  </div>
+  <div class="annotations">
+    <div class="anno"><div class="anno-num">1</div><div><div class="anno-title">Cross-signal synthesis block</div><div class="anno-body">Green-tinted card labelled &#8220;Cross-signal synthesis &#183; SAP + Teams + Email&#8221;. Two source pills &#8212; [SAP &#183; Finance] &#8596; [Teams &#183; Regional Ops] &#8212; connected by an arrow. Causal narrative inside the block.<span class="us-tag">US-03</span></div></div></div>
+    <div class="anno"><div class="anno-num">2</div><div><div class="anno-title">Source panel &#8212; expanded, 4 sources</div><div class="anno-body">Panel open state. Four sources type-coded: SAP (blue), Teams (purple), Email (amber), WMS (green). Shows system type and source name. Maximum trust signal at the wow moment.<span class="us-tag">US-04</span></div></div></div>
+    <div class="anno"><div class="anno-num">3</div><div><div class="anno-title">Named actor &#8212; grounded and traceable</div><div class="anno-body">Marcus Reid (NZ Regional Ops Lead) cited by name from the Teams corpus. CEO can ask a follow-up targeting that person directly. Grounded, verifiable, actionable.<span class="us-tag">US-03</span></div></div></div>
+  </div>
+</div>
+
+
+<!-- DESIGN SYSTEM -->
+<div class="section" id="s4">
+  <div class="section-hd">
+    <span class="sn">04</span>
+    <span class="st">Design system &#8212; <em>tokens for the engineer</em></span>
+    <div class="section-line"></div>
+  </div>
+  <p class="prose">All three screens share a unified dark token system defined in the Tailwind config. The engineer must not deviate from these values when wiring the DS backend to the frontend. Source type colour-coding must be applied consistently across all response components.</p>
+  <div class="ds-grid">
+    <div class="ds-card">
+      <div class="ds-card-title">Color tokens</div>
+      <div class="color-row"><div class="color-swatch" style="background:#0d0f0d;border:1px solid rgba(255,255,255,.1);"></div><span style="color:var(--text2);">#0d0f0d</span><span style="color:var(--text3);"> &#8212; background</span></div>
+      <div class="color-row"><div class="color-swatch" style="background:#141714;"></div><span style="color:var(--text2);">#141714</span><span style="color:var(--text3);"> &#8212; sidebar / cards</span></div>
+      <div class="color-row"><div class="color-swatch" style="background:#1c201c;"></div><span style="color:var(--text2);">#1c201c</span><span style="color:var(--text3);"> &#8212; elevated / hover</span></div>
+      <div class="color-row"><div class="color-swatch" style="background:#292a28;"></div><span style="color:var(--text2);">#292a28</span><span style="color:var(--text3);"> &#8212; surface container high</span></div>
+      <div class="color-row"><div class="color-swatch" style="background:#23c45e;"></div><span style="color:var(--text2);">#23c45e</span><span style="color:var(--text3);"> &#8212; primary accent</span></div>
+      <div class="color-row"><div class="color-swatch" style="background:#4ce177;"></div><span style="color:var(--text2);">#4ce177</span><span style="color:var(--text3);"> &#8212; primary fixed dim</span></div>
+      <div class="color-row"><div class="color-swatch" style="background:#ffb4ab;"></div><span style="color:var(--text2);">#ffb4ab</span><span style="color:var(--text3);"> &#8212; error / declining metrics</span></div>
+      <div class="color-row"><div class="color-swatch" style="background:#ffb94c;"></div><span style="color:var(--text2);">#ffb94c</span><span style="color:var(--text3);"> &#8212; tertiary / warnings</span></div>
+      <div class="color-row"><div class="color-swatch" style="background:#a7c8ff;"></div><span style="color:var(--text2);">#a7c8ff</span><span style="color:var(--text3);"> &#8212; secondary / info</span></div>
+    </div>
+    <div class="ds-card">
+      <div class="ds-card-title">Typography</div>
+      <div style="display:flex;flex-direction:column;gap:10px;font-size:13px;color:var(--text2);margin-bottom:16px;">
+        <div><span style="font-family:'Fraunces',serif;font-style:italic;font-size:17px;color:var(--text);">Fraunces italic</span><span style="color:var(--text3);font-size:12px;"> &#8212; display headings, AI response name</span></div>
+        <div><span style="font-family:'DM Sans',sans-serif;font-weight:500;color:var(--text);">DM Sans 500</span><span style="color:var(--text3);font-size:12px;"> &#8212; body text, navigation labels</span></div>
+        <div><span style="font-family:'DM Mono',monospace;font-size:12px;color:var(--text);">DM Mono</span><span style="color:var(--text3);font-size:12px;"> &#8212; IDs, timestamps, source labels, metric values</span></div>
+      </div>
+      <div style="border-top:1px solid var(--border);padding-top:12px;">
+        <div style="font-family:'DM Mono',monospace;font-size:10px;letter-spacing:.08em;text-transform:uppercase;color:var(--text3);margin-bottom:8px;">Source type colour coding</div>
+        <div class="source-pills">
+          <span class="source-pill" style="background:#1a2a4a;color:#a7c8ff;border:1px solid rgba(167,200,255,.2);">SAP &#183; blue</span>
+          <span class="source-pill" style="background:#2a1a3a;color:#c4a8ff;border:1px solid rgba(196,168,255,.2);">Teams &#183; purple</span>
+          <span class="source-pill" style="background:#3a2a00;color:#ffb94c;border:1px solid rgba(255,185,76,.2);">Email &#183; amber</span>
+          <span class="source-pill" style="background:#1a2a1a;color:#6dd49a;border:1px solid rgba(109,212,154,.2);">WMS &#183; green</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<div class="doc-footer">
+  <div class="footer-l">Calibrax &#183; AI Strategy &amp; Execution &#183; Deliverable 3 of 5 &#183; Confidential</div>
+  <div class="footer-r">FreshChoice Intelligence Hub &#183; Nexus Command Console</div>
+</div>
+
+</div>
+
+<script>
+const obs=new IntersectionObserver(entries=>{entries.forEach(e=>{if(e.isIntersecting){e.target.classList.add('visible');obs.unobserve(e.target);}});},{threshold:.05,rootMargin:'0px 0px -40px 0px'});
+document.querySelectorAll('.section').forEach((el,i)=>{el.style.transitionDelay=`${i*.08}s`;obs.observe(el);});
+</script>
+</body>
+</html>
