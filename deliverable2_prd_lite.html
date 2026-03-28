@@ -3,930 +3,1044 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>PRD v0.2 — Nexus Command Console</title>
+<title>Deliverable 2 — PRD-Lite · Nexus Command Console</title>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,200;0,9..144,400;0,9..144,600;1,9..144,200;1,9..144,400&family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
 <style>
-@import url('https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Geist+Mono:wght@400;500&family=Geist:wght@300;400;500&display=swap');
-
-*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-
-:root {
-  --bg:        #0e0f0d;
-  --surface:   #161714;
-  --surface2:  #1d1e1b;
-  --surface3:  #242520;
-  --border:    rgba(255,255,255,0.07);
-  --border-md: rgba(255,255,255,0.12);
-  --border-hi: rgba(255,255,255,0.18);
-  --text:      #e8e6df;
-  --text-2:    #9e9b92;
-  --text-3:    #5c5a54;
-  --accent:    #4eca8b;
-  --accent-dim:#1d6b47;
-  --amber:     #e8a83a;
-  --amber-dim: #6b4a12;
-  --red:       #e05c5c;
-  --red-dim:   #6b2020;
-  --blue:      #5b9cf6;
-  --blue-dim:  #1e3a70;
-  --purple:    #9d8df5;
-  --purple-dim:#3a2d80;
+@import url('https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,200;0,9..144,400;0,9..144,600;1,9..144,200;1,9..144,400&family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500&family=DM+Mono:wght@400;500&display=swap');
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+:root{
+  /* ── palette ── */
+  --bg:#f2f0e9;
+  --bg2:#ede9e0;
+  --surface:#ffffff;
+  --surface2:#f7f4ed;
+  --surface3:#ede9e0;
+  --border:rgba(0,0,0,0.065);
+  --border-md:rgba(0,0,0,0.11);
+  --border-hi:rgba(0,0,0,0.18);
+  --text:#17160f;
+  --text2:#52503f;
+  --text3:#97937f;
+  --text4:#c4c0ae;
+  /* greens */
+  --g:#14582e;
+  --g-mid:#1c7840;
+  --g-acc:#23c45e;
+  --g-bg:#e2f2e9;
+  --g-bg2:#c6e8d4;
+  /* ambers */
+  --a:#6e3a00;
+  --a-mid:#b86000;
+  --a-acc:#d97c00;
+  --a-bg:#fdf0dc;
+  --a-bg2:#f8dba8;
+  /* reds */
+  --r:#801a1a;
+  --r-mid:#b83030;
+  --r-bg:#fceaea;
+  --r-bg2:#f5c4c4;
+  /* blues */
+  --b:#142c6a;
+  --b-mid:#1e48a8;
+  --b-bg:#e4ecfb;
+  --b-bg2:#b8cef5;
+  /* purples */
+  --p:#30207a;
+  --p-mid:#5240b8;
+  --p-bg:#edeafb;
+  /* nav */
+  --nav-bg:#0b0f0b;
+  --nav-border:rgba(255,255,255,.07);
+  /* code */
+  --code-bg:#111814;
+  --code-border:rgba(255,255,255,.07);
+  --code-text2:#6b8a72;
+  --code-key:#6bbef5;
+  --code-type:#a890f0;
+  --code-val:#e8c050;
+  --code-comm:#3e5445;
+  --code-acc:#42d87a;
+}
+html{scroll-behavior:smooth;font-size:15px;}
+body{
+  font-family:'DM Sans',sans-serif;
+  background:var(--bg);color:var(--text);
+  line-height:1.7;-webkit-font-smoothing:antialiased;
+  padding-top:52px;
 }
 
-body {
-  font-family: 'Geist', sans-serif;
-  background: var(--bg);
-  color: var(--text);
-  font-size: 14px;
-  line-height: 1.7;
-  padding: 0;
-  min-height: 100vh;
+/* ── subtle paper grain ── */
+body::before{
+  content:'';position:fixed;inset:0;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='300'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='.028'/%3E%3C/svg%3E");
+  pointer-events:none;z-index:0;
 }
 
-.page {
-  max-width: 900px;
-  margin: 0 auto;
-  padding: 60px 40px 100px;
+.page{position:relative;z-index:1;max-width:900px;margin:0 auto;padding:56px 48px 120px;}
+
+/* ══════════════════════════════
+   SHARED NAV
+══════════════════════════════ */
+.doc-nav{
+  position:fixed;top:0;left:0;right:0;z-index:200;
+  height:52px;background:var(--nav-bg);
+  border-bottom:1px solid var(--nav-border);
+  display:flex;align-items:center;justify-content:space-between;
+  padding:0 48px;backdrop-filter:blur(16px);
+}
+.doc-nav-left{display:flex;align-items:center;gap:20px;}
+.doc-nav-back{
+  display:flex;align-items:center;gap:7px;
+  font-family:'DM Mono',monospace;font-size:10px;letter-spacing:.1em;
+  text-transform:uppercase;color:rgba(255,255,255,.32);
+  text-decoration:none;transition:color .2s,gap .18s;
+}
+.doc-nav-back:hover{color:var(--g-acc);gap:11px;}
+.doc-nav-back-arrow{font-size:13px;transition:transform .2s;display:inline-block;}
+.doc-nav-back:hover .doc-nav-back-arrow{transform:translateX(-3px);}
+.doc-nav-divider{width:1px;height:18px;background:rgba(255,255,255,.09);}
+.doc-nav-brand{
+  display:flex;align-items:center;gap:7px;
+  font-family:'DM Mono',monospace;font-size:11px;
+  letter-spacing:.12em;text-transform:uppercase;color:var(--g-acc);
+}
+.doc-nav-dot{width:6px;height:6px;border-radius:50%;background:var(--g-acc);animation:navdot 2.5s infinite;}
+@keyframes navdot{0%,100%{opacity:1;transform:scale(1);}50%{opacity:.3;transform:scale(.7);}}
+.doc-nav-right{display:flex;align-items:center;gap:16px;}
+.doc-nav-label{font-family:'DM Mono',monospace;font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:rgba(255,255,255,.2);}
+.doc-nav-pills{display:flex;gap:4px;}
+.doc-nav-pill{width:20px;height:3px;border-radius:2px;background:rgba(255,255,255,.08);transition:background .2s;}
+.doc-nav-pill.done{background:rgba(35,196,94,.32);}
+.doc-nav-pill.active{background:var(--g-acc);}
+
+/* ══════════════════════════════
+   COVER / HEADER
+══════════════════════════════ */
+.header{
+  margin-bottom:52px;padding:40px 44px 36px;
+  background:var(--text);border-radius:16px;
+  position:relative;overflow:hidden;
+}
+/* subtle radial glow top-right */
+.header::before{
+  content:'';position:absolute;top:-80px;right:-60px;
+  width:300px;height:300px;border-radius:50%;
+  background:radial-gradient(circle,rgba(35,196,94,.18) 0%,transparent 70%);
+  pointer-events:none;
+}
+/* grid lines */
+.header::after{
+  content:'';position:absolute;inset:0;
+  background-image:
+    linear-gradient(rgba(255,255,255,.03) 1px,transparent 1px),
+    linear-gradient(90deg,rgba(255,255,255,.03) 1px,transparent 1px);
+  background-size:40px 40px;
+  pointer-events:none;
+}
+.header > *{position:relative;z-index:1;}
+.doc-eyebrow{
+  font-family:'DM Mono',monospace;font-size:10px;letter-spacing:.14em;
+  text-transform:uppercase;color:var(--g-acc);
+  margin-bottom:14px;display:flex;align-items:center;gap:10px;
+}
+.doc-eyebrow::before{content:'';width:20px;height:1px;background:var(--g-acc);}
+.doc-title{
+  font-family:'Fraunces',serif;font-size:44px;font-weight:200;
+  line-height:1.08;letter-spacing:-.02em;color:#fff;margin-bottom:8px;
+}
+.doc-title em{font-style:italic;color:#6dd49a;}
+.doc-subtitle{font-size:14px;color:rgba(255,255,255,.45);margin-bottom:20px;font-weight:300;}
+.meta-row{display:flex;flex-wrap:wrap;gap:6px;margin-top:16px;}
+.meta-pill{
+  font-family:'DM Mono',monospace;font-size:10px;padding:4px 10px;border-radius:3px;
+  border:1px solid rgba(255,255,255,.12);color:rgba(255,255,255,.45);
+  letter-spacing:.04em;transition:border-color .2s,color .2s;
+}
+.meta-pill:hover{border-color:rgba(255,255,255,.25);color:rgba(255,255,255,.7);}
+.meta-pill.accent{border-color:rgba(35,196,94,.35);color:var(--g-acc);background:rgba(35,196,94,.1);}
+.meta-pill.red{border-color:rgba(220,80,80,.3);color:#e07070;background:rgba(196,48,48,.1);}
+
+/* ══════════════════════════════
+   CHANGELOG BANNER
+══════════════════════════════ */
+.changelog{
+  background:var(--surface);
+  border:1px solid var(--border-md);
+  border-left:4px solid var(--a-acc);
+  border-radius:0 12px 12px 0;
+  padding:18px 22px;margin-bottom:56px;
+  box-shadow:0 1px 3px rgba(0,0,0,.04),0 4px 16px rgba(0,0,0,.03);
+  transition:box-shadow .25s,border-left-color .2s;cursor:default;
+}
+.changelog:hover{
+  box-shadow:0 2px 8px rgba(0,0,0,.06),0 8px 32px rgba(217,124,0,.07);
+  border-left-color:var(--a-mid);
+}
+.changelog-title{
+  font-family:'DM Mono',monospace;font-size:10px;letter-spacing:.1em;
+  text-transform:uppercase;color:var(--a-mid);margin-bottom:14px;
+}
+.changelog-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:4px;}
+.change-item{
+  display:flex;align-items:flex-start;gap:8px;
+  font-size:12px;color:var(--text2);line-height:1.55;
+  padding:5px 8px;border-radius:5px;
+  transition:background .15s,color .15s;
+}
+.change-item:hover{background:var(--surface2);color:var(--text);}
+.change-item::before{
+  content:'+';color:var(--g-acc);font-weight:500;
+  font-family:'DM Mono',monospace;flex-shrink:0;margin-top:1px;
+}
+.change-item.removed::before{content:'~';color:var(--a-mid);}
+
+/* ══════════════════════════════
+   SECTIONS
+══════════════════════════════ */
+.section{
+  margin-bottom:64px;scroll-margin-top:32px;
+  opacity:0;transform:translateY(20px);
+  transition:opacity .65s ease,transform .65s ease;
+}
+.section.visible{opacity:1;transform:translateY(0);}
+
+.section-hd{
+  display:flex;align-items:center;gap:14px;
+  margin-bottom:24px;padding-bottom:14px;
+  border-bottom:1px solid var(--border-md);
+  position:relative;overflow:hidden;
+}
+.section-hd::after{
+  content:'';position:absolute;bottom:-1px;left:0;
+  width:40px;height:2px;background:var(--g-acc);
+  transition:width .45s cubic-bezier(.25,.46,.45,.94);
+}
+.section:hover .section-hd::after{width:100%;}
+
+/* section number pill */
+.sn{
+  font-family:'DM Mono',monospace;font-size:10px;
+  background:var(--surface3);color:var(--text3);
+  border:1px solid var(--border-md);
+  border-radius:4px;padding:2px 7px;
+  letter-spacing:.08em;flex-shrink:0;
+  transition:background .2s,color .2s,border-color .2s;
+}
+.section:hover .sn{
+  background:var(--g-bg);color:var(--g);
+  border-color:rgba(35,196,94,.3);
+}
+.st{
+  font-family:'Fraunces',serif;font-size:24px;font-weight:200;
+  color:var(--text);letter-spacing:-.015em;line-height:1.2;
+}
+.st em{font-style:italic;color:var(--g);}
+.section-line{flex:1;height:1px;background:var(--border);}
+
+.prose{font-size:14px;color:var(--text2);line-height:1.85;margin-bottom:14px;max-width:700px;}
+.prose strong{color:var(--text);font-weight:500;}
+.prose em{color:var(--g);font-style:normal;}
+
+/* ══════════════════════════════
+   BADGES
+══════════════════════════════ */
+.badge{
+  font-family:'DM Mono',monospace;font-size:9px;font-weight:500;
+  padding:2px 7px;border-radius:3px;letter-spacing:.06em;
+  text-transform:uppercase;white-space:nowrap;
+}
+.badge-must{background:var(--r-bg);color:var(--r-mid);border:1px solid rgba(184,48,48,.22);}
+.badge-nice{background:var(--a-bg);color:var(--a-mid);border:1px solid rgba(184,96,0,.2);}
+.badge-out{background:var(--surface3);color:var(--text3);border:1px solid var(--border-md);}
+.badge-new{background:var(--g-bg);color:var(--g-mid);border:1px solid rgba(28,120,64,.22);}
+.badge-ds{background:var(--b-bg);color:var(--b-mid);border:1px solid rgba(30,72,168,.2);}
+.badge-eng{background:var(--p-bg);color:var(--p-mid);border:1px solid rgba(82,64,184,.2);}
+.badge-pm{background:var(--g-bg);color:var(--g-mid);border:1px solid rgba(28,120,64,.2);}
+
+/* ══════════════════════════════
+   SCOPE GROUPS
+══════════════════════════════ */
+.scope-group{margin-bottom:22px;}
+.scope-group-header{
+  display:flex;align-items:center;gap:10px;margin-bottom:10px;
+  padding-left:2px;
+}
+.scope-group-title{font-size:12px;font-weight:500;color:var(--text);}
+.scope-items{display:flex;flex-direction:column;gap:3px;}
+.scope-item{
+  display:flex;align-items:flex-start;gap:12px;
+  background:var(--surface);
+  border:1px solid var(--border);
+  border-radius:8px;padding:11px 16px;
+  font-size:13px;color:var(--text2);line-height:1.58;
+  box-shadow:0 1px 2px rgba(0,0,0,.03);
+  transition:all .2s;position:relative;overflow:hidden;cursor:default;
+}
+.scope-item::before{
+  content:'';width:5px;height:5px;border-radius:50%;
+  flex-shrink:0;margin-top:6px;
+  background:var(--text4);
+  transition:transform .2s,background .2s;
+}
+.scope-item:hover{
+  background:var(--surface2);border-color:var(--border-md);
+  transform:translateX(4px);
+  box-shadow:0 2px 8px rgba(0,0,0,.06);
+}
+.scope-item:hover span{color:var(--text);}
+.scope-item.must::before{background:var(--r-mid);}
+.scope-item.must:hover{border-color:rgba(184,48,48,.18);box-shadow:0 2px 10px rgba(184,48,48,.06);}
+.scope-item.nice::before{background:var(--a-mid);}
+.scope-item.nice:hover{border-color:rgba(184,96,0,.18);box-shadow:0 2px 10px rgba(217,124,0,.06);}
+.scope-item.out{opacity:.5;}
+.scope-item.out:hover{opacity:.75;}
+.scope-item strong{color:var(--text);font-weight:500;}
+
+/* ══════════════════════════════
+   USER STORIES
+══════════════════════════════ */
+.story{
+  background:var(--surface);
+  border:1px solid var(--border-md);
+  border-radius:12px;overflow:hidden;margin-bottom:10px;
+  box-shadow:0 1px 3px rgba(0,0,0,.04),0 4px 16px rgba(0,0,0,.03);
+  position:relative;cursor:default;
+  transition:box-shadow .25s,border-color .25s,transform .22s;
+}
+/* left accent slides in */
+.story::before{
+  content:'';position:absolute;left:0;top:0;bottom:0;width:0;
+  background:linear-gradient(180deg,var(--g-acc),var(--g-mid));
+  transition:width .28s cubic-bezier(.25,.46,.45,.94);
+}
+.story:hover::before{width:4px;}
+.story:hover{
+  border-color:rgba(35,196,94,.28);
+  box-shadow:0 4px 20px rgba(0,0,0,.08),0 0 0 1px rgba(35,196,94,.08);
+  transform:translateX(5px);
+}
+.story-hd{
+  display:flex;align-items:center;gap:10px;
+  padding:12px 18px 11px;
+  background:var(--surface2);
+  border-bottom:1px solid var(--border);
+  transition:background .2s;
+}
+.story:hover .story-hd{background:var(--g-bg);}
+.story-id{
+  font-family:'DM Mono',monospace;font-size:10px;
+  color:var(--text3);letter-spacing:.1em;
+  transition:color .2s;
+}
+.story:hover .story-id{color:var(--g-mid);}
+.story-title{font-size:13px;font-weight:500;color:var(--text);flex:1;}
+.story-body{padding:14px 18px;}
+.story-as{
+  font-size:13px;color:var(--text2);line-height:1.75;margin-bottom:14px;
+  transition:color .2s;
+}
+.story:hover .story-as{color:var(--text);}
+.story-as em{color:var(--g);font-style:italic;}
+.story-ac-label{
+  font-family:'DM Mono',monospace;font-size:9px;letter-spacing:.12em;
+  text-transform:uppercase;color:var(--text4);margin-bottom:8px;
+}
+.story-ac-items{display:flex;flex-direction:column;gap:5px;}
+.story-ac-item{
+  display:flex;align-items:flex-start;gap:9px;
+  font-size:12px;color:var(--text3);line-height:1.58;
+  padding:4px 8px;border-radius:5px;
+  transition:background .15s,color .15s;
+}
+.story:hover .story-ac-item{color:var(--text2);}
+.story:hover .story-ac-item:hover{background:var(--surface2);color:var(--text);}
+.story-ac-item::before{
+  content:'✓';color:var(--g-acc);font-size:11px;
+  flex-shrink:0;margin-top:1px;font-family:'DM Mono',monospace;
+}
+.story-ac-item strong{color:var(--text2);font-weight:500;}
+
+/* ══════════════════════════════
+   DATA TABLE
+══════════════════════════════ */
+.data-table{
+  border:1px solid var(--border-md);border-radius:12px;overflow:hidden;
+  width:100%;box-shadow:0 1px 3px rgba(0,0,0,.04),0 4px 16px rgba(0,0,0,.03);
+}
+.data-table-hd{
+  display:grid;grid-template-columns:190px 72px 1fr;
+  background:var(--text);padding:9px 16px;
+}
+.data-table-hd span{
+  font-family:'DM Mono',monospace;font-size:9px;letter-spacing:.12em;
+  text-transform:uppercase;color:rgba(255,255,255,.45);
+}
+.data-row{
+  display:grid;grid-template-columns:190px 72px 1fr;gap:14px;
+  padding:15px 16px;border-bottom:1px solid var(--border);
+  align-items:start;font-size:13px;cursor:default;
+  box-shadow:inset 4px 0 0 transparent;
+  transition:background .2s,box-shadow .2s;
+}
+.data-row:last-child{border-bottom:none;}
+.data-row:hover{
+  background:var(--g-bg);
+  box-shadow:inset 4px 0 0 var(--g-acc);
+}
+.data-label{
+  font-family:'DM Mono',monospace;font-size:11px;
+  color:var(--text2);padding-top:2px;line-height:1.6;transition:color .2s;
+}
+.data-row:hover .data-label{color:var(--g);}
+.data-val{color:var(--text2);line-height:1.65;transition:color .2s;}
+.data-row:hover .data-val{color:var(--text);}
+.data-val strong{color:var(--text);font-weight:500;}
+.data-val .note{
+  font-size:11px;color:var(--text3);margin-top:5px;
+  font-family:'DM Mono',monospace;line-height:1.65;
+  padding:5px 8px;background:var(--surface2);border-radius:4px;display:inline-block;width:100%;
 }
 
-/* ── Header ── */
-.header {
-  margin-bottom: 56px;
-  padding-bottom: 32px;
-  border-bottom: 1px solid var(--border-md);
-  position: relative;
+/* ══════════════════════════════
+   CODE SCHEMA (stays dark)
+══════════════════════════════ */
+.schema-block{
+  background:var(--code-bg);border:1px solid var(--code-border);
+  border-radius:12px;padding:20px 22px;margin-bottom:12px;
+  box-shadow:0 4px 20px rgba(0,0,0,.18);
+  transition:border-color .25s,box-shadow .25s;cursor:default;
+  position:relative;overflow:hidden;
 }
-.header::before {
-  content: '';
-  position: absolute;
-  bottom: -1px; left: 0;
-  width: 80px; height: 1px;
-  background: var(--accent);
+/* top glow line */
+.schema-block::before{
+  content:'';position:absolute;top:0;left:0;right:0;height:1px;
+  background:linear-gradient(90deg,transparent,rgba(66,216,122,.25),transparent);
+  transition:opacity .3s;
 }
-.doc-eyebrow {
-  font-family: 'Geist Mono', monospace;
-  font-size: 10px;
-  letter-spacing: 0.14em;
-  text-transform: uppercase;
-  color: var(--accent);
-  margin-bottom: 14px;
-  display: flex;
-  align-items: center;
-  gap: 10px;
+.schema-block:hover{
+  border-color:rgba(66,216,122,.25);
+  box-shadow:0 6px 32px rgba(0,0,0,.24),0 0 0 1px rgba(66,216,122,.06);
 }
-.doc-eyebrow::before {
-  content: '';
-  width: 20px; height: 1px;
-  background: var(--accent);
+.schema-title{
+  font-family:'DM Mono',monospace;font-size:10px;
+  color:var(--code-acc);margin-bottom:14px;
+  letter-spacing:.08em;text-transform:uppercase;
+  display:flex;align-items:center;gap:8px;
 }
-.doc-title {
-  font-family: 'Instrument Serif', serif;
-  font-size: 42px;
-  font-weight: 400;
-  line-height: 1.1;
-  letter-spacing: -0.01em;
-  color: var(--text);
-  margin-bottom: 6px;
+.schema-title::before{
+  content:'';width:6px;height:6px;border-radius:50%;
+  background:var(--code-acc);flex-shrink:0;
 }
-.doc-title em {
-  font-style: italic;
-  color: var(--accent);
+.schema-code{
+  font-family:'DM Mono',monospace;font-size:12px;
+  color:var(--code-text2);line-height:2.1;white-space:pre;
 }
-.doc-subtitle {
-  font-size: 14px;
-  color: var(--text-2);
-  margin-bottom: 24px;
-}
-.meta-row {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 6px;
-  margin-top: 20px;
-}
-.meta-pill {
-  font-family: 'Geist Mono', monospace;
-  font-size: 10px;
-  padding: 4px 10px;
-  border-radius: 3px;
-  border: 1px solid var(--border-md);
-  color: var(--text-2);
-  letter-spacing: 0.04em;
-}
-.meta-pill.accent { border-color: var(--accent-dim); color: var(--accent); }
-.meta-pill.red    { border-color: var(--red-dim);    color: var(--red); }
+.schema-code .key{color:var(--code-key);}
+.schema-code .type{color:var(--code-type);}
+.schema-code .comm{color:var(--code-comm);}
+.schema-code .val{color:var(--code-val);}
+.schema-code .acc{color:var(--code-acc);}
 
-/* ── Change log banner ── */
-.changelog {
-  background: var(--surface2);
-  border: 1px solid var(--border-md);
-  border-left: 3px solid var(--amber);
-  border-radius: 6px;
-  padding: 14px 18px;
-  margin-bottom: 48px;
-  font-size: 13px;
+/* ══════════════════════════════
+   ASSUMPTIONS
+══════════════════════════════ */
+.assumption{
+  background:var(--surface);
+  border:1px solid var(--border);
+  border-radius:10px;padding:16px 18px;margin-bottom:8px;
+  display:grid;grid-template-columns:40px 1fr;gap:14px;align-items:start;
+  box-shadow:0 1px 3px rgba(0,0,0,.03);
+  position:relative;overflow:hidden;cursor:default;
+  transition:border-color .2s,box-shadow .22s,transform .2s;
 }
-.changelog-title {
-  font-family: 'Geist Mono', monospace;
-  font-size: 10px;
-  letter-spacing: .1em;
-  text-transform: uppercase;
-  color: var(--amber);
-  margin-bottom: 10px;
+.assumption::before{
+  content:'';position:absolute;left:0;top:0;bottom:0;width:0;
+  background:linear-gradient(180deg,var(--b-mid),var(--b));
+  transition:width .28s cubic-bezier(.25,.46,.45,.94);
 }
-.changelog-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
-  gap: 6px;
+.assumption:hover::before{width:4px;}
+.assumption:hover{
+  border-color:rgba(30,72,168,.2);
+  box-shadow:0 3px 16px rgba(30,72,168,.08);
+  transform:translateX(4px);
 }
-.change-item {
-  display: flex;
-  align-items: flex-start;
-  gap: 7px;
-  font-size: 12px;
-  color: var(--text-2);
-  line-height: 1.5;
+.assumption-id{
+  font-family:'DM Mono',monospace;font-size:10px;
+  color:var(--text3);padding-top:2px;letter-spacing:.06em;
+  background:var(--surface2);border:1px solid var(--border);
+  border-radius:4px;padding:3px 6px;text-align:center;
+  align-self:start;margin-top:1px;transition:all .2s;
 }
-.change-item::before {
-  content: '+';
-  color: var(--accent);
-  font-weight: 500;
-  font-family: 'Geist Mono', monospace;
-  flex-shrink: 0;
-  margin-top: 1px;
+.assumption:hover .assumption-id{
+  background:var(--b-bg);color:var(--b-mid);border-color:rgba(30,72,168,.25);
 }
-.change-item.removed::before { content: '~'; color: var(--amber); }
+.assumption-title{font-size:13.5px;font-weight:500;color:var(--text);margin-bottom:5px;}
+.assumption-body{font-size:13px;color:var(--text2);line-height:1.7;transition:color .2s;}
+.assumption:hover .assumption-body{color:var(--text);}
+.assumption-body strong{color:var(--text);font-weight:500;}
+.assumption-why{
+  font-size:12px;color:var(--text3);margin-top:10px;
+  border-top:1px dashed var(--border-md);padding-top:8px;
+  transition:color .2s,border-color .2s;line-height:1.65;
+}
+.assumption:hover .assumption-why{color:var(--text2);border-color:var(--border-hi);}
 
-/* ── Section ── */
-.section { margin-bottom: 52px; }
-.section-header {
-  display: flex;
-  align-items: baseline;
-  gap: 12px;
-  margin-bottom: 20px;
+/* ══════════════════════════════
+   SPRINT GATES
+══════════════════════════════ */
+.gates{display:flex;flex-direction:column;gap:8px;}
+.gate{
+  background:var(--surface);
+  border:1px solid var(--border);
+  border-radius:10px;padding:16px 18px;
+  display:grid;grid-template-columns:100px 1fr;gap:16px;align-items:start;
+  box-shadow:0 1px 3px rgba(0,0,0,.03);
+  position:relative;overflow:hidden;cursor:default;
+  transition:border-color .2s,box-shadow .25s,transform .2s;
 }
-.section-num {
-  font-family: 'Geist Mono', monospace;
-  font-size: 10px;
-  color: var(--text-3);
-  letter-spacing: 0.08em;
-  flex-shrink: 0;
+.gate::before{
+  content:'';position:absolute;left:0;top:0;bottom:0;width:4px;
+  transition:width .2s;
 }
-.section-title {
-  font-family: 'Instrument Serif', serif;
-  font-size: 22px;
-  font-weight: 400;
-  color: var(--text);
-  letter-spacing: -0.01em;
-}
-.section-line {
-  flex: 1;
-  height: 1px;
-  background: var(--border);
-}
+.gate:hover::before{width:6px;}
+.gate:hover{transform:translateX(5px);}
 
-.prose {
-  font-size: 14px;
-  color: var(--text-2);
-  line-height: 1.8;
-  margin-bottom: 12px;
-}
-.prose strong { color: var(--text); font-weight: 500; }
-.prose em { color: var(--accent); font-style: normal; }
+.gate.critical{border-color:rgba(184,48,48,.18);}
+.gate.critical::before{background:linear-gradient(180deg,var(--r-mid),var(--r));}
+.gate.critical:hover{border-color:rgba(184,48,48,.3);box-shadow:0 4px 20px rgba(184,48,48,.1);}
+.gate.warn{border-color:rgba(184,96,0,.18);}
+.gate.warn::before{background:linear-gradient(180deg,var(--a-acc),var(--a-mid));}
+.gate.warn:hover{border-color:rgba(217,124,0,.3);box-shadow:0 4px 20px rgba(217,124,0,.08);}
+.gate.good{border-color:rgba(35,196,94,.18);}
+.gate.good::before{background:linear-gradient(180deg,var(--g-acc),var(--g-mid));}
+.gate.good:hover{border-color:rgba(35,196,94,.3);box-shadow:0 4px 20px rgba(35,196,94,.08);}
 
-/* ── Scope groups ── */
-.scope-group { margin-bottom: 20px; }
-.scope-group-header {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  margin-bottom: 10px;
+.gate-day{
+  font-family:'DM Mono',monospace;font-size:10px;
+  color:var(--text3);line-height:1.5;transition:color .2s;
+  padding-top:2px;
 }
-.scope-group-title {
-  font-size: 12px;
-  font-weight: 500;
-  color: var(--text);
-}
-.badge {
-  font-family: 'Geist Mono', monospace;
-  font-size: 9px;
-  font-weight: 500;
-  padding: 2px 7px;
-  border-radius: 3px;
-  letter-spacing: .06em;
-  text-transform: uppercase;
-}
-.badge-must   { background: rgba(224,92,92,.15);  color: var(--red);    border: 1px solid var(--red-dim); }
-.badge-nice   { background: rgba(232,168,58,.12); color: var(--amber);  border: 1px solid var(--amber-dim); }
-.badge-out    { background: rgba(255,255,255,.04); color: var(--text-3); border: 1px solid var(--border); }
-.badge-new    { background: rgba(78,202,139,.12); color: var(--accent); border: 1px solid var(--accent-dim); }
-.badge-ds     { background: rgba(91,156,246,.12); color: var(--blue);   border: 1px solid var(--blue-dim); }
-.badge-eng    { background: rgba(157,141,245,.12);color: var(--purple); border: 1px solid var(--purple-dim); }
-.badge-pm     { background: rgba(78,202,139,.1);  color: var(--accent); border: 1px solid var(--accent-dim); }
+.gate.critical:hover .gate-day{color:var(--r-mid);}
+.gate.warn:hover .gate-day{color:var(--a-mid);}
+.gate.good:hover .gate-day{color:var(--g-mid);}
+.gate-title{font-weight:500;color:var(--text);margin-bottom:4px;font-size:13.5px;}
+.gate-criteria{color:var(--text2);font-size:12.5px;line-height:1.7;transition:color .2s;}
+.gate:hover .gate-criteria{color:var(--text);}
+.gate-criteria strong{color:var(--text);font-weight:500;}
 
-.scope-items { display: flex; flex-direction: column; gap: 4px; }
-.scope-item {
-  display: flex;
-  align-items: flex-start;
-  gap: 10px;
-  background: var(--surface2);
-  border: 1px solid var(--border);
-  border-radius: 6px;
-  padding: 10px 14px;
-  font-size: 13px;
-  color: var(--text-2);
-  line-height: 1.55;
+/* ══════════════════════════════
+   SUCCESS METRICS
+══════════════════════════════ */
+.metrics-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin:16px 0;}
+.metric-card{
+  background:var(--text);border-radius:12px;padding:20px 18px;
+  position:relative;overflow:hidden;cursor:default;
+  box-shadow:0 4px 20px rgba(0,0,0,.14);
+  transition:transform .22s,box-shadow .22s;
 }
-.scope-item::before {
-  content: '';
-  width: 4px; height: 4px;
-  border-radius: 50%;
-  background: var(--text-3);
-  flex-shrink: 0;
-  margin-top: 7px;
+.metric-card::before{
+  content:'';position:absolute;bottom:-30px;right:-20px;
+  width:100px;height:100px;border-radius:50%;
+  background:radial-gradient(circle,rgba(35,196,94,.15) 0%,transparent 70%);
 }
-.scope-item.must::before  { background: var(--red); }
-.scope-item.nice::before  { background: var(--amber); }
-.scope-item.out           { opacity: .5; }
-.scope-item.out::before   { background: var(--text-3); }
-.scope-item strong { color: var(--text); font-weight: 500; }
+.metric-card:hover{
+  transform:translateY(-4px);
+  box-shadow:0 8px 32px rgba(0,0,0,.2);
+}
+.metric-label{
+  font-family:'DM Mono',monospace;font-size:9px;letter-spacing:.12em;
+  text-transform:uppercase;color:rgba(255,255,255,.35);margin-bottom:10px;
+}
+.metric-value{
+  font-family:'Fraunces',serif;font-size:32px;font-weight:200;
+  color:var(--g-acc);line-height:1;margin-bottom:8px;
+  transition:color .2s;
+}
+.metric-card:hover .metric-value{color:#6dd49a;}
+.metric-desc{font-size:12px;color:rgba(255,255,255,.5);line-height:1.6;}
 
-/* ── User stories ── */
-.story {
-  background: var(--surface);
-  border: 1px solid var(--border);
-  border-radius: 8px;
-  overflow: hidden;
-  margin-bottom: 8px;
+/* ══════════════════════════════
+   NFR TABLE
+══════════════════════════════ */
+.nfr-label{
+  font-family:'DM Mono',monospace;font-size:10px;letter-spacing:.1em;
+  text-transform:uppercase;color:var(--text3);margin:22px 0 10px;
 }
-.story-header {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  padding: 12px 16px 10px;
-  border-bottom: 1px solid var(--border);
+.nfr-table{
+  width:100%;border-collapse:collapse;
+  border:1px solid var(--border-md);border-radius:12px;overflow:hidden;
+  box-shadow:0 1px 3px rgba(0,0,0,.04),0 4px 16px rgba(0,0,0,.03);
 }
-.story-id {
-  font-family: 'Geist Mono', monospace;
-  font-size: 10px;
-  color: var(--text-3);
-  letter-spacing: .08em;
+.nfr-table thead tr{background:var(--text);}
+.nfr-table th{
+  font-family:'DM Mono',monospace;font-size:9px;letter-spacing:.12em;text-transform:uppercase;
+  color:rgba(255,255,255,.4);text-align:left;padding:9px 16px;
+  border-bottom:1px solid rgba(255,255,255,.06);
 }
-.story-title-text {
-  font-size: 13px;
-  font-weight: 500;
-  color: var(--text);
-  flex: 1;
+.nfr-table tbody tr{
+  border-bottom:1px solid var(--border);
+  box-shadow:inset 4px 0 0 transparent;
+  transition:background .18s,box-shadow .18s;cursor:default;
 }
-.story-body-wrap { padding: 12px 16px; }
-.story-as {
-  font-size: 13px;
-  color: var(--text-2);
-  line-height: 1.65;
-  margin-bottom: 10px;
+.nfr-table tbody tr:last-child{border-bottom:none;}
+.nfr-table tbody tr:hover{
+  background:var(--b-bg);
+  box-shadow:inset 4px 0 0 var(--b-mid);
 }
-.story-as em { color: var(--accent); font-style: italic; }
-.story-ac-label {
-  font-family: 'Geist Mono', monospace;
-  font-size: 9px;
-  letter-spacing: .1em;
-  text-transform: uppercase;
-  color: var(--text-3);
-  margin-bottom: 6px;
-}
-.story-ac-items { display: flex; flex-direction: column; gap: 4px; }
-.story-ac-item {
-  display: flex;
-  align-items: flex-start;
-  gap: 8px;
-  font-size: 12px;
-  color: var(--text-3);
-  line-height: 1.55;
-}
-.story-ac-item::before {
-  content: '✓';
-  color: var(--accent);
-  font-size: 11px;
-  flex-shrink: 0;
-  margin-top: 1px;
-  font-family: 'Geist Mono', monospace;
-}
-.story-ac-item strong { color: var(--text-2); font-weight: 500; }
+.nfr-table td{padding:12px 16px;font-size:13px;color:var(--text2);vertical-align:top;line-height:1.65;transition:color .18s;}
+.nfr-table tbody tr:hover td{color:var(--text);}
+.nfr-table td:first-child{font-weight:500;color:var(--text);white-space:nowrap;}
+.nfr-table tbody tr:hover td:first-child{color:var(--b-mid);}
+.nfr-table td strong{color:var(--text);font-weight:500;}
 
-/* ── Data table ── */
-.data-table {
-  border: 1px solid var(--border);
-  border-radius: 8px;
-  overflow: hidden;
-  width: 100%;
+/* ══════════════════════════════
+   KEY DECISIONS
+══════════════════════════════ */
+.key-decision{
+  background:var(--surface);border:1px solid var(--border);
+  border-radius:10px;padding:16px 18px;margin-bottom:8px;
+  display:grid;grid-template-columns:40px 1fr;gap:14px;align-items:start;
+  box-shadow:0 1px 3px rgba(0,0,0,.03);
+  position:relative;overflow:hidden;cursor:default;
+  transition:border-color .2s,box-shadow .22s,transform .2s;
 }
-.data-table-header {
-  display: grid;
-  grid-template-columns: 190px 80px 1fr;
-  background: var(--surface2);
-  border-bottom: 1px solid var(--border-md);
-  padding: 7px 14px;
+.key-decision::before{
+  content:'';position:absolute;left:0;top:0;bottom:0;width:0;
+  background:linear-gradient(180deg,var(--a-acc),var(--a-mid));
+  transition:width .28s cubic-bezier(.25,.46,.45,.94);
 }
-.data-table-header span {
-  font-family: 'Geist Mono', monospace;
-  font-size: 9px;
-  letter-spacing: .1em;
-  text-transform: uppercase;
-  color: var(--text-3);
+.key-decision:hover::before{width:4px;}
+.key-decision:hover{
+  border-color:rgba(217,124,0,.25);
+  box-shadow:0 3px 16px rgba(217,124,0,.08);
+  transform:translateX(4px);
 }
-.data-row {
-  display: grid;
-  grid-template-columns: 190px 80px 1fr;
-  gap: 12px;
-  padding: 12px 14px;
-  border-bottom: 1px solid var(--border);
-  align-items: start;
-  font-size: 13px;
+.kd-id{
+  font-family:'DM Mono',monospace;font-size:10px;
+  background:var(--a-bg);color:var(--a-mid);
+  border:1px solid rgba(184,96,0,.22);
+  border-radius:4px;padding:3px 6px;text-align:center;
+  align-self:start;margin-top:1px;letter-spacing:.06em;transition:all .2s;
 }
-.data-row:last-child { border-bottom: none; }
-.data-label {
-  font-family: 'Geist Mono', monospace;
-  font-size: 11px;
-  color: var(--text-2);
-  padding-top: 2px;
-}
-.data-owner { padding-top: 2px; }
-.data-val {
-  color: var(--text-2);
-  line-height: 1.6;
-}
-.data-val strong { color: var(--text); font-weight: 500; }
-.data-val .note {
-  font-size: 11px;
-  color: var(--text-3);
-  margin-top: 3px;
-  font-family: 'Geist Mono', monospace;
-}
+.key-decision:hover .kd-id{background:var(--a-bg2);border-color:rgba(184,96,0,.4);}
 
-/* ── Schema block ── */
-.schema-block {
-  background: var(--surface2);
-  border: 1px solid var(--border);
-  border-radius: 8px;
-  padding: 16px 18px;
-  margin-bottom: 12px;
+/* ══════════════════════════════
+   COMMIT GRID (keeping in CSS for legacy use)
+══════════════════════════════ */
+.commit-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;}
+.commit-block{
+  background:var(--surface);border:1px solid var(--border-md);
+  border-radius:12px;padding:20px 22px;position:relative;overflow:hidden;
+  box-shadow:0 1px 3px rgba(0,0,0,.04);
+  transition:box-shadow .25s,transform .2s;cursor:default;
 }
-.schema-title {
-  font-family: 'Geist Mono', monospace;
-  font-size: 11px;
-  color: var(--accent);
-  margin-bottom: 10px;
-  letter-spacing: .04em;
+.commit-block::before{
+  content:'';position:absolute;top:0;left:0;right:0;height:2px;
+  transform:scaleX(0);transform-origin:left;
+  transition:transform .35s cubic-bezier(.25,.46,.45,.94);
 }
-.schema-code {
-  font-family: 'Geist Mono', monospace;
-  font-size: 11px;
-  color: var(--text-2);
-  line-height: 1.8;
-  white-space: pre;
+.commit-block:nth-child(1)::before{background:var(--g-acc);}
+.commit-block:nth-child(2)::before{background:var(--b-mid);}
+.commit-block:hover::before{transform:scaleX(1);}
+.commit-block:hover{box-shadow:0 5px 24px rgba(0,0,0,.08);transform:translateY(-3px);}
+.commit-hd{display:flex;align-items:center;gap:8px;margin-bottom:14px;font-size:12px;font-weight:500;color:var(--text);}
+.commit-dot{width:8px;height:8px;border-radius:50%;}
+.commit-item{
+  display:flex;align-items:flex-start;gap:8px;
+  font-size:12px;color:var(--text2);line-height:1.6;margin-bottom:8px;
+  padding:5px 8px;border-radius:5px;transition:background .15s,color .15s;
 }
-.schema-code .key   { color: var(--blue); }
-.schema-code .type  { color: var(--purple); }
-.schema-code .comm  { color: var(--text-3); }
-.schema-code .val   { color: var(--amber); }
+.commit-item:last-child{margin-bottom:0;}
+.commit-item:hover{background:var(--surface2);color:var(--text);}
+.commit-item::before{content:'—';color:var(--text3);flex-shrink:0;}
 
-/* ── Assumptions ── */
-.assumption {
-  background: var(--surface);
-  border: 1px solid var(--border);
-  border-radius: 8px;
-  padding: 14px 16px;
-  margin-bottom: 8px;
-  display: grid;
-  grid-template-columns: 36px 1fr;
-  gap: 12px;
-  align-items: start;
+/* ══════════════════════════════
+   FOOTER
+══════════════════════════════ */
+.doc-footer{
+  margin-top:80px;padding:22px 0;
+  border-top:1px solid var(--border-md);
+  display:flex;justify-content:space-between;align-items:center;
 }
-.assumption-id {
-  font-family: 'Geist Mono', monospace;
-  font-size: 10px;
-  color: var(--text-3);
-  padding-top: 2px;
-  letter-spacing: .06em;
-}
-.assumption-content {}
-.assumption-title {
-  font-size: 13px;
-  font-weight: 500;
-  color: var(--text);
-  margin-bottom: 4px;
-}
-.assumption-body {
-  font-size: 13px;
-  color: var(--text-2);
-  line-height: 1.6;
-}
-.assumption-body strong { color: var(--text); font-weight: 500; }
-.assumption-why {
-  font-size: 11px;
-  color: var(--text-3);
-  margin-top: 6px;
-  font-style: italic;
-  border-top: 1px solid var(--border);
-  padding-top: 6px;
-}
+.footer-l{font-family:'DM Mono',monospace;font-size:10px;letter-spacing:.1em;color:var(--text3);text-transform:uppercase;}
+.footer-r{font-family:'DM Mono',monospace;font-size:10px;color:var(--text3);letter-spacing:.06em;}
 
-/* ── Open questions ── */
-.oq {
-  background: var(--surface);
-  border: 1px solid var(--border);
-  border-left: 2px solid var(--amber);
-  border-radius: 0 8px 8px 0;
-  padding: 12px 16px;
-  margin-bottom: 8px;
-}
-.oq-header { display: flex; align-items: center; gap: 10px; margin-bottom: 5px; }
-.oq-id {
-  font-family: 'Geist Mono', monospace;
-  font-size: 10px;
-  color: var(--amber);
-  letter-spacing: .08em;
-}
-.oq-deadline {
-  font-family: 'Geist Mono', monospace;
-  font-size: 9px;
-  color: var(--red);
-  background: var(--red-dim);
-  padding: 1px 6px;
-  border-radius: 3px;
-  letter-spacing: .04em;
-}
-.oq-q { font-size: 13px; font-weight: 500; color: var(--text); margin-bottom: 4px; }
-.oq-a { font-size: 13px; color: var(--text-2); line-height: 1.6; }
-.oq-a strong { color: var(--text); font-weight: 500; }
-
-/* ── Gates ── */
-.gates { display: flex; flex-direction: column; gap: 8px; }
-.gate {
-  background: var(--surface2);
-  border: 1px solid var(--border);
-  border-radius: 8px;
-  padding: 12px 16px;
-  display: grid;
-  grid-template-columns: 90px 1fr;
-  gap: 14px;
-  align-items: start;
-  font-size: 13px;
-}
-.gate-day {
-  font-family: 'Geist Mono', monospace;
-  font-size: 11px;
-  color: var(--text-3);
-  padding-top: 2px;
-}
-.gate-title {
-  font-weight: 500;
-  color: var(--text);
-  margin-bottom: 4px;
-  font-size: 13px;
-}
-.gate-criteria { color: var(--text-2); font-size: 12px; line-height: 1.6; }
-.gate-criteria strong { color: var(--text); }
-.gate.critical { border-left: 2px solid var(--red); border-radius: 0 8px 8px 0; }
-.gate.warn     { border-left: 2px solid var(--amber); border-radius: 0 8px 8px 0; }
-.gate.good     { border-left: 2px solid var(--accent); border-radius: 0 8px 8px 0; }
-
-/* ── Commitments ── */
-.commit-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
-.commit-block {
-  background: var(--surface2);
-  border: 1px solid var(--border);
-  border-radius: 8px;
-  padding: 16px;
-}
-.commit-header {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  margin-bottom: 12px;
-  font-size: 12px;
-  font-weight: 500;
-  color: var(--text);
-}
-.commit-dot {
-  width: 8px; height: 8px;
-  border-radius: 50%;
-}
-.commit-item {
-  display: flex;
-  align-items: flex-start;
-  gap: 8px;
-  font-size: 12px;
-  color: var(--text-2);
-  line-height: 1.55;
-  margin-bottom: 7px;
-}
-.commit-item:last-child { margin-bottom: 0; }
-.commit-item::before {
-  content: '—';
-  color: var(--text-3);
-  flex-shrink: 0;
-  font-family: 'Geist Mono', monospace;
-}
-
-/* ── Footer ── */
-.footer {
-  margin-top: 64px;
-  padding-top: 24px;
-  border-top: 1px solid var(--border);
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-}
-.footer-left {
-  font-family: 'Geist Mono', monospace;
-  font-size: 10px;
-  color: var(--text-3);
-  letter-spacing: .06em;
-}
-.footer-right {
-  font-family: 'Geist Mono', monospace;
-  font-size: 10px;
-  color: var(--text-3);
-}
-
-@media (max-width: 640px) {
-  .page { padding: 32px 20px 60px; }
-  .doc-title { font-size: 30px; }
-  .commit-grid { grid-template-columns: 1fr; }
-  .data-table-header, .data-row { grid-template-columns: 140px 60px 1fr; }
+@media(max-width:680px){
+  .page{padding:36px 20px 80px;}
+  .doc-title{font-size:32px;}
+  .header{padding:28px 24px 24px;}
+  .metrics-grid{grid-template-columns:1fr;}
+  .data-table-hd,.data-row{grid-template-columns:130px 56px 1fr;}
+  .gate{grid-template-columns:80px 1fr;}
+  .assumption,.key-decision{grid-template-columns:36px 1fr;}
+  .commit-grid{grid-template-columns:1fr;}
 }
 </style>
 </head>
 <body>
+
+<!-- ══ SHARED NAV ══ -->
+<nav class="doc-nav">
+  <div class="doc-nav-left">
+    <a class="doc-nav-back" href="index.html">
+      <span class="doc-nav-back-arrow">←</span>
+      Back to overview
+    </a>
+    <div class="doc-nav-divider"></div>
+    <div class="doc-nav-brand">
+      <div class="doc-nav-dot"></div>
+      Calibrax.ai
+    </div>
+  </div>
+  <div class="doc-nav-right">
+    <div class="doc-nav-label">Deliverable 2 of 5</div>
+    <div class="doc-nav-pills">
+      <div class="doc-nav-pill done"></div>
+      <div class="doc-nav-pill active"></div>
+      <div class="doc-nav-pill"></div>
+      <div class="doc-nav-pill"></div>
+      <div class="doc-nav-pill"></div>
+    </div>
+  </div>
+</nav>
+
 <div class="page">
 
-  <!-- ── Header ── -->
-  <div class="header">
-    <div class="doc-eyebrow">Calibrax Internal — Pitch Sprint Document</div>
-    <div class="doc-title">Nexus <em>Command Console</em></div>
-    <div class="doc-subtitle">Lightweight Product Requirements Document — CEO Prototype</div>
-    <div class="meta-row">
-      <span class="meta-pill accent">v0.2 — FINAL</span>
-      <span class="meta-pill">Client: FreshChoice Group</span>
-      <span class="meta-pill">Sprint: 14 days</span>
-      <span class="meta-pill">Squad: 1 AI PM · 1 DS · 1 ENG</span>
-      <span class="meta-pill red">Supersedes v0.1</span>
+<!-- ══ HEADER ══ -->
+<div class="header">
+  <div class="doc-eyebrow">Calibrax Internal · Pitch Sprint Document · Deliverable 2 of 5</div>
+  <div class="doc-title">Nexus <em>Command Console</em></div>
+  <div class="doc-subtitle">Lightweight Product Requirements Document — CEO Prototype</div>
+  <div class="meta-row">
+    <span class="meta-pill accent">v0.3 — Final</span>
+    <span class="meta-pill">Client: FreshChoice Group</span>
+    <span class="meta-pill">Sprint: 14 days</span>
+    <span class="meta-pill">Squad: 1 AI PM · 1 DS · 1 ENG</span>
+    <span class="meta-pill red">Supersedes v0.1</span>
+  </div>
+</div>
+
+<!-- ══ CHANGELOG ══ -->
+<div class="changelog">
+  <div class="changelog-title">What changed in v0.3 — post-review refinements</div>
+  <div class="changelog-grid">
+    <div class="change-item removed">Problem statement condensed to a 5-line context anchor. Full analysis in D1 — no duplication.</div>
+    <div class="change-item removed">US-06 and US-07 removed as user stories. Replaced with a Non-Functional Requirements table (requirement, threshold, test method).</div>
+    <div class="change-item removed">Mutual commitments section removed from PRD. Moved to Deliverable 4 — Sprint Plan where it belongs.</div>
+    <div class="change-item">A-03 (LLM via API) and A-04 (single laptop) reclassified as Key Decisions — these are choices already made, not unknowns.</div>
+    <div class="change-item">Sections renumbered: 10 → 9 total. Problem statement, user stories, and assumptions all tighter.</div>
+  </div>
+</div>
+
+
+<!-- ══ 01: CONTEXT ══ -->
+<div class="section" id="s1">
+  <div class="section-hd">
+    <span class="sn">01</span>
+    <span class="st">Context — <em>read D1 first</em></span>
+    <div class="section-line"></div>
+  </div>
+  <p class="prose">We are building a 14-day pitch prototype for <strong>FreshChoice Group</strong> — a $2.4B grocery retailer whose CEO cannot answer basic business questions without a 1–2 day human relay across five disconnected data systems. Full problem analysis, user landscape, and market scan are in <strong>Deliverable 1</strong>.</p>
+  <p class="prose">This document covers what to build, how it should behave, and what the squad needs to know to ship it. The prototype must make James Whitfield say <em>"this is exactly what I've been asking for"</em> in under 20 minutes. Everything below is in service of that moment.</p>
+</div>
+
+
+<!-- ══ 02: SCOPE ══ -->
+<div class="section" id="s2">
+  <div class="section-hd">
+    <span class="sn">02</span>
+    <span class="st">Prototype scope</span>
+    <div class="section-line"></div>
+  </div>
+  <p class="prose" style="margin-bottom:20px;">This is a <strong>14-day, pitch-quality prototype</strong> — not a production system. Every scope decision is optimised for demo reliability and wow factor, not engineering completeness. Every cut below was made deliberately.</p>
+
+  <div class="scope-group">
+    <div class="scope-group-header">
+      <span class="scope-group-title">Must have</span>
+      <span class="badge badge-must">required — no exceptions</span>
+    </div>
+    <div class="scope-items">
+      <div class="scope-item must"><span><strong>Conversational chat interface</strong> — CEO types a free-text question and receives a prose answer. Clean, professional web UI. No login screen for the demo.</span></div>
+      <div class="scope-item must"><span><strong>Pre-computed structured data lookup</strong> — ~40–50 query variants covering all 5 demo questions and natural rephrasings. Deterministic, millisecond responses.</span></div>
+      <div class="scope-item must"><span><strong>RAG pipeline over unstructured corpus</strong> — Teams message threads and email summaries chunked, embedded, and stored in ChromaDB. Top-k retrieval on every relevant query.</span></div>
+      <div class="scope-item must"><span><strong>Query intent classifier</strong> — keyword-based routing: numbers/metrics → lookup, people/escalation → RAG, blended → both. Fallback to "both" on any unrecognised query.</span></div>
+      <div class="scope-item must"><span><strong>LLM synthesis layer</strong> — receives lookup data + RAG chunks + query. Returns blended prose with citations. System prompt enforces source-only responding for numeric values.</span></div>
+      <div class="scope-item must"><span><strong>Numeric hallucination guardrail</strong> — post-processing extracts all numbers from LLM response and verifies each exists verbatim in source context. If any fail: graceful fallback triggered.</span></div>
+      <div class="scope-item must"><span><strong>SSE streaming response</strong> — answer streams token-by-token from FastAPI to React. First token must appear within 2 seconds of query submission.</span></div>
+      <div class="scope-item must"><span><strong>Source attribution panel</strong> — collapsible panel beneath each answer showing 1–3 citation references (source name, type, short excerpt).</span></div>
+      <div class="scope-item must"><span><strong>Graceful failure handler</strong> — when guardrail triggers: confident, non-technical message. Zero Python errors visible. Zero hallucinated numbers ever rendered.</span></div>
+      <div class="scope-item must"><span><strong>Suggested question chips (5)</strong> — pre-validated demo questions as clickable chips. Each has a confirmed good answer in the test suite.</span></div>
+      <div class="scope-item must"><span><strong>Demo Mode toggle</strong> — hidden keyboard shortcut or URL param that serves pre-cached responses for the 5 scripted questions with client-side streaming simulation. Off-script queries always use the live system.</span></div>
     </div>
   </div>
 
-  <!-- ── Changelog ── -->
-  <div class="changelog">
-    <div class="changelog-title">What changed from v0.1 — negotiated with Technical Lead</div>
-    <div class="changelog-grid">
-      <div class="change-item">NL-to-SQL replaced with pre-computed lookup JSON (~40–50 query variants). Saves 3 DS days. CEO output identical.</div>
-      <div class="change-item">Query intent classifier added — keyword-based routing to lookup / RAG / both. Falls back to "both" on ambiguity.</div>
-      <div class="change-item">Numeric hallucination guardrail added — post-processing verifies all numbers exist in source context before rendering.</div>
-      <div class="change-item">Streaming (SSE) promoted from architecture note to must-have US-07. First token must appear within 2 seconds.</div>
-      <div class="change-item">US-06 (graceful failure) added as must-have. Zero visible errors, zero hallucinated numbers in demo conditions.</div>
-      <div class="change-item">Demo Mode added as must-have engineering task — pre-caches scripted answers, simulates streaming client-side.</div>
-      <div class="change-item">API contract milestone added: Day 2. Schema signed off by DS + ENG before deep build begins.</div>
-      <div class="change-item">Red-team block formalised: Days 11–12, PM-run, 30 queries, go/no-go gate before pitch.</div>
-      <div class="change-item removed">Data authoring extended from 3 to 4 days. PM provides structured template on Day 1 morning to enable this.</div>
-      <div class="change-item removed">Second DS confirmed as named contingency. Activated if Day 4 checkpoint shows RAG pipeline not started.</div>
-      <div class="change-item removed">Code freeze on Day 13. No changes without TL + PM joint approval after that point.</div>
+  <div class="scope-group" style="margin-top:16px;">
+    <div class="scope-group-header">
+      <span class="scope-group-title">Nice to have</span>
+      <span class="badge badge-nice">only if all 5 scripted questions pass by Day 7</span>
+    </div>
+    <div class="scope-items">
+      <div class="scope-item nice"><span><strong>Proactive alert feed</strong> — 2–3 pre-generated insight cards above the chat input. Powerful for showing push intelligence. Do not build until core is solid.</span></div>
+      <div class="scope-item nice"><span><strong>Role switcher</strong> — lightweight toggle between CEO view and Regional Manager view. Excellent for the pitch narrative. One afternoon if core is done.</span></div>
+      <div class="scope-item nice"><span><strong>Follow-up question context</strong> — retain the previous answer in LLM context for clarifying follow-ups. Adds depth to the conversational feel.</span></div>
     </div>
   </div>
 
-
-  <!-- ── 01: Problem Statement ── -->
-  <div class="section">
-    <div class="section-header">
-      <span class="section-num">01</span>
-      <span class="section-title">Problem statement</span>
-      <div class="section-line"></div>
+  <div class="scope-group" style="margin-top:16px;">
+    <div class="scope-group-header">
+      <span class="scope-group-title">Out of scope</span>
+      <span class="badge badge-out">explicitly excluded — do not build</span>
     </div>
-    <p class="prose">
-      James Whitfield, CEO of FreshChoice Group — a <strong>$2.4B grocery retailer with 280+ stores across Australia, NZ, and Singapore</strong> — cannot get timely answers to basic business questions. A question like <em>"How did fresh produce margins perform in NZ last month vs the prior quarter?"</em> requires a 1–2 day human relay: CEO → CFO → finance team → SAP extract → Excel analysis → email back.
-    </p>
-    <p class="prose">
-      His data lives in five disconnected systems: <strong>SAP</strong> (finance), <strong>Salesforce</strong> (CRM), a <strong>proprietary POS</strong> (transactions), a <strong>legacy WMS</strong> (supply chain), and <strong>Teams/WhatsApp/email</strong> (qualitative operational context). Nobody has a unified view. A previous Tableau rollout failed 18 months ago due to poor data integration and low adoption. The CEO is sceptical of vendor pitches that are "all slides, no substance."
-    </p>
-    <p class="prose">
-      This prototype must make that problem viscerally obvious — and then instantly dissolve it. The CEO's exact words: <em>"I want to ask a question and get an answer — like I'm talking to my smartest analyst who has access to everything."</em> That is what we are building. Not a dashboard. Not a report. A conversation that returns numbers and context, together, in seconds.
-    </p>
-    <p class="prose">
-      This is not a FreshChoice-specific problem. The same pattern — data silos, human relay bottlenecks, slow decisions — repeats across large retailers, FMCG companies, logistics operators, and healthcare networks. The prototype is the proof-of-concept for a reusable enterprise platform.
-    </p>
-  </div>
-
-
-  <!-- ── 02: Scope ── -->
-  <div class="section">
-    <div class="section-header">
-      <span class="section-num">02</span>
-      <span class="section-title">Prototype scope</span>
-      <div class="section-line"></div>
-    </div>
-    <p class="prose" style="margin-bottom:20px;">
-      This is a <strong>14-day, pitch-quality prototype</strong> — not a production system. Scope decisions are optimised for demo reliability and wow factor, not engineering completeness. Every cut below was made deliberately to protect quality on what matters in the room.
-    </p>
-
-    <div class="scope-group">
-      <div class="scope-group-header">
-        <span class="scope-group-title">Must have</span>
-        <span class="badge badge-must">required — no exceptions</span>
-      </div>
-      <div class="scope-items">
-        <div class="scope-item must"><span><strong>Conversational chat interface</strong> — CEO types a free-text question and receives a prose answer. Clean, professional web UI. No login screen for the demo.</span></div>
-        <div class="scope-item must"><span><strong>Pre-computed structured data lookup</strong> — ~40–50 query variants covering all 5 demo questions and natural rephrasings. Returned in milliseconds. Deterministic and debuggable.</span></div>
-        <div class="scope-item must"><span><strong>RAG pipeline over unstructured corpus</strong> — Teams message threads and email summaries chunked, embedded, and stored in ChromaDB. Top-k retrieval on every relevant query.</span></div>
-        <div class="scope-item must"><span><strong>Query intent classifier</strong> — keyword-based routing: numbers/metrics → lookup, people/teams/escalation → RAG, ambiguous or blended → both. Fallback to "both" on any unrecognised query.</span></div>
-        <div class="scope-item must"><span><strong>LLM synthesis layer</strong> — receives lookup data + RAG chunks + user query. Returns a blended prose answer with citations. System prompt enforces source-only responding for numeric values.</span></div>
-        <div class="scope-item must"><span><strong>Numeric hallucination guardrail</strong> — post-processing step extracts all numbers from LLM response and verifies each exists verbatim in the source context passed in. If any fails verification, graceful fallback is triggered instead.</span></div>
-        <div class="scope-item must"><span><strong>SSE streaming response</strong> — answer streams token-by-token from FastAPI to React via Server-Sent Events. First token must appear within 2 seconds of query submission.</span></div>
-        <div class="scope-item must"><span><strong>Source attribution panel</strong> — collapsible panel beneath each answer showing 1–3 citation references (source name, type, short excerpt). Populated from citation JSON in API response.</span></div>
-        <div class="scope-item must"><span><strong>Graceful failure handler</strong> — when guardrail triggers or classifier cannot route: system returns a confident, non-technical message stating what it cannot answer and inviting rephrasing. Zero Python errors visible to user. Zero hallucinated numbers ever rendered.</span></div>
-        <div class="scope-item must"><span><strong>Suggested questions (5 chips)</strong> — pre-validated demo questions displayed as clickable chips. Each populates the input and triggers the live query. All 5 have pre-validated good answers in the test suite.</span></div>
-        <div class="scope-item must"><span><strong>Demo Mode toggle</strong> — hidden toggle (keyboard shortcut or URL param) that serves pre-cached responses to the 5 scripted questions with client-side streaming simulation. Fallback for API latency or WiFi issues during pitch. Off-script queries always use live system.</span></div>
-      </div>
-    </div>
-
-    <div class="scope-group" style="margin-top:16px;">
-      <div class="scope-group-header">
-        <span class="scope-group-title">Nice to have</span>
-        <span class="badge badge-nice">only if all 5 scripted Qs pass by Day 7</span>
-      </div>
-      <div class="scope-items">
-        <div class="scope-item nice"><span><strong>Proactive alert feed</strong> — 2–3 pre-generated insight cards surfaced above the chat input (e.g., "NZ fresh produce margin dropped 4% this week"). Powerful for showing push intelligence. Do not build until core is solid.</span></div>
-        <div class="scope-item nice"><span><strong>Role switcher</strong> — lightweight toggle between CEO view and Regional Manager view showing same data with different scope. Excellent for the pitch narrative. One afternoon if the core is done.</span></div>
-        <div class="scope-item nice"><span><strong>Follow-up question context</strong> — retain the previous answer in the LLM context so the CEO can ask a clarifying follow-up without re-stating the question. Adds depth to the conversation feel.</span></div>
-      </div>
-    </div>
-
-    <div class="scope-group" style="margin-top:16px;">
-      <div class="scope-group-header">
-        <span class="scope-group-title">Out of scope</span>
-        <span class="badge badge-out">explicitly excluded — do not build</span>
-      </div>
-      <div class="scope-items">
-        <div class="scope-item out"><span>Live API connections to SAP, Salesforce, or any real client system</span></div>
-        <div class="scope-item out"><span>User authentication, access control, or session management</span></div>
-        <div class="scope-item out"><span>Mobile interface or responsive layout below 1024px</span></div>
-        <div class="scope-item out"><span>Full dynamic NL-to-SQL engine — this is Phase 2 in the paid engagement</span></div>
-        <div class="scope-item out"><span>WhatsApp or Teams bot interface</span></div>
-        <div class="scope-item out"><span>Data persistence, user history, or conversation storage</span></div>
-        <div class="scope-item out"><span>Production error handling, logging, or monitoring</span></div>
-        <div class="scope-item out"><span>Multi-language support</span></div>
-      </div>
+    <div class="scope-items">
+      <div class="scope-item out"><span>Live API connections to SAP, Salesforce, or any real client system</span></div>
+      <div class="scope-item out"><span>User authentication, access control, or session management</span></div>
+      <div class="scope-item out"><span>Mobile interface or responsive layout below 1024px</span></div>
+      <div class="scope-item out"><span>Full dynamic NL-to-SQL engine — this is Phase 2 in the paid engagement</span></div>
+      <div class="scope-item out"><span>WhatsApp or Teams bot interface</span></div>
+      <div class="scope-item out"><span>Data persistence, user history, or conversation storage</span></div>
+      <div class="scope-item out"><span>Production error handling, logging, or monitoring</span></div>
     </div>
   </div>
+</div>
 
 
-  <!-- ── 03: User Stories ── -->
-  <div class="section">
-    <div class="section-header">
-      <span class="section-num">03</span>
-      <span class="section-title">Key user stories</span>
-      <div class="section-line"></div>
+<!-- ══ 03: USER STORIES ══ -->
+<div class="section" id="s3">
+  <div class="section-hd">
+    <span class="sn">03</span>
+    <span class="st">Key user stories</span>
+    <div class="section-line"></div>
+  </div>
+  <p class="prose" style="margin-bottom:20px;">Primary persona: <strong>James Whitfield, CEO, FreshChoice Group.</strong> Finance and operations background. Highly commercial. Sceptical of conceptual pitches. Will type his own questions. Must be convinced in 20 minutes.</p>
+
+  <div class="story">
+    <div class="story-hd">
+      <span class="story-id">US-01</span>
+      <span class="story-title">Ask a structured data question</span>
+      <span class="badge badge-must">must have</span>
     </div>
-    <p class="prose" style="margin-bottom:20px;">Primary persona: <strong>James Whitfield, CEO, FreshChoice Group.</strong> Finance and operations background. Highly commercial. Sceptical of conceptual pitches. Will type his own questions. Must be convinced in 20 minutes.</p>
-
-    <div class="story">
-      <div class="story-header">
-        <span class="story-id">US-01</span>
-        <span class="story-title-text">Ask a structured data question</span>
-        <span class="badge badge-must">must have</span>
-      </div>
-      <div class="story-body-wrap">
-        <div class="story-as">As the CEO, I want to type <em>"How did fresh produce margins perform in New Zealand last month versus the prior quarter?"</em> and receive an answer with actual percentage figures and a short explanation of what drove the change — without waiting for my finance team.</div>
-        <div class="story-ac-label">Acceptance criteria</div>
-        <div class="story-ac-items">
-          <div class="story-ac-item">Response includes at least <strong>two numeric values</strong> and a trend direction (up/down/flat)</div>
-          <div class="story-ac-item">A 1–2 sentence explanation of the driver is included alongside the numbers</div>
-          <div class="story-ac-item"><strong>First token appears within 2 seconds.</strong> Full response within 10 seconds.</div>
-          <div class="story-ac-item">Source attribution panel cites the structured data fixture by name</div>
-        </div>
-      </div>
-    </div>
-
-    <div class="story">
-      <div class="story-header">
-        <span class="story-id">US-02</span>
-        <span class="story-title-text">Ask about what teams are saying</span>
-        <span class="badge badge-must">must have</span>
-      </div>
-      <div class="story-body-wrap">
-        <div class="story-as">As the CEO, I want to type <em>"What are the top issues my regional managers are escalating this week?"</em> and receive a synthesised summary drawn from Teams and email messages — not a raw list of messages, but an intelligent distillation of themes.</div>
-        <div class="story-ac-label">Acceptance criteria</div>
-        <div class="story-ac-items">
-          <div class="story-ac-item">Response summarises <strong>2–3 distinct themes</strong> from the unstructured corpus</div>
-          <div class="story-ac-item">At least one citation references a specific source with date (e.g., <em>"Auckland regional manager Teams thread, 14 March"</em>)</div>
-          <div class="story-ac-item">Response reads as synthesised analysis, not a message dump</div>
-          <div class="story-ac-item">No numeric values appear in this response unless they were present verbatim in the corpus</div>
-        </div>
-      </div>
-    </div>
-
-    <div class="story">
-      <div class="story-header">
-        <span class="story-id">US-03</span>
-        <span class="story-title-text">Ask a blended cross-source question</span>
-        <span class="badge badge-must">must have — the wow moment</span>
-      </div>
-      <div class="story-body-wrap">
-        <div class="story-as">As the CEO, I want to ask <em>"What's happening with supply chain disruptions and how is it affecting our margins?"</em> and get a single answer that connects the financial impact from our data with the operational context from what my team has been saying — without me having to ask two separate questions.</div>
-        <div class="story-ac-label">Acceptance criteria</div>
-        <div class="story-ac-items">
-          <div class="story-ac-item">Answer explicitly references <strong>both a number (from lookup) and a qualitative source (from RAG)</strong> in the same response</div>
-          <div class="story-ac-item">The two are <strong>causally connected</strong> in the narrative — not listed separately</div>
-          <div class="story-ac-item">Example of passing response: <em>"The 3.2% margin drop in NZ correlates with the Auckland DC delay flagged by Sarah Chen on 11 March"</em></div>
-          <div class="story-ac-item">Source panel shows citations from both source types</div>
-          <div class="story-ac-item">All numbers in the response verified by the guardrail post-processor</div>
-        </div>
-      </div>
-    </div>
-
-    <div class="story">
-      <div class="story-header">
-        <span class="story-id">US-04</span>
-        <span class="story-title-text">See where the answer came from</span>
-        <span class="badge badge-must">must have — trust signal</span>
-      </div>
-      <div class="story-body-wrap">
-        <div class="story-as">As a CEO who has been burned by inaccurate dashboards before, I want to see exactly which data file or message thread each part of the answer was drawn from — so I can trust the numbers without having to verify them myself.</div>
-        <div class="story-ac-label">Acceptance criteria</div>
-        <div class="story-ac-items">
-          <div class="story-ac-item">A <strong>collapsible "Sources" panel</strong> appears beneath every answer</div>
-          <div class="story-ac-item">Each source shows: name, type (structured data / Teams / email), and a short excerpt</div>
-          <div class="story-ac-item">Panel is collapsed by default, expanded on click — does not clutter the main answer</div>
-          <div class="story-ac-item">1–3 sources per answer. Never zero on a successful response.</div>
-        </div>
-      </div>
-    </div>
-
-    <div class="story">
-      <div class="story-header">
-        <span class="story-id">US-05</span>
-        <span class="story-title-text">Use suggested questions</span>
-        <span class="badge badge-must">must have — demo safety net</span>
-      </div>
-      <div class="story-body-wrap">
-        <div class="story-as">As a demo participant, I want to see pre-loaded question chips I can click to trigger reliable, impressive answers — so the demo flows naturally even without scripting the CEO's every move.</div>
-        <div class="story-ac-label">Acceptance criteria</div>
-        <div class="story-ac-items">
-          <div class="story-ac-item">5 question chips visible above the input field on load</div>
-          <div class="story-ac-item">Clicking a chip populates the input and triggers the query (does not auto-submit — CEO presses Enter, keeping him in control)</div>
-          <div class="story-ac-item">All 5 chips have <strong>pre-validated passing answers</strong> confirmed during red-team</div>
-          <div class="story-ac-item">In Demo Mode, these 5 chips return pre-cached answers instantly</div>
-        </div>
-      </div>
-    </div>
-
-    <div class="story">
-      <div class="story-header">
-        <span class="story-id">US-06</span>
-        <span class="story-title-text">Handle off-script questions gracefully</span>
-        <span class="badge badge-must">must have — added v0.2</span>
-        <span class="badge badge-new">new</span>
-      </div>
-      <div class="story-body-wrap">
-        <div class="story-as">As the CEO typing a question the system wasn't specifically built for, I want to receive a response that is honest about what it knows and doesn't know — rather than a hallucinated answer or a technical error on screen.</div>
-        <div class="story-ac-label">Acceptance criteria</div>
-        <div class="story-ac-items">
-          <div class="story-ac-item"><strong>Zero Python tracebacks or API error messages</strong> ever visible to the user under any condition</div>
-          <div class="story-ac-item"><strong>Zero hallucinated numeric values</strong> — enforced by the guardrail post-processor</div>
-          <div class="story-ac-item">When guardrail triggers: system returns a calm, confident message (e.g., <em>"I don't have enough data to give you a reliable number on that — can you try rephrasing or ask about a specific market?"</em>)</div>
-          <div class="story-ac-item">Tested against 15 off-script queries during red-team. Must return plausible, non-embarrassing responses on at least 10 of 15.</div>
-        </div>
-      </div>
-    </div>
-
-    <div class="story">
-      <div class="story-header">
-        <span class="story-id">US-07</span>
-        <span class="story-title-text">See the answer stream in real time</span>
-        <span class="badge badge-must">must have — added v0.2</span>
-        <span class="badge badge-new">new</span>
-      </div>
-      <div class="story-body-wrap">
-        <div class="story-as">As the CEO, I want to see the answer begin appearing immediately after I press Enter — not wait 12 seconds staring at a spinner — so the system feels alive and intelligent rather than slow.</div>
-        <div class="story-ac-label">Acceptance criteria</div>
-        <div class="story-ac-items">
-          <div class="story-ac-item"><strong>First token appears within 2 seconds</strong> of query submission in normal network conditions</div>
-          <div class="story-ac-item">Answer streams token-by-token with no visible chunks or jumps</div>
-          <div class="story-ac-item">Source panel populates <strong>after</strong> the prose completes — does not interrupt reading flow</div>
-          <div class="story-ac-item">In Demo Mode, streaming is simulated client-side at the same visual cadence as live streaming</div>
-        </div>
+    <div class="story-body">
+      <div class="story-as">As the CEO, I want to type <em>"How did fresh produce margins perform in New Zealand last month versus the prior quarter?"</em> and receive an answer with actual percentage figures and a short explanation of what drove the change — without waiting for my finance team.</div>
+      <div class="story-ac-label">Acceptance criteria</div>
+      <div class="story-ac-items">
+        <div class="story-ac-item">Response includes at least <strong>two numeric values</strong> and a trend direction</div>
+        <div class="story-ac-item">A 1–2 sentence explanation of the driver is included alongside the numbers</div>
+        <div class="story-ac-item"><strong>First token appears within 2 seconds.</strong> Full response within 10 seconds.</div>
+        <div class="story-ac-item">Source attribution panel cites the structured data fixture by name</div>
       </div>
     </div>
   </div>
 
-
-  <!-- ── 04: Data Requirements ── -->
-  <div class="section">
-    <div class="section-header">
-      <span class="section-num">04</span>
-      <span class="section-title">Data requirements</span>
-      <div class="section-line"></div>
+  <div class="story">
+    <div class="story-hd">
+      <span class="story-id">US-02</span>
+      <span class="story-title">Ask about what teams are saying</span>
+      <span class="badge badge-must">must have</span>
     </div>
-    <p class="prose" style="margin-bottom:8px;">
-      All data is <strong>synthetic and fictional</strong>. No real FreshChoice data is required or expected. Data must be <strong>internally consistent</strong> — if NZ margins drop in week 3 of the structured fixture, the Teams messages must reference that same event. The PM will provide a structured authoring template to the DS on Day 1 morning. The 5 demo questions are locked before data authoring begins.
-    </p>
-    <p class="prose" style="margin-bottom:20px;">
-      Data authoring is the <strong>highest-risk task in the sprint</strong>. It must start Day 1 and complete by end of Day 4. Poor data produces weak demo answers that no amount of prompt engineering can recover.
-    </p>
-
-    <div class="data-table">
-      <div class="data-table-header">
-        <span>Dataset</span>
-        <span>Owner</span>
-        <span>Specification</span>
+    <div class="story-body">
+      <div class="story-as">As the CEO, I want to type <em>"What are the top issues my regional managers are escalating this week?"</em> and receive a synthesised summary drawn from Teams and email — not a raw message list, but an intelligent distillation of themes.</div>
+      <div class="story-ac-label">Acceptance criteria</div>
+      <div class="story-ac-items">
+        <div class="story-ac-item">Response summarises <strong>2–3 distinct themes</strong> from the unstructured corpus</div>
+        <div class="story-ac-item">At least one citation references a specific source with date</div>
+        <div class="story-ac-item">Response reads as synthesised analysis, not a message dump</div>
+        <div class="story-ac-item">No numeric values appear unless present verbatim in the corpus</div>
       </div>
-
-      <div class="data-row">
-        <div class="data-label">Structured fixture 1<br>Sales &amp; margin data</div>
-        <div class="data-owner"><span class="badge badge-ds">DS</span></div>
-        <div class="data-val">
-          <strong>500–800 rows.</strong> Weekly sales volume and gross margin % by: product category (fresh produce, dry goods, beverages, dairy), market (AU / NZ / SG), store format (hypermarket / supermarket / convenience). 14–16 weeks of history. Must include a visible margin dip in NZ fresh produce weeks 10–12 to support demo questions. Delivered as CSV + pre-parsed into lookup JSON.
-          <div class="note">Format: week_ending, market, category, format, revenue_aud, gross_margin_pct, units_sold</div>
-        </div>
-      </div>
-
-      <div class="data-row">
-        <div class="data-label">Structured fixture 2<br>Supply chain log</div>
-        <div class="data-owner"><span class="badge badge-ds">DS</span></div>
-        <div class="data-val">
-          <strong>20–40 rows.</strong> Incident records covering distribution disruptions. Fields: date, affected_dc (Auckland / Melbourne / Singapore), affected_categories (comma-separated), estimated_margin_impact_pct, status (resolved / ongoing), notes. Must include an Auckland DC event in week 11 that causally links to the NZ margin dip in Fixture 1.
-          <div class="note">Format: incident_date, dc_name, categories_affected, margin_impact_pct, status, summary_note</div>
-        </div>
-      </div>
-
-      <div class="data-row">
-        <div class="data-label">Unstructured corpus 1<br>Teams message threads</div>
-        <div class="data-owner"><span class="badge badge-ds">DS</span></div>
-        <div class="data-val">
-          <strong>4–6 threads, 8–15 messages each.</strong> Covering: (1) NZ fresh produce supply issues referencing the Auckland DC delay, (2) cross-market performance concerns, (3) e-commerce channel growth, (4) staff rostering escalation. Written in the authentic voice of a regional ops manager — direct, slightly informal, with specific names and dates. Named characters: Sarah Chen (CSO), regional managers for Auckland, Melbourne, and Singapore.
-          <div class="note">Format: thread_name, date, sender_name, sender_role, message_body</div>
-        </div>
-      </div>
-
-      <div class="data-row">
-        <div class="data-label">Unstructured corpus 2<br>Email summaries</div>
-        <div class="data-owner"><span class="badge badge-ds">DS</span></div>
-        <div class="data-val">
-          <strong>6–10 emails.</strong> From regional managers to Sarah Chen (CSO) or James Whitfield (CEO) covering: weekly ops summaries, supplier delay notifications, margin concern escalations, and one e-commerce performance update. Each email should have a clear subject, date, sender, and 3–6 paragraph body. Must cross-reference the Auckland DC event from Fixture 2.
-          <div class="note">Format: email_date, sender_name, sender_role, recipient, subject, body</div>
-        </div>
-      </div>
-
-      <div class="data-row">
-        <div class="data-label">Pre-computed lookup JSON</div>
-        <div class="data-owner"><span class="badge badge-ds">DS</span></div>
-        <div class="data-val">
-          <strong>40–50 query variants</strong> derived from the 5 demo questions and natural rephrasings. Each entry maps a query pattern (keyword set) to a pre-computed answer payload: the relevant data rows, the computed metric, and a short context note. Enables deterministic, millisecond responses to structured data questions. Must cover all 5 demo questions plus at least 6 plausible variations of each.
-          <div class="note">Format: query_keywords[], market?, category?, metric_type → answer_payload{value, trend, context, source_ref}</div>
-        </div>
-      </div>
-
-      <div class="data-row">
-        <div class="data-label">Embedding index</div>
-        <div class="data-owner"><span class="badge badge-ds">DS</span></div>
-        <div class="data-val">
-          All unstructured documents (Teams threads + emails) chunked at <strong>200–350 tokens with 40-token overlap</strong>. Embedded using OpenAI text-embedding-3-small or equivalent. Stored in <strong>ChromaDB (local)</strong>. Each chunk metadata must include: source_name, source_type (teams/email), date, sender_name. Top-k retrieval set at k=4 for demo conditions.
-          <div class="note">Target: &lt;500ms retrieval latency on demo hardware</div>
-        </div>
-      </div>
-
     </div>
   </div>
 
-
-  <!-- ── 05: API Contract ── -->
-  <div class="section">
-    <div class="section-header">
-      <span class="section-num">05</span>
-      <span class="section-title">API contract — agreed Day 2</span>
-      <div class="section-line"></div>
+  <div class="story">
+    <div class="story-hd">
+      <span class="story-id">US-03</span>
+      <span class="story-title">Ask a blended cross-source question</span>
+      <span class="badge badge-must">must have — the wow moment</span>
     </div>
-    <p class="prose" style="margin-bottom:16px;">
-      The following schema is agreed between DS and ENG by end of Day 2. <strong>No changes after Day 6</strong> without PM sign-off. The engineer builds all UI components against this schema from Day 3 onward.
-    </p>
+    <div class="story-body">
+      <div class="story-as">As the CEO, I want to ask <em>"What's happening with supply chain disruptions and how is it affecting our margins?"</em> and get a single answer connecting financial impact from our data with operational context from what my team has been saying.</div>
+      <div class="story-ac-label">Acceptance criteria</div>
+      <div class="story-ac-items">
+        <div class="story-ac-item">Answer explicitly references <strong>both a number (from lookup) and a qualitative source (from RAG)</strong> in the same response</div>
+        <div class="story-ac-item">The two are <strong>causally connected</strong> in the narrative — not listed separately</div>
+        <div class="story-ac-item">Passing example: <em>"The 3.2% margin drop in NZ correlates with the Auckland DC delay flagged by Sarah Chen on 11 March"</em></div>
+        <div class="story-ac-item">Source panel shows citations from both structured and unstructured types</div>
+        <div class="story-ac-item">All numbers verified by the guardrail post-processor</div>
+      </div>
+    </div>
+  </div>
 
-    <div class="schema-block">
-      <div class="schema-title">POST /api/query — request</div>
-      <div class="schema-code"><span class="key">{
+  <div class="story">
+    <div class="story-hd">
+      <span class="story-id">US-04</span>
+      <span class="story-title">See where the answer came from</span>
+      <span class="badge badge-must">must have — trust signal</span>
+    </div>
+    <div class="story-body">
+      <div class="story-as">As a CEO who has been burned by inaccurate dashboards before, I want to see exactly which data file or message thread each part of the answer was drawn from — so I can trust the numbers without verifying them myself.</div>
+      <div class="story-ac-label">Acceptance criteria</div>
+      <div class="story-ac-items">
+        <div class="story-ac-item">A <strong>collapsible "Sources" panel</strong> appears beneath every answer</div>
+        <div class="story-ac-item">Each source shows: name, type (structured / Teams / email), and a short excerpt</div>
+        <div class="story-ac-item">Panel is collapsed by default, expanded on click — does not clutter the main answer</div>
+        <div class="story-ac-item">1–3 sources per answer. Never zero on a successful response.</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="story">
+    <div class="story-hd">
+      <span class="story-id">US-05</span>
+      <span class="story-title">Use suggested questions</span>
+      <span class="badge badge-must">must have — demo safety net</span>
+    </div>
+    <div class="story-body">
+      <div class="story-as">As a demo participant, I want to see pre-loaded question chips I can click to trigger reliable, impressive answers — so the demo flows naturally even without scripting every move.</div>
+      <div class="story-ac-label">Acceptance criteria</div>
+      <div class="story-ac-items">
+        <div class="story-ac-item">5 question chips visible above the input field on load</div>
+        <div class="story-ac-item">Clicking a chip populates the input — CEO presses Enter, keeping him in control</div>
+        <div class="story-ac-item">All 5 chips have <strong>pre-validated passing answers</strong> confirmed during red-team</div>
+        <div class="story-ac-item">In Demo Mode, these 5 chips return pre-cached answers instantly</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="nfr-label">Non-functional requirements</div>
+  <table class="nfr-table">
+    <thead>
+      <tr>
+        <th style="width:22%">Requirement</th>
+        <th style="width:26%">Threshold</th>
+        <th>Test method</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>Streaming latency</td>
+        <td><strong>First token ≤ 2 seconds</strong> after query submission</td>
+        <td>Stopwatch test on demo hardware, 5 consecutive runs on each of the 5 scripted questions. All must pass.</td>
+      </tr>
+      <tr>
+        <td>Hallucination guard</td>
+        <td><strong>Zero hallucinated numbers</strong> in any response, ever</td>
+        <td>Guardrail post-processor verified unit-tested. Red-team 30 queries manually checked for numeric accuracy before pitch.</td>
+      </tr>
+      <tr>
+        <td>Error visibility</td>
+        <td><strong>Zero Python tracebacks or API error messages</strong> visible to user</td>
+        <td>Force guardrail failure deliberately in staging. Confirm only the calm fallback message renders — no stack traces, no raw error strings.</td>
+      </tr>
+      <tr>
+        <td>Off-script robustness</td>
+        <td><strong>≥ 10 of 15</strong> off-script queries return plausible, non-embarrassing responses</td>
+        <td>PM-run red-team session on Day 11–12 using a predetermined 15-query adversarial set. Pass/fail logged per query.</td>
+      </tr>
+      <tr>
+        <td>Demo Mode fidelity</td>
+        <td>Cached responses stream at <strong>identical visual cadence</strong> to live responses</td>
+        <td>Side-by-side comparison on demo laptop. No perceptible difference in token-by-token appearance speed between live and cached.</td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+
+
+<!-- ══ 04: DATA REQUIREMENTS ══ -->
+<div class="section" id="s4">
+  <div class="section-hd">
+    <span class="sn">04</span>
+    <span class="st">Data requirements</span>
+    <div class="section-line"></div>
+  </div>
+  <p class="prose" style="margin-bottom:8px;">All data is <strong>synthetic and fictional</strong>. No real FreshChoice data required. Data must be <strong>internally consistent</strong> — if NZ margins drop in week 3 of the structured fixture, the Teams messages must reference that same event. Data authoring is the <strong>highest-risk task in the sprint</strong>. It must start Day 1 and complete by end of Day 4.</p>
+
+  <div class="data-table">
+    <div class="data-table-hd">
+      <span>Dataset</span>
+      <span>Owner</span>
+      <span>Specification</span>
+    </div>
+    <div class="data-row">
+      <div class="data-label">Structured fixture 1<br>Sales &amp; margin data</div>
+      <div><span class="badge badge-ds">DS</span></div>
+      <div class="data-val">
+        <strong>500–800 rows.</strong> Weekly sales volume and gross margin % by: product category, market (AU / NZ / SG), store format. 14–16 weeks of history. Must include a visible margin dip in NZ fresh produce weeks 10–12.
+        <div class="note">Format: week_ending, market, category, format, revenue_aud, gross_margin_pct, units_sold</div>
+      </div>
+    </div>
+    <div class="data-row">
+      <div class="data-label">Structured fixture 2<br>Supply chain log</div>
+      <div><span class="badge badge-ds">DS</span></div>
+      <div class="data-val">
+        <strong>20–40 rows.</strong> Incident records covering distribution disruptions. Must include an Auckland DC event in week 11 that causally links to the NZ margin dip in Fixture 1.
+        <div class="note">Format: incident_date, dc_name, categories_affected, margin_impact_pct, status, summary_note</div>
+      </div>
+    </div>
+    <div class="data-row">
+      <div class="data-label">Unstructured corpus 1<br>Teams message threads</div>
+      <div><span class="badge badge-ds">DS</span></div>
+      <div class="data-val">
+        <strong>4–6 threads, 8–15 messages each.</strong> Covering: NZ fresh produce supply issues, cross-market performance, e-commerce growth, staff rostering escalation. Named characters: Sarah Chen (CSO), regional managers for Auckland, Melbourne, and Singapore.
+        <div class="note">Format: thread_name, date, sender_name, sender_role, message_body</div>
+      </div>
+    </div>
+    <div class="data-row">
+      <div class="data-label">Unstructured corpus 2<br>Email summaries</div>
+      <div><span class="badge badge-ds">DS</span></div>
+      <div class="data-val">
+        <strong>6–10 emails.</strong> From regional managers to Sarah Chen or James Whitfield covering: weekly ops summaries, supplier delay notifications, margin escalations, one e-commerce update. Must cross-reference the Auckland DC event from Fixture 2.
+        <div class="note">Format: email_date, sender_name, sender_role, recipient, subject, body</div>
+      </div>
+    </div>
+    <div class="data-row">
+      <div class="data-label">Pre-computed lookup JSON</div>
+      <div><span class="badge badge-ds">DS</span></div>
+      <div class="data-val">
+        <strong>40–50 query variants</strong> mapping keyword sets to pre-computed answer payloads. Enables deterministic, millisecond responses to structured data questions. Must cover all 5 demo questions plus at least 6 plausible rephrasings of each.
+        <div class="note">Format: query_keywords[], market?, category?, metric_type → answer_payload{value, trend, context, source_ref}</div>
+      </div>
+    </div>
+    <div class="data-row">
+      <div class="data-label">Embedding index</div>
+      <div><span class="badge badge-ds">DS</span></div>
+      <div class="data-val">
+        All unstructured documents chunked at <strong>200–350 tokens with 40-token overlap</strong>. Embedded with text-embedding-3-small. Stored in <strong>ChromaDB (local)</strong>. Each chunk metadata: source_name, source_type, date, sender_name. k=4 retrieval.
+        <div class="note">Target: &lt;500ms retrieval latency on demo hardware</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<!-- ══ 05: API CONTRACT ══ -->
+<div class="section" id="s5">
+  <div class="section-hd">
+    <span class="sn">05</span>
+    <span class="st">API contract — <em>agreed Day 2</em></span>
+    <div class="section-line"></div>
+  </div>
+  <p class="prose" style="margin-bottom:16px;">Schema agreed between DS and ENG by end of Day 2. <strong>No changes after Day 6</strong> without PM sign-off. Engineer builds all UI components against this schema from Day 3 onward.</p>
+
+  <div class="schema-block">
+    <div class="schema-title">POST /api/query — request</div>
+    <div class="schema-code"><span class="key">{
   "query"</span>:       <span class="type">string</span>,        <span class="comm">// raw user input</span>
   <span class="key">"demo_mode"</span>:  <span class="type">boolean</span>,       <span class="comm">// if true, return pre-cached response</span>
   <span class="key">"session_id"</span>: <span class="type">string | null</span>  <span class="comm">// reserved for future context — pass null now</span>
-}</div>
-    </div>
+<span class="key">}</span></div>
+  </div>
 
-    <div class="schema-block">
-      <div class="schema-title">SSE stream — response events</div>
-      <div class="schema-code"><span class="comm">// Event 1..N: token stream</span>
-<span class="key">event</span>: <span class="val">token</span>
+  <div class="schema-block">
+    <div class="schema-title">SSE stream — response events</div>
+    <div class="schema-code"><span class="comm">// Event 1..N: token stream</span>
+<span class="key">event</span>: <span class="acc">token</span>
 <span class="key">data</span>:  <span class="type">{ "token": string }</span>
 
 <span class="comm">// Final event: metadata</span>
-<span class="key">event</span>: <span class="val">done</span>
+<span class="key">event</span>: <span class="acc">done</span>
 <span class="key">data</span>:  <span class="type">{
-  "query_type"</span>:    <span class="val">"structured" | "unstructured" | "blended" | "fallback"</span>,
-  <span class="type">"citations"</span>:     <span class="type">Citation[]</span>,
-  <span class="type">"guardrail_pass"</span>: <span class="type">boolean</span>   <span class="comm">// false = graceful failure was served</span>
+  "query_type"</span>:     <span class="val">"structured" | "unstructured" | "blended" | "fallback"</span>,
+  <span class="key">"citations"</span>:      <span class="type">Citation[]</span>,
+  <span class="key">"guardrail_pass"</span>: <span class="type">boolean</span>  <span class="comm">// false = graceful failure was served</span>
 <span class="type">}</span>
 
 <span class="comm">// Citation object</span>
@@ -935,221 +1049,238 @@ body {
   <span class="key">"source_type"</span>:  <span class="val">"structured_data" | "teams" | "email"</span>,
   <span class="key">"excerpt"</span>:      <span class="type">string</span>,    <span class="comm">// max 120 chars</span>
   <span class="key">"date"</span>:         <span class="type">string | null</span>
-}</div>
+<span class="key">}</span></div>
+  </div>
+</div>
+
+
+<!-- ══ 06: TECHNICAL ARCHITECTURE ══ -->
+<div class="section" id="s6">
+  <div class="section-hd">
+    <span class="sn">06</span>
+    <span class="st">Technical architecture</span>
+    <div class="section-line"></div>
+  </div>
+
+  <div class="scope-group">
+    <div class="scope-group-header">
+      <span class="scope-group-title">Data scientist stack</span>
+      <span class="badge badge-ds">DS owns</span>
+    </div>
+    <div class="scope-items">
+      <div class="scope-item must"><span><strong>Data authoring</strong> — synthetic fixtures from PM template. CSV → pandas → pre-computed lookup JSON. Days 1–4.</span></div>
+      <div class="scope-item must"><span><strong>RAG pipeline</strong> — chunk + embed Teams/email corpus. ChromaDB local vector store. text-embedding-3-small. k=4 retrieval. Days 4–6.</span></div>
+      <div class="scope-item must"><span><strong>Query classifier</strong> — keyword-based routing function (~30 lines Python). Structured → lookup. Unstructured → RAG. Unknown → both. Day 5.</span></div>
+      <div class="scope-item must"><span><strong>System prompt + LLM call</strong> — single prompt receiving lookup data + RAG chunks + query. Returns prose + citation JSON. GPT-4o or Claude Sonnet via API. Day 6.</span></div>
+      <div class="scope-item must"><span><strong>Numeric guardrail post-processor</strong> — regex extracts all numbers from LLM response. Verifies each exists in source context. If any fail: return graceful fallback payload. Day 6, 0.5 days.</span></div>
+      <div class="scope-item must"><span><strong>FastAPI SSE endpoint</strong> — POST /api/query. Streams token events then sends done event with citation JSON. Day 7.</span></div>
     </div>
   </div>
 
-
-  <!-- ── 06: Technical Architecture ── -->
-  <div class="section">
-    <div class="section-header">
-      <span class="section-num">06</span>
-      <span class="section-title">Technical architecture</span>
-      <div class="section-line"></div>
+  <div class="scope-group" style="margin-top:16px;">
+    <div class="scope-group-header">
+      <span class="scope-group-title">Engineer stack</span>
+      <span class="badge badge-eng">ENG owns</span>
     </div>
-
-    <div class="scope-group">
-      <div class="scope-group-header">
-        <span class="scope-group-title">Data scientist stack</span>
-        <span class="badge badge-ds">DS owns</span>
-      </div>
-      <div class="scope-items">
-        <div class="scope-item must"><span><strong>Data authoring</strong> — synthetic fixtures from PM template. CSV → pandas → pre-computed lookup JSON. Days 1–4.</span></div>
-        <div class="scope-item must"><span><strong>RAG pipeline</strong> — chunk + embed Teams/email corpus. ChromaDB local vector store. text-embedding-3-small. k=4 retrieval. Days 4–6.</span></div>
-        <div class="scope-item must"><span><strong>Query classifier</strong> — keyword-based routing function (~30 lines Python). Structured keywords → lookup. Unstructured keywords → RAG. Unknown → both. Day 5.</span></div>
-        <div class="scope-item must"><span><strong>System prompt + LLM call</strong> — single prompt that receives lookup data + RAG chunks + query. Returns prose + citation JSON. GPT-4o or Claude Sonnet via API. Day 6.</span></div>
-        <div class="scope-item must"><span><strong>Numeric guardrail post-processor</strong> — regex extract all numbers from LLM response. Verify each exists in source context string. If any fail: return graceful fallback payload instead. Day 6. 0.5 days.</span></div>
-        <div class="scope-item must"><span><strong>FastAPI SSE endpoint</strong> — POST /api/query. Streams token events then sends done event with citation JSON. Day 7.</span></div>
-      </div>
+    <div class="scope-items">
+      <div class="scope-item must"><span><strong>React / Next.js web app</strong> — chat interface with message history, text input, send button. Clean, professional. Days 1–3.</span></div>
+      <div class="scope-item must"><span><strong>SSE stream renderer</strong> — consume token events from FastAPI, append to message in real time. No visible chunking. Days 2–4.</span></div>
+      <div class="scope-item must"><span><strong>Suggested question chips</strong> — 5 chips above input. Click → populate input field. CEO presses Enter. Days 3–4.</span></div>
+      <div class="scope-item must"><span><strong>Source attribution panel</strong> — collapsible panel rendering citation array from done event. Name, type badge, excerpt. Days 4–5.</span></div>
+      <div class="scope-item must"><span><strong>Graceful failure UI</strong> — detects guardrail_pass: false in done event. Renders fallback message. No error stack traces ever. Day 5.</span></div>
+      <div class="scope-item must"><span><strong>Demo Mode</strong> — URL param ?demo=true activates. Serves pre-cached payloads for 5 scripted questions with simulated streaming. Day 5, half day.</span></div>
+      <div class="scope-item must"><span><strong>Full integration + smoke test</strong> — wire all components to live DS endpoint. Smoke test all 5 scripted questions end-to-end. Days 7–9.</span></div>
     </div>
+  </div>
+</div>
 
-    <div class="scope-group" style="margin-top:16px;">
-      <div class="scope-group-header">
-        <span class="scope-group-title">Engineer stack</span>
-        <span class="badge badge-eng">ENG owns</span>
-      </div>
-      <div class="scope-items">
-        <div class="scope-item must"><span><strong>React / Next.js web app</strong> — chat interface with message history, text input, send button. Clean, professional. Days 1–3.</span></div>
-        <div class="scope-item must"><span><strong>SSE stream renderer</strong> — consume token events from FastAPI, append to message in real time. No visible chunking. Days 2–4.</span></div>
-        <div class="scope-item must"><span><strong>Suggested question chips</strong> — 5 chips above input. Click → populate input field. CEO presses Enter. Days 3–4.</span></div>
-        <div class="scope-item must"><span><strong>Source attribution panel</strong> — collapsible panel. Renders citation array from done event. Name, type badge, excerpt. Days 4–5.</span></div>
-        <div class="scope-item must"><span><strong>Graceful failure UI</strong> — detects guardrail_pass: false in done event. Renders fallback message component. No error stack traces ever. Day 5.</span></div>
-        <div class="scope-item must"><span><strong>Demo Mode</strong> — URL param ?demo=true or keyboard shortcut activates. Serves pre-cached response payloads for 5 scripted questions with simulated streaming at natural cadence. Day 5. Half day.</span></div>
-        <div class="scope-item must"><span><strong>Full integration + smoke test</strong> — wire all components to live DS endpoint. Smoke test all 5 scripted questions end-to-end. Days 7–9.</span></div>
-      </div>
+
+<!-- ══ 07: SUCCESS METRICS ══ -->
+<div class="section" id="s7">
+  <div class="section-hd">
+    <span class="sn">07</span>
+    <span class="st">Success metrics</span>
+    <div class="section-line"></div>
+  </div>
+  <p class="prose" style="margin-bottom:16px;">These are the measurable conditions that define a successful prototype on pitch day. Each is binary — pass or fail.</p>
+  <div class="metrics-grid">
+    <div class="metric-card">
+      <div class="metric-label">Primary</div>
+      <div class="metric-value">5 / 5</div>
+      <div class="metric-desc">Scripted demo questions return passing answers with no visible errors or hallucinated numbers</div>
+    </div>
+    <div class="metric-card">
+      <div class="metric-label">Reliability</div>
+      <div class="metric-value">&lt; 2s</div>
+      <div class="metric-desc">First streaming token appears within 2 seconds of query submission on demo hardware</div>
+    </div>
+    <div class="metric-card">
+      <div class="metric-label">Robustness</div>
+      <div class="metric-value">10 / 15</div>
+      <div class="metric-desc">Off-script queries during red-team return plausible, non-embarrassing responses</div>
+    </div>
+  </div>
+</div>
+
+
+<!-- ══ 08: ASSUMPTIONS & KEY DECISIONS ══ -->
+<div class="section" id="s8">
+  <div class="section-hd">
+    <span class="sn">08</span>
+    <span class="st">Assumptions &amp; key decisions</span>
+    <div class="section-line"></div>
+  </div>
+
+  <p class="prose" style="margin-bottom:6px;font-size:13px;color:var(--text3);">Assumptions are unknowns we are treating as true. Key decisions are choices already made — they are locked and not open for re-discussion during the sprint.</p>
+
+  <div style="margin-top:20px;margin-bottom:6px;">
+    <span class="nfr-label" style="margin:0;">Assumptions</span>
+  </div>
+
+  <div class="assumption">
+    <div class="assumption-id">A-01</div>
+    <div class="assumption-content">
+      <div class="assumption-title">Simulated data is accepted by the client</div>
+      <div class="assumption-body">James Whitfield understands this is a pitch prototype. The PM will frame this explicitly: <strong>"We've built this on a representative data model — connecting to your live SAP and Teams is what the paid engagement delivers."</strong></div>
+      <div class="assumption-why">Why: Live integration would consume 8–10 engineer days on connectors alone. The CEO cannot distinguish well-designed synthetic data from real data in a 20-minute demo.</div>
     </div>
   </div>
 
-
-  <!-- ── 07: Assumptions ── -->
-  <div class="section">
-    <div class="section-header">
-      <span class="section-num">07</span>
-      <span class="section-title">Assumptions</span>
-      <div class="section-line"></div>
-    </div>
-
-    <div class="assumption">
-      <div class="assumption-id">A-01</div>
-      <div class="assumption-content">
-        <div class="assumption-title">Simulated data is accepted by the client</div>
-        <div class="assumption-body">James Whitfield understands this is a pitch prototype, not a production system. The PM will frame this expectation explicitly at the start of the demo: <strong>"We've built this on a representative data model — connecting to your live SAP and Teams is what the paid engagement delivers."</strong></div>
-        <div class="assumption-why">Why: Live integration would consume 8–10 engineer days on connectors alone, leaving nothing for the UI, streaming, or polish. The CEO cannot tell the difference between well-designed synthetic data and real data in a 20-minute demo.</div>
-      </div>
-    </div>
-
-    <div class="assumption">
-      <div class="assumption-id">A-02</div>
-      <div class="assumption-content">
-        <div class="assumption-title">Pre-computed lookup is architecturally honest for the prototype</div>
-        <div class="assumption-body">The lookup table replaces dynamic NL-to-SQL for the prototype only. <strong>Full NL-to-SQL is explicitly the first deliverable in the paid discovery phase.</strong> The PM owns the narrative bridge in the pitch: "What you see here uses a structured retrieval layer — in the engagement we'd connect this directly to your SAP queries in real time."</div>
-        <div class="assumption-why">Why: Saves 3 DS days. CEO output is identical. Deterministic and debuggable for the demo. A live NL-to-SQL engine under 14-day time pressure is a reliability risk we cannot afford.</div>
-      </div>
-    </div>
-
-    <div class="assumption">
-      <div class="assumption-id">A-03</div>
-      <div class="assumption-content">
-        <div class="assumption-title">LLM called via API — no fine-tuning or self-hosting</div>
-        <div class="assumption-body">We use <strong>GPT-4o or Claude Sonnet via their respective APIs.</strong> Decision locked Day 1. API keys provisioned before standup. No model switching after Day 3 — system prompt tuning is model-specific and re-tuning costs 1–2 days.</div>
-        <div class="assumption-why">Why: Fine-tuning is weeks of work. API access is hours. Demo-quality output from a well-engineered system prompt is indistinguishable from a fine-tuned model to a non-technical audience.</div>
-      </div>
-    </div>
-
-    <div class="assumption">
-      <div class="assumption-id">A-04</div>
-      <div class="assumption-content">
-        <div class="assumption-title">Demo runs on a controlled environment — a single laptop</div>
-        <div class="assumption-body">Prototype runs locally on the engineer's demo laptop, not in cloud infrastructure. <strong>Internet access is required for LLM API calls.</strong> Demo Mode pre-caches all 5 scripted answers as the fallback if WiFi is unreliable. Engineer is physically on-site during the pitch, running the machine.</div>
-        <div class="assumption-why">Why: Removes the need for production hardening, deployment pipelines, load testing, and cloud security review — none of which are achievable in 14 days.</div>
-      </div>
-    </div>
-
-    <div class="assumption">
-      <div class="assumption-id">A-05</div>
-      <div class="assumption-content">
-        <div class="assumption-title">5 demo questions are locked by 9am Day 1</div>
-        <div class="assumption-body">The PM delivers the 5 scripted demo questions and the data authoring template to the DS <strong>before 9am on Day 1.</strong> Data authoring cannot begin without them. Every hour of delay on Day 1 morning is an hour of risk at the end of the sprint. Questions are derived from James Whitfield's exact words in the SDR briefing memo.</div>
-        <div class="assumption-why">Why: The entire data fixture, lookup table, and system prompt are designed around making these 5 questions produce impressive answers. They must drive the data design, not follow it.</div>
-      </div>
-    </div>
-
-    <div class="assumption">
-      <div class="assumption-id">A-06</div>
-      <div class="assumption-content">
-        <div class="assumption-title">Second DS is a named, available contingency</div>
-        <div class="assumption-body">A second data scientist is identified by name before end of Day 1. They are briefable and available to start Day 5 if the <strong>Day 4 checkpoint</strong> shows the RAG pipeline has not started. The Day 4 checkpoint condition: lookup JSON complete AND ChromaDB ingestion begun. If either is not true, second DS is activated without further discussion.</div>
-        <div class="assumption-why">Why: The DS workstream has no buffer at 12.5 days across 14 calendar days. The contingency DS is insurance, not a plan B — the primary DS is expected to deliver. But the contingency must be real and named, not theoretical.</div>
-      </div>
-    </div>
-
-    <div class="assumption">
-      <div class="assumption-id">A-07</div>
-      <div class="assumption-content">
-        <div class="assumption-title">Demo Mode is not deceptive</div>
-        <div class="assumption-body">Pre-caching the 5 scripted answers in Demo Mode is <strong>standard practice for enterprise software demos.</strong> The system genuinely does what it shows — Demo Mode simply removes API latency risk for the hero moments. Off-script questions always use the live system. The PM does not tell the CEO "this is real-time" for the cached responses — the framing is "ask me anything" while the suggested questions are the safety net.</div>
-        <div class="assumption-why">Why: Every major enterprise software demo pre-caches its hero scenarios. The alternative — risking a 15-second blank screen or an API timeout in the room — is not acceptable.</div>
-      </div>
+  <div class="assumption">
+    <div class="assumption-id">A-02</div>
+    <div class="assumption-content">
+      <div class="assumption-title">Pre-computed lookup is architecturally honest for the prototype</div>
+      <div class="assumption-body">The lookup table replaces dynamic NL-to-SQL for the prototype only. <strong>Full NL-to-SQL is the first deliverable in the paid discovery phase.</strong> PM owns the narrative bridge: "What you see here uses a structured retrieval layer — in the engagement we'd connect this directly to your SAP queries."</div>
+      <div class="assumption-why">Why: Saves 3 DS days. CEO output is identical. Deterministic and debuggable. A live NL-to-SQL engine under 14-day pressure is a reliability risk we cannot afford.</div>
     </div>
   </div>
 
-
-  <!-- ── 08: Sprint Gates ── -->
-  <div class="section">
-    <div class="section-header">
-      <span class="section-num">08</span>
-      <span class="section-title">Sprint gates &amp; checkpoints</span>
-      <div class="section-line"></div>
-    </div>
-    <p class="prose" style="margin-bottom:16px;">These are go/no-go decision points. If a gate fails, the escalation action is immediate — not deferred to the next standup.</p>
-    <div class="gates">
-      <div class="gate critical">
-        <div class="gate-day">End of Day 1</div>
-        <div>
-          <div class="gate-title">Foundation gate</div>
-          <div class="gate-criteria"><strong>5 demo questions locked.</strong> Data template handed to DS. LLM provider decided and API keys working. Second DS name confirmed. If any of these fail: PM escalates to Calibrax leadership same day.</div>
-        </div>
-      </div>
-      <div class="gate critical">
-        <div class="gate-day">End of Day 2</div>
-        <div>
-          <div class="gate-title">API contract gate</div>
-          <div class="gate-criteria"><strong>Response schema signed off by DS + ENG.</strong> TL chairs the session. Schema document shared to the squad Slack/Teams channel. No schema changes after Day 6 without PM approval.</div>
-        </div>
-      </div>
-      <div class="gate warn">
-        <div class="gate-day">End of Day 4</div>
-        <div>
-          <div class="gate-title">DS pipeline checkpoint</div>
-          <div class="gate-criteria"><strong>Lookup JSON complete. ChromaDB ingestion started.</strong> If either condition is not met: second DS activated immediately for Days 5–8. No grace period.</div>
-        </div>
-      </div>
-      <div class="gate warn">
-        <div class="gate-day">End of Day 7</div>
-        <div>
-          <div class="gate-title">Integration gate</div>
-          <div class="gate-criteria"><strong>At least 3 of 5 scripted questions returning passing answers end-to-end.</strong> If fewer than 3 pass: scope review meeting with TL + PM. Nice-to-haves are cancelled. If fewer than 2 pass: escalate to Calibrax leadership.</div>
-        </div>
-      </div>
-      <div class="gate critical">
-        <div class="gate-day">End of Day 12</div>
-        <div>
-          <div class="gate-title">Red-team gate — pitch go/no-go</div>
-          <div class="gate-criteria"><strong>All 5 scripted questions pass. Zero visible errors. Zero hallucinated numbers. At least 10 of 15 off-script queries return plausible responses.</strong> If gate fails: Day 13 is used for emergency fixes, not rehearsal. PM decides whether to pitch.</div>
-        </div>
-      </div>
-      <div class="gate good">
-        <div class="gate-day">End of Day 13</div>
-        <div>
-          <div class="gate-title">Code freeze</div>
-          <div class="gate-criteria"><strong>No code changes after Day 13</strong> without joint TL + PM approval. Demo environment locked. Demo Mode loaded and tested on pitch laptop. Engineer confirms environment runs cleanly on venue hardware.</div>
-        </div>
-      </div>
+  <div class="assumption">
+    <div class="assumption-id">A-03</div>
+    <div class="assumption-content">
+      <div class="assumption-title">5 demo questions locked by 9am Day 1</div>
+      <div class="assumption-body">The PM delivers 5 scripted demo questions and the data authoring template to the DS <strong>before 9am on Day 1.</strong> Every hour of delay is an hour of risk at the end of the sprint. Questions are derived from Whitfield's exact words in the SDR briefing memo.</div>
+      <div class="assumption-why">Why: The entire data fixture, lookup table, and system prompt are designed around making these 5 questions produce impressive answers. They must drive the data design, not follow it.</div>
     </div>
   </div>
 
-
-  <!-- ── 09: Mutual Commitments ── -->
-  <div class="section">
-    <div class="section-header">
-      <span class="section-num">09</span>
-      <span class="section-title">Mutual commitments</span>
-      <div class="section-line"></div>
-    </div>
-    <p class="prose" style="margin-bottom:16px;">These are not guidelines. They are the agreed terms under which the sprint operates.</p>
-    <div class="commit-grid">
-      <div class="commit-block">
-        <div class="commit-header">
-          <div class="commit-dot" style="background:var(--accent)"></div>
-          AI PM commits to
-        </div>
-        <div class="commit-item">5 demo questions locked and data template delivered to DS before 9am Day 1 — no exceptions</div>
-        <div class="commit-item">No scope additions after Day 6 unless something of equal size is removed</div>
-        <div class="commit-item">Zero interruptions to DS during working hours Days 1–7 — PM buffers all external noise</div>
-        <div class="commit-item">PM owns the narrative bridge in the pitch for anything the prototype cannot do — no live questions deflected to the engineer</div>
-        <div class="commit-item">Red-team script of 30 queries delivered to the squad by Day 10</div>
-      </div>
-      <div class="commit-block">
-        <div class="commit-header">
-          <div class="commit-dot" style="background:var(--blue)"></div>
-          Technical Lead commits to
-        </div>
-        <div class="commit-item">Pre-computed lookup architecture signed off — no re-opening this decision during the sprint</div>
-        <div class="commit-item">Chair Day 2 API contract session, arrive with draft schema ready</div>
-        <div class="commit-item">Demo Mode accepted as standard demo practice — no further objection</div>
-        <div class="commit-item">Second DS name confirmed by end of Day 1 and available to start Day 5 if gate fails</div>
-        <div class="commit-item">DS present for the full red-team session Days 11–12, not on standby</div>
-      </div>
+  <div class="assumption">
+    <div class="assumption-id">A-04</div>
+    <div class="assumption-content">
+      <div class="assumption-title">Second DS is a named, available contingency</div>
+      <div class="assumption-body">A second data scientist is identified by name before end of Day 1. Available to start Day 5 if the Day 4 checkpoint shows the RAG pipeline has not started. <strong>The contingency must be real and named, not theoretical.</strong></div>
+      <div class="assumption-why">Why: The DS workstream has no buffer across 14 days. This is insurance, not a plan B — the primary DS is expected to deliver.</div>
     </div>
   </div>
 
-
-  <!-- ── Footer ── -->
-  <div class="footer">
-    <div class="footer-left">CALIBRAX INTERNAL — CONFIDENTIAL · PRD v0.2 FINAL · SUPERSEDES v0.1</div>
-    <div class="footer-right">Nexus Command Console — FreshChoice Pitch Sprint</div>
+  <div class="assumption">
+    <div class="assumption-id">A-05</div>
+    <div class="assumption-content">
+      <div class="assumption-title">Demo Mode is not deceptive</div>
+      <div class="assumption-body">Pre-caching the 5 scripted answers is <strong>standard practice for enterprise software demos.</strong> The system genuinely does what it shows — Demo Mode removes API latency risk for hero moments only. Off-script questions always use the live system.</div>
+      <div class="assumption-why">Why: Every major enterprise software demo pre-caches its hero scenarios. The alternative — risking a 15-second blank screen or API timeout in the room — is not acceptable.</div>
+    </div>
   </div>
+
+  <div style="margin-top:28px;margin-bottom:6px;">
+    <span class="nfr-label" style="margin:0;">Key decisions — locked, not open for discussion</span>
+  </div>
+
+  <div class="key-decision">
+    <div class="kd-id">D-01</div>
+    <div class="assumption-content">
+      <div class="assumption-title">LLM via API — no fine-tuning, no self-hosting</div>
+      <div class="assumption-body">GPT-4o or Claude Sonnet via their respective APIs. <strong>Decision locked Day 1, API keys provisioned before standup. No model switching after Day 3</strong> — system prompt tuning is model-specific and re-tuning costs 1–2 days.</div>
+      <div class="assumption-why">Rationale: Fine-tuning takes weeks. API access takes hours. Demo-quality output from a well-engineered system prompt is indistinguishable from a fine-tuned model to a non-technical audience.</div>
+    </div>
+  </div>
+
+  <div class="key-decision">
+    <div class="kd-id">D-02</div>
+    <div class="assumption-content">
+      <div class="assumption-title">Demo runs locally on a single engineer laptop</div>
+      <div class="assumption-body">Prototype runs locally, not in cloud infrastructure. <strong>Internet required for LLM API calls.</strong> Demo Mode pre-caches all 5 scripted answers as WiFi fallback. Engineer is physically on-site during the pitch, running the machine.</div>
+      <div class="assumption-why">Rationale: Removes the need for production hardening, deployment pipelines, load testing, and cloud security review — none achievable in 14 days.</div>
+    </div>
+  </div>
+</div>
+
+
+<!-- ══ 09: SPRINT GATES ══ -->
+<div class="section" id="s9">
+  <div class="section-hd">
+    <span class="sn">09</span>
+    <span class="st">Sprint gates &amp; checkpoints</span>
+    <div class="section-line"></div>
+  </div>
+  <p class="prose" style="margin-bottom:16px;">These are go/no-go decision points. If a gate fails, the escalation action is immediate — not deferred to the next standup.</p>
+  <div class="gates">
+    <div class="gate critical">
+      <div class="gate-day">End of Day 1</div>
+      <div>
+        <div class="gate-title">Foundation gate</div>
+        <div class="gate-criteria"><strong>5 demo questions locked.</strong> Data template handed to DS. LLM provider decided, API keys working. Second DS name confirmed. Failure: PM escalates to Calibrax leadership same day.</div>
+      </div>
+    </div>
+    <div class="gate critical">
+      <div class="gate-day">End of Day 2</div>
+      <div>
+        <div class="gate-title">API contract gate</div>
+        <div class="gate-criteria"><strong>Response schema signed off by DS + ENG.</strong> TL chairs the session. Schema document shared to squad channel. No schema changes after Day 6 without PM approval.</div>
+      </div>
+    </div>
+    <div class="gate warn">
+      <div class="gate-day">End of Day 4</div>
+      <div>
+        <div class="gate-title">DS pipeline checkpoint</div>
+        <div class="gate-criteria"><strong>Lookup JSON complete. ChromaDB ingestion started.</strong> If either condition is not met: second DS activated immediately for Days 5–8. No grace period.</div>
+      </div>
+    </div>
+    <div class="gate warn">
+      <div class="gate-day">End of Day 7</div>
+      <div>
+        <div class="gate-title">Integration gate</div>
+        <div class="gate-criteria"><strong>At least 3 of 5 scripted questions returning passing answers end-to-end.</strong> If fewer than 3 pass: scope review, nice-to-haves cancelled. If fewer than 2 pass: escalate to leadership.</div>
+      </div>
+    </div>
+    <div class="gate critical">
+      <div class="gate-day">End of Day 12</div>
+      <div>
+        <div class="gate-title">Red-team gate — pitch go/no-go</div>
+        <div class="gate-criteria"><strong>All 5 scripted questions pass. Zero visible errors. Zero hallucinated numbers. At least 10 of 15 off-script queries return plausible responses.</strong> Failure: Day 13 used for emergency fixes. PM decides whether to pitch.</div>
+      </div>
+    </div>
+    <div class="gate good">
+      <div class="gate-day">End of Day 13</div>
+      <div>
+        <div class="gate-title">Code freeze</div>
+        <div class="gate-criteria"><strong>No code changes after Day 13</strong> without joint TL + PM approval. Demo environment locked. Demo Mode tested on pitch laptop. Engineer confirms environment runs cleanly on venue hardware.</div>
+      </div>
+    </div>
+  </div>
+  <p class="prose" style="margin-top:20px;font-size:13px;color:var(--text3);">Team operating commitments — scope discipline, DS availability, red-team obligations — are documented in <strong style="color:var(--text2);">Deliverable 4 · Sprint Plan</strong>.</p>
+</div>
+
+
+<!-- ══ FOOTER ══ -->
+<div class="doc-footer">
+  <div class="footer-l">Calibrax Internal — Confidential · PRD v0.3 Final</div>
+  <div class="footer-r">Nexus Command Console · FreshChoice Pitch Sprint</div>
+</div>
 
 </div>
+
+<script>
+const obs = new IntersectionObserver(entries => {
+  entries.forEach(e => {
+    if (e.isIntersecting) { e.target.classList.add('visible'); obs.unobserve(e.target); }
+  });
+}, { threshold: 0.06, rootMargin: '0px 0px -40px 0px' });
+document.querySelectorAll('.section').forEach((el, i) => {
+  el.style.transitionDelay = `${i * 0.04}s`;
+  obs.observe(el);
+});
+</script>
+
 </body>
 </html>
