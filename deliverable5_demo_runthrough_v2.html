@@ -1,0 +1,943 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Deliverable 5 — Demo Run-Through · Nexus Command Console</title>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,200;0,9..144,400;0,9..144,600;1,9..144,200;1,9..144,400&family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+:root{
+  --bg:#f2f0e9;--bg2:#ede9e0;--surface:#ffffff;--surface2:#f7f4ed;--surface3:#ede9e0;
+  --border:rgba(0,0,0,0.065);--border-md:rgba(0,0,0,0.11);--border-hi:rgba(0,0,0,0.2);
+  --text:#17160f;--text2:#52503f;--text3:#97937f;--text4:#c4c0ae;
+  --g:#14582e;--g-mid:#1c7840;--g-acc:#23c45e;--g-bg:#e2f2e9;--g-bg2:#c6e8d4;
+  --a:#6e3a00;--a-mid:#b86000;--a-acc:#d97c00;--a-bg:#fdf0dc;
+  --r:#801a1a;--r-mid:#b83030;--r-bg:#fceaea;
+  --b:#142c6a;--b-mid:#1e48a8;--b-bg:#e4ecfb;
+  --p:#30207a;--p-mid:#5240b8;--p-bg:#edeafb;
+  --nav-bg:#0b0f0b;--nav-border:rgba(255,255,255,.07);
+}
+html{font-size:15px;scroll-behavior:smooth;}
+body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);line-height:1.7;-webkit-font-smoothing:antialiased;padding-top:52px;}
+body::before{content:'';position:fixed;inset:0;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='300'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='.028'/%3E%3C/svg%3E");pointer-events:none;z-index:0;}
+.page{position:relative;z-index:1;max-width:960px;margin:0 auto;padding:56px 48px 120px;}
+
+/* ── NAV ── */
+.doc-nav{position:fixed;top:0;left:0;right:0;z-index:200;height:52px;background:var(--nav-bg);border-bottom:1px solid var(--nav-border);display:flex;align-items:center;justify-content:space-between;padding:0 48px;backdrop-filter:blur(16px);}
+.doc-nav-left{display:flex;align-items:center;gap:20px;}
+.doc-nav-back{display:flex;align-items:center;gap:7px;font-family:'DM Mono',monospace;font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:rgba(255,255,255,.32);text-decoration:none;transition:color .2s;}
+.doc-nav-back:hover{color:var(--g-acc);}
+.doc-nav-divider{width:1px;height:18px;background:rgba(255,255,255,.09);}
+.doc-nav-brand{display:flex;align-items:center;gap:7px;font-family:'DM Mono',monospace;font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--g-acc);}
+.doc-nav-dot{width:6px;height:6px;border-radius:50%;background:var(--g-acc);animation:navdot 2.5s infinite;}
+@keyframes navdot{0%,100%{opacity:1;transform:scale(1);}50%{opacity:.3;transform:scale(.7);}}
+.doc-nav-right{display:flex;align-items:center;gap:16px;}
+.doc-nav-label{font-family:'DM Mono',monospace;font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:rgba(255,255,255,.2);}
+.doc-nav-pills{display:flex;gap:4px;}
+.doc-nav-pill{width:20px;height:3px;border-radius:2px;background:rgba(255,255,255,.08);transition:background .3s;}
+.doc-nav-pill.done{background:rgba(35,196,94,.32);}
+.doc-nav-pill.active{background:var(--g-acc);}
+
+/* ── HEADER ── */
+.header{margin-bottom:48px;padding:40px 44px 36px;background:var(--text);border-radius:16px;position:relative;overflow:hidden;}
+.header::before{content:'';position:absolute;top:-80px;right:-60px;width:300px;height:300px;border-radius:50%;background:radial-gradient(circle,rgba(35,196,94,.18) 0%,transparent 70%);pointer-events:none;}
+.header::after{content:'';position:absolute;inset:0;background-image:linear-gradient(rgba(255,255,255,.03) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.03) 1px,transparent 1px);background-size:40px 40px;pointer-events:none;}
+.header>*{position:relative;z-index:1;}
+.doc-eyebrow{font-family:'DM Mono',monospace;font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:var(--g-acc);margin-bottom:14px;display:flex;align-items:center;gap:10px;}
+.doc-eyebrow::before{content:'';width:20px;height:1px;background:var(--g-acc);}
+.doc-title{font-family:'Fraunces',serif;font-size:44px;font-weight:200;line-height:1.08;letter-spacing:-.02em;color:#fff;margin-bottom:8px;}
+.doc-title em{font-style:italic;color:#6dd49a;}
+.doc-subtitle{font-size:14px;color:rgba(255,255,255,.45);margin-bottom:20px;font-weight:300;}
+.meta-row{display:flex;flex-wrap:wrap;gap:6px;margin-top:16px;}
+.meta-pill{font-family:'DM Mono',monospace;font-size:10px;padding:4px 10px;border-radius:3px;border:1px solid rgba(255,255,255,.12);color:rgba(255,255,255,.45);letter-spacing:.04em;}
+.meta-pill.accent{border-color:rgba(35,196,94,.35);color:var(--g-acc);background:rgba(35,196,94,.1);}
+.meta-pill.red{border-color:rgba(220,80,80,.3);color:#e07070;background:rgba(196,48,48,.1);}
+
+/* ── SECTIONS ── */
+.section{margin-bottom:64px;scroll-margin-top:70px;opacity:0;transform:translateY(18px);transition:opacity .6s ease,transform .6s ease;}
+.section.visible{opacity:1;transform:translateY(0);}
+.section-hd{display:flex;align-items:center;gap:14px;margin-bottom:24px;padding-bottom:14px;border-bottom:1px solid var(--border-md);position:relative;overflow:hidden;}
+.section-hd::after{content:'';position:absolute;bottom:-1px;left:0;width:40px;height:2px;background:var(--g-acc);transition:width .5s cubic-bezier(.25,.46,.45,.94);}
+.section:hover .section-hd::after{width:100%;}
+.sn{font-family:'DM Mono',monospace;font-size:10px;background:var(--surface3);color:var(--text3);border:1px solid var(--border-md);border-radius:4px;padding:2px 7px;letter-spacing:.08em;flex-shrink:0;transition:background .2s,color .2s,border-color .2s;}
+.section:hover .sn{background:var(--g-bg);color:var(--g);border-color:rgba(35,196,94,.3);}
+.st{font-family:'Fraunces',serif;font-size:24px;font-weight:200;color:var(--text);letter-spacing:-.015em;line-height:1.2;}
+.st em{font-style:italic;color:var(--g);}
+.section-line{flex:1;height:1px;background:var(--border);}
+.prose{font-size:14px;color:var(--text2);line-height:1.85;margin-bottom:14px;max-width:700px;}
+.prose strong{color:var(--text);font-weight:500;}
+
+/* ── PURPOSE CARD ── */
+.purpose-card{background:var(--text);border-radius:12px;padding:28px 32px;display:grid;grid-template-columns:1fr 1fr;gap:24px;}
+.purpose-item{display:flex;gap:14px;}
+.purpose-num{font-family:'Fraunces',serif;font-size:36px;font-weight:200;color:rgba(255,255,255,.12);line-height:1;flex-shrink:0;}
+.purpose-label{font-family:'DM Mono',monospace;font-size:9px;letter-spacing:.12em;text-transform:uppercase;color:var(--g-acc);margin-bottom:6px;}
+.purpose-text{font-size:13px;color:rgba(255,255,255,.6);line-height:1.7;}
+.purpose-text strong{color:rgba(255,255,255,.85);font-weight:500;}
+.purpose-rule{font-family:'Fraunces',serif;font-size:16px;font-style:italic;color:rgba(255,255,255,.45);border-top:1px solid rgba(255,255,255,.08);padding-top:18px;margin-top:4px;grid-column:1/-1;}
+
+/* ── SETUP ── */
+.setup-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:24px;}
+.setup-item{background:var(--surface);border:1px solid var(--border-md);border-radius:8px;padding:14px 16px;display:flex;gap:12px;align-items:flex-start;transition:border-color .2s,box-shadow .2s,transform .2s;}
+.setup-item:hover{border-color:var(--border-hi);box-shadow:0 4px 16px rgba(0,0,0,.07);transform:translateY(-2px);}
+.setup-icon{width:28px;height:28px;border-radius:6px;background:var(--g-bg);display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:13px;}
+.setup-label{font-size:12px;font-weight:500;color:var(--text);display:block;margin-bottom:2px;}
+.setup-text{font-size:13px;color:var(--text2);line-height:1.55;}
+
+.room-table{width:100%;border-collapse:collapse;font-size:13px;margin:16px 0;}
+.room-table th{font-family:'DM Mono',monospace;font-size:9px;letter-spacing:.1em;text-transform:uppercase;color:var(--text3);padding:8px 14px;text-align:left;border-bottom:1px solid var(--border-md);background:var(--surface2);}
+.room-table td{padding:12px 14px;border-bottom:1px solid var(--border);vertical-align:top;line-height:1.6;color:var(--text2);}
+.room-table td:first-child{font-weight:500;color:var(--text);white-space:nowrap;width:22%;}
+.room-table td:last-child{color:var(--g-mid);}
+.room-table tbody tr{transition:background .15s;}
+.room-table tbody tr:hover{background:var(--g-bg);}
+.room-table tr:last-child td{border-bottom:none;}
+
+/* ── STRATEGIC ASIDE ── */
+.aside{background:var(--surface);border:1px solid var(--border-md);border-left:3px solid var(--a-mid);border-radius:0 8px 8px 0;padding:16px 20px;margin:20px 0;}
+.aside-label{font-family:'DM Mono',monospace;font-size:9px;letter-spacing:.12em;text-transform:uppercase;color:var(--a-mid);margin-bottom:8px;}
+.aside p{font-size:13px;color:var(--text2);line-height:1.8;font-style:italic;}
+.aside p strong{color:var(--text);font-style:normal;font-weight:500;}
+
+/* ── SCENE CARDS ── */
+.scene-card{background:var(--surface);border:1px solid var(--border-md);border-radius:12px;overflow:hidden;margin-bottom:14px;transition:box-shadow .25s,transform .25s;}
+.scene-card:hover{box-shadow:0 8px 32px rgba(0,0,0,.09);transform:translateY(-3px);}
+.scene-card-hd{display:grid;grid-template-columns:4px 1fr;}
+.scene-accent{width:4px;transition:opacity .2s;}
+.scene-hd-inner{padding:14px 20px;display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;background:var(--surface2);transition:background .2s;}
+.scene-card:hover .scene-hd-inner{background:var(--surface3);}
+.scene-left{display:flex;align-items:center;gap:10px;}
+.scene-right{display:flex;align-items:center;gap:8px;flex-wrap:wrap;}
+.scene-num{font-family:'DM Mono',monospace;font-size:9px;letter-spacing:.1em;padding:2px 8px;border-radius:3px;border:1px solid var(--border-md);color:var(--text3);}
+.scene-name{font-size:14px;font-weight:500;color:var(--text);}
+.scene-sub{font-style:italic;color:var(--text3);font-size:13px;font-weight:400;}
+.scene-dur{font-family:'DM Mono',monospace;font-size:9px;letter-spacing:.06em;padding:2px 7px;border-radius:3px;background:var(--surface3);color:var(--text3);border:1px solid var(--border);}
+.scene-goal-pill{font-family:'DM Mono',monospace;font-size:9px;padding:2px 8px;border-radius:3px;}
+.scene-body{padding:22px 24px;}
+.scene-goal-line{font-size:13px;color:var(--text3);font-style:italic;margin-bottom:18px;padding-bottom:14px;border-bottom:1px solid var(--border);}
+
+/* ── SCRIPT BLOCK ── */
+.script-block{background:var(--text);border-radius:10px;padding:22px 26px;margin:14px 0;position:relative;}
+.script-block-label{font-family:'DM Mono',monospace;font-size:9px;letter-spacing:.12em;text-transform:uppercase;color:rgba(255,255,255,.25);margin-bottom:14px;display:flex;align-items:center;gap:8px;}
+.script-block-label::after{content:'';flex:1;height:1px;background:rgba(255,255,255,.07);}
+.stage-dir{font-family:'DM Mono',monospace;font-size:10px;color:rgba(255,255,255,.25);letter-spacing:.04em;margin:10px 0 6px;display:block;font-style:normal;}
+.script-line{font-family:'Fraunces',serif;font-size:16px;font-weight:200;font-style:italic;color:rgba(255,255,255,.88);line-height:1.72;margin-bottom:10px;padding:6px 10px;border-radius:6px;transition:background .2s;}
+.script-line:hover{background:rgba(255,255,255,.05);}
+.script-line:last-child{margin-bottom:0;}
+.script-line em{color:#6dd49a;font-style:normal;}
+.script-pause{display:block;font-family:'DM Mono',monospace;font-size:10px;color:rgba(255,255,255,.18);letter-spacing:.06em;margin:12px 0;text-align:center;border-top:1px dashed rgba(255,255,255,.07);border-bottom:1px dashed rgba(255,255,255,.07);padding:5px 0;}
+
+/* ── MANAGING NOTES ── */
+.managing{margin:18px 0 0;}
+.managing-label{font-family:'DM Mono',monospace;font-size:9px;letter-spacing:.12em;text-transform:uppercase;color:var(--text4);margin-bottom:10px;}
+.managing-item{display:flex;gap:10px;margin-bottom:8px;align-items:flex-start;padding:10px 12px;border-radius:7px;border:1px solid transparent;transition:background .18s,border-color .18s;}
+.managing-item:hover{background:var(--surface2);border-color:var(--border-md);}
+.managing-dot{width:5px;height:5px;border-radius:50%;background:var(--g-acc);flex-shrink:0;margin-top:7px;}
+.managing-text{font-size:13px;color:var(--text2);line-height:1.65;}
+.managing-text strong{color:var(--text);font-weight:500;}
+
+/* ── DEMO STATE ── */
+.demo-state{background:var(--b-bg);border:1px solid rgba(30,72,168,.18);border-radius:8px;padding:16px 18px;margin-top:16px;}
+.demo-state-label{font-family:'DM Mono',monospace;font-size:9px;letter-spacing:.12em;text-transform:uppercase;color:var(--b-mid);margin-bottom:12px;display:flex;align-items:center;gap:7px;}
+.demo-state-label::before{content:'';width:6px;height:6px;border-radius:50%;background:var(--b-mid);flex-shrink:0;}
+.demo-screen-box{background:rgba(255,255,255,.7);border:1px solid rgba(30,72,168,.14);border-radius:6px;padding:11px 14px;margin-bottom:10px;font-family:'DM Mono',monospace;font-size:11px;color:var(--text3);line-height:1.65;}
+.demo-screen-box strong{color:var(--text);font-weight:500;display:block;margin-bottom:4px;}
+.annotation-row{display:flex;gap:8px;margin-bottom:6px;align-items:flex-start;padding:5px 6px;border-radius:5px;transition:background .15s;}
+.annotation-row:hover{background:rgba(30,72,168,.06);}
+.ann-tag{font-family:'DM Mono',monospace;font-size:9px;letter-spacing:.05em;padding:1px 6px;border-radius:3px;background:rgba(30,72,168,.1);color:var(--b-mid);border:1px solid rgba(30,72,168,.18);flex-shrink:0;white-space:nowrap;}
+.ann-text{font-size:12px;color:var(--text2);line-height:1.55;}
+
+/* ── TIMING ── */
+.timing-wrap{background:var(--surface);border:1px solid var(--border-md);border-radius:12px;overflow:hidden;}
+.timing-head{padding:14px 22px;border-bottom:1px solid var(--border-md);background:var(--surface2);}
+.timing-head-label{font-family:'DM Mono',monospace;font-size:9px;letter-spacing:.12em;text-transform:uppercase;color:var(--text3);}
+.timing-row{display:grid;grid-template-columns:1fr 110px 100px;padding:11px 22px;border-bottom:1px solid var(--border);align-items:center;transition:background .15s;}
+.timing-row:hover{background:var(--surface2);}
+.timing-row:last-child{border-bottom:none;}
+.timing-row.cols{background:var(--surface3);}
+.timing-row.cols span{font-family:'DM Mono',monospace;font-size:9px;letter-spacing:.09em;text-transform:uppercase;color:var(--text4);}
+.timing-row.buffer{background:var(--g-bg);}
+.timing-row.buffer:hover{background:var(--g-bg2);}
+.timing-scene-name{font-size:13px;color:var(--text2);}
+.timing-scene-name strong{color:var(--text);font-weight:500;}
+.timing-dur{font-family:'DM Mono',monospace;font-size:12px;color:var(--text3);}
+.timing-cum{font-family:'DM Mono',monospace;font-size:12px;color:var(--g-mid);font-weight:500;}
+.timing-note{padding:12px 22px;background:var(--surface2);font-size:12px;font-style:italic;color:var(--text3);border-top:1px solid var(--border-md);}
+
+/* ── BRANCH CARDS ── */
+.branch-card{background:var(--surface);border:1px solid var(--border-md);border-radius:10px;overflow:hidden;margin-bottom:10px;transition:box-shadow .2s,transform .2s,border-color .2s;}
+.branch-card:hover{box-shadow:0 6px 24px rgba(0,0,0,.08);transform:translateX(5px);border-color:var(--border-hi);}
+.branch-hd{padding:11px 18px;background:var(--surface2);border-bottom:1px solid var(--border);display:flex;align-items:center;gap:12px;transition:background .2s;}
+.branch-card:hover .branch-hd{background:var(--r-bg);}
+.branch-num{font-family:'DM Mono',monospace;font-size:10px;padding:2px 7px;border-radius:3px;background:var(--r-bg);color:var(--r-mid);border:1px solid rgba(184,48,48,.2);flex-shrink:0;}
+.branch-signal{font-size:13px;font-weight:500;color:var(--text);font-style:italic;}
+.branch-body{padding:16px 18px;display:grid;grid-template-columns:1fr 1fr;gap:18px;}
+.branch-col-label{font-family:'DM Mono',monospace;font-size:9px;letter-spacing:.1em;text-transform:uppercase;margin-bottom:8px;}
+.branch-col-label.say{color:var(--g-mid);}
+.branch-col-label.why{color:var(--a-mid);}
+.branch-say{font-family:'Fraunces',serif;font-size:14px;font-weight:200;font-style:italic;color:var(--text);line-height:1.68;border-left:2px solid var(--g-mid);padding-left:12px;}
+.branch-why{font-size:13px;color:var(--text2);line-height:1.68;}
+
+/* ── CLOSE STEPS ── */
+.close-steps{display:flex;flex-direction:column;}
+.close-step{display:grid;grid-template-columns:52px 1fr;}
+.close-step-spine{display:flex;flex-direction:column;align-items:center;padding-top:2px;}
+.step-circle{width:30px;height:30px;border-radius:50%;border:2px solid var(--g-mid);display:flex;align-items:center;justify-content:center;font-family:'DM Mono',monospace;font-size:11px;color:var(--g-mid);font-weight:500;flex-shrink:0;transition:background .2s,color .2s;}
+.close-step:hover .step-circle{background:var(--g-mid);color:#fff;}
+.step-line{width:2px;flex:1;background:var(--border-md);margin:5px 0;}
+.close-step:last-child .step-line{display:none;}
+.close-step-content{padding:0 0 28px 18px;}
+.close-step-title{font-size:14px;font-weight:500;color:var(--text);margin-bottom:8px;}
+.close-step-body{font-size:13px;color:var(--text2);line-height:1.8;}
+.close-step-body strong{color:var(--text);font-weight:500;}
+
+.ynm-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin:12px 0;}
+.ynm-card{border-radius:8px;padding:12px 14px;border:1px solid var(--border-md);transition:transform .15s,box-shadow .15s;}
+.ynm-card:hover{transform:translateY(-2px);box-shadow:0 4px 14px rgba(0,0,0,.07);}
+.ynm-card.yes{background:var(--g-bg);}
+.ynm-card.maybe{background:var(--a-bg);}
+.ynm-card.no{background:var(--r-bg);}
+.ynm-label{font-family:'DM Mono',monospace;font-size:9px;letter-spacing:.1em;text-transform:uppercase;margin-bottom:8px;}
+.ynm-card.yes .ynm-label{color:var(--g-mid);}
+.ynm-card.maybe .ynm-label{color:var(--a-mid);}
+.ynm-card.no .ynm-label{color:var(--r-mid);}
+.ynm-text{font-family:'Fraunces',serif;font-size:13px;font-style:italic;font-weight:200;color:var(--text);line-height:1.62;}
+
+/* ── LEAVE-BEHIND ── */
+.lb-card{background:var(--text);border-radius:12px;padding:30px 34px;color:#fff;}
+.lb-eyebrow{font-family:'DM Mono',monospace;font-size:9px;letter-spacing:.14em;text-transform:uppercase;color:var(--g-acc);margin-bottom:14px;display:flex;align-items:center;gap:8px;}
+.lb-eyebrow::before{content:'';width:16px;height:1px;background:var(--g-acc);}
+.lb-title{font-family:'Fraunces',serif;font-size:26px;font-weight:200;color:#fff;margin-bottom:4px;}
+.lb-sub{font-size:13px;color:rgba(255,255,255,.38);margin-bottom:22px;}
+.lb-grid{display:grid;grid-template-columns:1fr 1fr;gap:22px;}
+.lb-block-label{font-family:'DM Mono',monospace;font-size:9px;letter-spacing:.1em;text-transform:uppercase;color:rgba(255,255,255,.28);margin-bottom:10px;}
+.lb-block-text{font-size:13px;color:rgba(255,255,255,.58);line-height:1.8;}
+.lb-block-text strong{color:rgba(255,255,255,.85);font-weight:500;display:block;}
+.lb-divider{border:none;border-top:1px solid rgba(255,255,255,.1);margin:22px 0;}
+.lb-ask{display:flex;align-items:center;justify-content:space-between;}
+.lb-ask-left .lb-ask-label{font-family:'DM Mono',monospace;font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:rgba(255,255,255,.28);}
+.lb-ask-left .lb-ask-detail{font-size:13px;color:rgba(255,255,255,.45);margin-top:4px;}
+.lb-ask-quote{font-family:'Fraunces',serif;font-size:18px;font-style:italic;font-weight:200;color:var(--g-acc);text-align:right;max-width:260px;line-height:1.4;}
+
+/* ── FOOTER ── */
+.doc-footer{margin-top:80px;padding:22px 0;border-top:1px solid var(--border-md);display:flex;justify-content:space-between;}
+.footer-l,.footer-r{font-family:'DM Mono',monospace;font-size:10px;letter-spacing:.08em;color:var(--text4);}
+
+@media(max-width:700px){
+  .page{padding:36px 18px 80px;}
+  .doc-title{font-size:32px;}
+  .purpose-card,.setup-grid,.branch-body,.ynm-grid,.lb-grid{grid-template-columns:1fr;}
+}
+</style>
+</head>
+<body>
+
+<nav class="doc-nav">
+  <div class="doc-nav-left">
+    <a class="doc-nav-back" href="#">← Back to overview</a>
+    <div class="doc-nav-divider"></div>
+    <div class="doc-nav-brand"><div class="doc-nav-dot"></div>Calibrax.ai</div>
+  </div>
+  <div class="doc-nav-right">
+    <div class="doc-nav-label">Deliverable 5 of 5</div>
+    <div class="doc-nav-pills">
+      <div class="doc-nav-pill done"></div>
+      <div class="doc-nav-pill done"></div>
+      <div class="doc-nav-pill done"></div>
+      <div class="doc-nav-pill done"></div>
+      <div class="doc-nav-pill active"></div>
+    </div>
+  </div>
+</nav>
+
+<div class="page">
+
+<!-- HEADER -->
+<div class="header">
+  <div class="doc-eyebrow">Calibrax Internal · Pitch Sprint Document · Deliverable 5 of 5</div>
+  <div class="doc-title">Demo <em>Run-Through</em></div>
+  <div class="doc-subtitle">My pitch script for Day 15 — 5 scenes · off-script branches · close protocol</div>
+  <div class="meta-row">
+    <span class="meta-pill accent">v1.0 — Final</span>
+    <span class="meta-pill">Client: FreshChoice Group</span>
+    <span class="meta-pill">Audience: James Whitfield, CEO</span>
+    <span class="meta-pill">Hard ceiling: 20 minutes</span>
+    <span class="meta-pill red">Conversion event — not a product tour</span>
+  </div>
+</div>
+
+<!-- 00: PURPOSE -->
+<div class="section" id="s0">
+  <div class="section-hd">
+    <span class="sn">00</span>
+    <span class="st">Why I wrote <em>this document</em></span>
+    <div class="section-line"></div>
+  </div>
+  <div class="purpose-card">
+    <div class="purpose-item">
+      <div class="purpose-num">1</div>
+      <div>
+        <div class="purpose-label">On pitch day</div>
+        <div class="purpose-text">My crib sheet in the room — structured by scene, with <strong>exact words, timing cues, and decision branches</strong> I can glance at without breaking stride. The engineer runs the laptop. I present standing.</div>
+      </div>
+    </div>
+    <div class="purpose-item">
+      <div class="purpose-num">2</div>
+      <div>
+        <div class="purpose-label">In interview</div>
+        <div class="purpose-text">The strategic asides record <strong>why I designed each move the way I did</strong> — so I can defend every choice under questioning without having to reconstruct my reasoning on the spot.</div>
+      </div>
+    </div>
+    <div class="purpose-rule">This demo is not a product tour. It is a conversion event. Every scene I run has one job.</div>
+  </div>
+</div>
+
+<!-- 01: PRE-MEETING -->
+<div class="section" id="s1">
+  <div class="section-hd">
+    <span class="sn">01</span>
+    <span class="st">Pre-meeting <em>setup & room read</em></span>
+    <div class="section-line"></div>
+  </div>
+
+  <p class="prose"><strong>T-60 minutes before James walks in.</strong> Six non-negotiable logistics checks I run with the engineer before anyone else arrives.</p>
+
+  <div class="setup-grid">
+    <div class="setup-item">
+      <div class="setup-icon">💻</div>
+      <div class="setup-text"><span class="setup-label">Engineer runs the machine</span>I present standing. The engineer is silent unless there is a technical failure — in which case I keep talking while they fix it.</div>
+    </div>
+    <div class="setup-item">
+      <div class="setup-icon">🔒</div>
+      <div class="setup-text"><span class="setup-label">Demo Mode active</span>I confirm <code style="font-family:'DM Mono',monospace;font-size:11px;background:var(--surface3);padding:1px 5px;border-radius:3px;">?demo=true</code> is live. All 5 scripted questions cached and pre-validated. I am not relying on live inference during the pitch.</div>
+    </div>
+    <div class="setup-item">
+      <div class="setup-icon">📡</div>
+      <div class="setup-text"><span class="setup-label">Offline fallback confirmed</span>I test cached responses work without internet. Venue WiFi is a bonus — not a dependency I will be caught relying on.</div>
+    </div>
+    <div class="setup-item">
+      <div class="setup-icon">🖥</div>
+      <div class="setup-text"><span class="setup-label">Display tested from the back of the room</span>I walk to the far wall and confirm the screen is readable. Font size 16px minimum. No squinting across a conference table.</div>
+    </div>
+    <div class="setup-item">
+      <div class="setup-icon">⌨️</div>
+      <div class="setup-text"><span class="setup-label">Input field pre-focused on load</span>When I hand the keyboard to James in Scene 4, he types immediately — no clicking, no friction. I test this before he arrives.</div>
+    </div>
+    <div class="setup-item">
+      <div class="setup-icon">🗂</div>
+      <div class="setup-text"><span class="setup-label">Backup device ready, silent</span>My own laptop is loaded, charged, and on the table. Emergency failover in under 60 seconds. I never mention it unless I need it.</div>
+    </div>
+  </div>
+
+  <p class="prose"><strong>T-5 minutes.</strong> My room read before James arrives. Four questions I answer before I say a word.</p>
+
+  <table class="room-table">
+    <thead>
+      <tr>
+        <th>My question</th>
+        <th>What I look for</th>
+        <th>How I adapt</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>Who else is in the room?</td>
+        <td>Is Sarah Chen (CSO) present? Any unexpected faces — IT, legal, finance?</td>
+        <td>If Sarah is there, I acknowledge her — she is my internal champion. Unknown faces: I ask for quick intros before I start.</td>
+      </tr>
+      <tr>
+        <td>What is James's energy?</td>
+        <td>Rushed, curious, sceptical, or warm?</td>
+        <td>Rushed → I strip my setup to 45 seconds and open the product immediately. Curious → I let him explore. Sceptical → I don't oversell the intro.</td>
+      </tr>
+      <tr>
+        <td>How technical is the room?</td>
+        <td>Is IT or the data team present alongside James?</td>
+        <td>Technical audience → I can briefly reference RAG and the data architecture. Non-technical → outcomes only. No acronyms.</td>
+      </tr>
+      <tr>
+        <td>What did he just come from?</td>
+        <td>Did Calibrax present slides first? Has James been in back-to-back meetings for hours?</td>
+        <td>If he's already been briefed for an hour, I open the product within 60 seconds of sitting down. No extended setup. I get out of the way and let the product go to work.</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <div class="aside">
+    <div class="aside-label">Why I set up this way</div>
+    <p>The biggest demo killer is a PM who talks for 10 minutes before showing anything. James came up through finance and operations — he is commercially impatient and has sat through too many conceptual AI pitches that never showed him a working product. <strong>The moment I open the laptop, I am already differentiated.</strong> My job in the setup is to give him just enough context to feel the contrast, then get out of the way.</p>
+  </div>
+</div>
+
+<!-- 02: THE FIVE SCENES -->
+<div class="section" id="s2">
+  <div class="section-hd">
+    <span class="sn">02</span>
+    <span class="st">The five <em>scenes I run</em></span>
+    <div class="section-line"></div>
+  </div>
+
+  <!-- SCENE 1 -->
+  <div class="scene-card">
+    <div class="scene-card-hd">
+      <div class="scene-accent" style="background:#5240b8;"></div>
+      <div class="scene-hd-inner">
+        <div class="scene-left">
+          <span class="scene-num">Scene 01</span>
+          <span class="scene-name">The Setup &nbsp;<span class="scene-sub">— no product yet</span></span>
+        </div>
+        <div class="scene-right">
+          <span class="scene-dur">90 sec max</span>
+          <span class="scene-goal-pill" style="background:var(--p-bg);color:var(--p-mid);border:1px solid rgba(82,64,184,.2);">Goal: establish the pain</span>
+        </div>
+      </div>
+    </div>
+    <div class="scene-body">
+      <div class="scene-goal-line">I establish the pain so viscerally that when the product appears, it lands as a relief — not a feature demo.</div>
+
+      <div class="script-block">
+        <div class="script-block-label">What I say</div>
+        <span class="stage-dir">// I am standing. Laptop is closed. Direct eye contact with James.</span>
+        <p class="script-line">"Before I show you anything — I want to read you something back."</p>
+        <p class="script-line">"In your briefing with our team, you said: <em>'I run a $2.4 billion business and I still can't get a straight answer to a simple question without waiting days.'</em>"</p>
+        <p class="script-line">"That's not a technology problem. That's a structural intelligence gap — and it compounds across every decision you make, every day."</p>
+        <p class="script-line">"What I'm going to show you in the next 20 minutes is not a dashboard. It's not a reporting tool. It's not another Tableau."</p>
+        <p class="script-line">"It's what your business looks like when you can just... ask."</p>
+        <span class="script-pause">— I pause. I open the laptop. I turn it toward James. —</span>
+      </div>
+
+      <div class="managing">
+        <div class="managing-label">What I am managing</div>
+        <div class="managing-item"><div class="managing-dot"></div><div class="managing-text"><strong>I name Tableau deliberately.</strong> James views that project as a failure. Naming it signals I have done my homework and I am not repeating that mistake. If he reacts, I have already pre-empted Branch 3.</div></div>
+        <div class="managing-item"><div class="managing-dot"></div><div class="managing-text"><strong>I quote him back at himself.</strong> His own words create instant recognition — he feels heard before I have shown him a single feature. This is not flattery. It is proof of preparation.</div></div>
+        <div class="managing-item"><div class="managing-dot"></div><div class="managing-text"><strong>I hold to 90 seconds, hard.</strong> Any longer and I am burning the goodwill I just built. The product is the pitch. I get to it.</div></div>
+      </div>
+
+      <div class="demo-state">
+        <div class="demo-state-label">Screen state at this moment</div>
+        <div class="demo-screen-box">
+          <strong>Idle state — Command Console loaded, empty chat area</strong>
+          Suggested question chips visible. Alert strip active: NZ Margin Alert · Auckland DC Delay · SG E-Commerce · AU on track. Input field focused.
+        </div>
+        <div class="annotation-row"><span class="ann-tag">Note</span><div class="ann-text">The alert strip is already surfacing intelligence before James has typed a word. I do not narrate this — I let him notice it himself. That first moment of unprompted discovery is more powerful than anything I could say about it.</div></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SCENE 2 -->
+  <div class="scene-card">
+    <div class="scene-card-hd">
+      <div class="scene-accent" style="background:#1e48a8;"></div>
+      <div class="scene-hd-inner">
+        <div class="scene-left">
+          <span class="scene-num">Scene 02</span>
+          <span class="scene-name">The First Question &nbsp;<span class="scene-sub">— structured data</span></span>
+        </div>
+        <div class="scene-right">
+          <span class="scene-dur">2–3 min</span>
+          <span class="scene-goal-pill" style="background:var(--b-bg);color:var(--b-mid);border:1px solid rgba(30,72,168,.2);">Goal: prove it works</span>
+        </div>
+      </div>
+    </div>
+    <div class="scene-body">
+      <div class="scene-goal-line">I give James a clean, fast, accurate answer to a financial question he has waited 2 days for in the past. Proof of concept. Trust begins here.</div>
+
+      <div class="script-block">
+        <div class="script-block-label">What I say</div>
+        <span class="stage-dir">// I gesture toward the screen — or let James lean in naturally.</span>
+        <p class="script-line">"You mentioned you've been frustrated by NZ fresh produce margins. Let's start there."</p>
+        <span class="script-pause">— I click the chip: "How did NZ fresh produce margins perform last month?" —</span>
+        <span class="stage-dir">// As the answer streams in, I say nothing. I let it land. This silence is the demo.</span>
+        <span class="script-pause">— I wait for the response to complete —</span>
+        <p class="script-line">"18.4% in March. Down 3.2 percentage points from Q3. The steepest single-month decline in that category in 12 months."</p>
+        <p class="script-line">"That answer — with that context — would have taken your finance team the better part of a day to produce. It just took four seconds."</p>
+        <span class="script-pause">— I click to expand the source attribution panel —</span>
+        <p class="script-line">"And this matters. Every number you see has a source. You can see exactly where it came from — which dataset, which period, which extraction. <em>This system doesn't hallucinate.</em> If it doesn't have the data, it tells you."</p>
+      </div>
+
+      <div class="managing">
+        <div class="managing-label">What I am managing</div>
+        <div class="managing-item"><div class="managing-dot"></div><div class="managing-text"><strong>I let the streaming silence do the work.</strong> The 4-second response is the demo. I do not fill it with words. James will watch the tokens appear and that visual does more than any explanation I could offer.</div></div>
+        <div class="managing-item"><div class="managing-dot"></div><div class="managing-text"><strong>I open the source panel deliberately.</strong> This is trust-building, not feature-showing. James is sceptical — his finance team will immediately ask "how do we know the numbers are right?" I defuse that objection before it becomes a blocker.</div></div>
+        <div class="managing-item"><div class="managing-dot"></div><div class="managing-text"><strong>I do not explain the technology.</strong> He does not need to know it is RAG + structured lookup. He needs to feel that the answer is grounded and trustworthy. Those are different things.</div></div>
+      </div>
+
+      <div class="demo-state">
+        <div class="demo-state-label">Screen state at this moment</div>
+        <div class="demo-screen-box">
+          <strong>Structured data response — message thread visible</strong>
+          User message (right-aligned) → AI response: prose + 3 data cards (March: 18.4% ↓ · Q3 avg: 21.6% · Variance: –$1.2M) → Source attribution panel EXPANDED showing "SAP · NZ COGS detail · March"
+        </div>
+        <div class="annotation-row"><span class="ann-tag">Annotation</span><div class="ann-text">Data cards show numbers, not charts — fast to read, impossible to misread across a conference table.</div></div>
+        <div class="annotation-row"><span class="ann-tag">Annotation</span><div class="ann-text">Source panel is open and I have pointed to it — every claim attributed, every number auditable. This is what separates this from a hallucinating chatbot.</div></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SCENE 3 -->
+  <div class="scene-card">
+    <div class="scene-card-hd">
+      <div class="scene-accent" style="background:#14582e;"></div>
+      <div class="scene-hd-inner">
+        <div class="scene-left">
+          <span class="scene-num">Scene 03</span>
+          <span class="scene-name">The Wow Moment &nbsp;<span class="scene-sub">— cross-signal synthesis</span></span>
+        </div>
+        <div class="scene-right">
+          <span class="scene-dur">3–4 min</span>
+          <span class="scene-goal-pill" style="background:var(--g-bg);color:var(--g-mid);border:1px solid rgba(28,120,64,.2);">Goal: convert the deal</span>
+        </div>
+      </div>
+    </div>
+    <div class="scene-body">
+      <div class="scene-goal-line">I show what no other product can do — financial data and operational context joined in a single answer. This is the scene that closes the deal. I have designed the entire demo to arrive here.</div>
+
+      <div class="script-block">
+        <div class="script-block-label">What I say</div>
+        <span class="stage-dir">// After Scene 2 lands — I lean forward slightly. This is my pivot.</span>
+        <p class="script-line">"Now. That was a financial answer. Good, fast, cited. But here's what's actually different about this."</p>
+        <p class="script-line">"That margin number doesn't exist in isolation. Your teams have been talking about what caused it — emailing, messaging in Teams, escalating up the chain. That context lives somewhere too. It's just been invisible."</p>
+        <p class="script-line">"Let me show you what happens when I connect the two."</p>
+        <span class="script-pause">— I click: "Are the NZ margin issues connected to anything my regional team has flagged recently?" —</span>
+        <span class="stage-dir">// This response takes ~6 seconds. I stay silent. I watch James, not the screen.</span>
+        <span class="script-pause">— I wait for the full response —</span>
+        <p class="script-line">"The Northland supplier delay — flagged by the NZ Regional Ops Lead on 10 March. A 6-day replenishment gap for leafy greens across 4 Auckland stores. $0.9 million in expedited freight costs, booked in March COGS. That accounts for approximately 75% of the margin variance."</p>
+        <p class="script-line">"The escalation thread had 7 messages. The issue has been resolved as of last week. Partial margin recovery is expected in the first two weeks of April."</p>
+        <span class="script-pause">— I point to the expanded source panel: SAP / Teams / Email / WMS —</span>
+        <p class="script-line">"Four sources. One answer. <em>No analyst in the middle.</em>"</p>
+      </div>
+
+      <div class="managing">
+        <div class="managing-label">What I am managing</div>
+        <div class="managing-item"><div class="managing-dot"></div><div class="managing-text"><strong>This is the emotional peak of the demo.</strong> James asked for exactly this in the SDR memo — almost verbatim. I am delivering his own words back to him as a live product. I watch his face, not the screen, during the 6-second response.</div></div>
+        <div class="managing-item"><div class="managing-dot"></div><div class="managing-text"><strong>"No analyst in the middle" is my close.</strong> It is not a feature. It is the elimination of his current daily pain. I say it slowly, then I stop talking completely. I do not rush to fill the silence.</div></div>
+        <div class="managing-item"><div class="managing-dot"></div><div class="managing-text"><strong>I watch for the lean.</strong> If James leans forward, nods, or starts reading the response himself — I slow down and let him sit in the moment. I do not rush to Scene 4 if he is still processing this one.</div></div>
+      </div>
+
+      <div class="demo-state">
+        <div class="demo-state-label">Screen state at this moment — the centrepiece</div>
+        <div class="demo-screen-box">
+          <strong>Cross-signal synthesis response</strong>
+          Thread: [Q1 condensed] → [User: "Are the NZ margin issues connected..."] → [AI: "Yes — there is a direct operational link."] → Synthesis block (green-tinted inset): [SAP · Finance] ←→ [Teams · Regional Ops] → Source panel EXPANDED: 4 source pills visible.
+        </div>
+        <div class="annotation-row"><span class="ann-tag">Key</span><div class="ann-text">The green-tinted cross-signal synthesis block is the visual differentiator. No BI tool, no dashboard, no previous Tableau does this — and James knows it.</div></div>
+        <div class="annotation-row"><span class="ann-tag">Key</span><div class="ann-text">Source panel shows provenance across 4 disconnected systems — SAP, Teams, Email, WMS — joined automatically. Not by an analyst. Not by a 48-hour relay chain.</div></div>
+        <div class="annotation-row"><span class="ann-tag">Key</span><div class="ann-text">Causal chain is explicit: supplier delay → stock gap → expedited freight → $0.9M COGS → 75% of margin variance. This is the answer James has been asking his CFO for.</div></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SCENE 4 -->
+  <div class="scene-card">
+    <div class="scene-card-hd">
+      <div class="scene-accent" style="background:#b86000;"></div>
+      <div class="scene-hd-inner">
+        <div class="scene-left">
+          <span class="scene-num">Scene 04</span>
+          <span class="scene-name">The Handoff &nbsp;<span class="scene-sub">— James types his own question</span></span>
+        </div>
+        <div class="scene-right">
+          <span class="scene-dur">2–3 min</span>
+          <span class="scene-goal-pill" style="background:var(--a-bg);color:var(--a-mid);border:1px solid rgba(184,96,0,.2);">Goal: transfer ownership</span>
+        </div>
+      </div>
+    </div>
+    <div class="scene-body">
+      <div class="scene-goal-line">James stops watching a demo and starts using a product. This is the moment it stops being my system and starts being his.</div>
+
+      <div class="script-block">
+        <div class="script-block-label">What I say</div>
+        <span class="stage-dir">// I push the laptop gently toward James — or signal the engineer to turn it.</span>
+        <p class="script-line">"I've been driving. Your turn."</p>
+        <p class="script-line">"Ask it anything that's actually on your mind right now. Not a scripted question. Something you'd genuinely want answered tomorrow morning."</p>
+        <span class="script-pause">— I step back — I stay quiet — I let him type —</span>
+        <span class="stage-dir">// Whatever he asks, the system responds. I do not intervene, pre-empt, or hover. If the answer is imperfect, I go to Branch 1.</span>
+        <span class="script-pause">— after his response returns —</span>
+        <p class="script-line">"That's what this is. Not a demo environment you'd never use again. An interface you'd open every morning."</p>
+      </div>
+
+      <div class="managing">
+        <div class="managing-label">What I am managing</div>
+        <div class="managing-item"><div class="managing-dot"></div><div class="managing-text"><strong>This is the highest-stakes, highest-reward moment.</strong> Nothing I say will be as convincing as James typing a question himself and getting a useful answer. My job here is to stay out of the way. The engineer stays invisible.</div></div>
+        <div class="managing-item"><div class="managing-dot"></div><div class="managing-text"><strong>I do not hover.</strong> If he struggles to phrase the question, I do not help. I let him find his own words — that is part of the experience. Assisting him would undermine the point entirely.</div></div>
+        <div class="managing-item"><div class="managing-dot"></div><div class="managing-text"><strong>If the answer is imperfect:</strong> I do not apologise. I say: "This is a 14-day prototype on synthetic data. With your live SAP and real Teams data, this gets significantly sharper. That's exactly what the discovery phase is for."</div></div>
+      </div>
+
+      <div class="demo-state">
+        <div class="demo-state-label">Screen state at this moment</div>
+        <div class="demo-screen-box">
+          <strong>Live response to James's own question</strong>
+          Whatever he typed + the system's response. I do not script this screen. The product must stand on its own here.
+        </div>
+        <div class="annotation-row"><span class="ann-tag">Note</span><div class="ann-text">This is the trust moment. James is in control, I am not narrating. My red-team on Days 11–12 gave me confidence that the system handles off-script questions without embarrassing me. I trust that work now.</div></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SCENE 5 -->
+  <div class="scene-card">
+    <div class="scene-card-hd">
+      <div class="scene-accent" style="background:#b83030;"></div>
+      <div class="scene-hd-inner">
+        <div class="scene-left">
+          <span class="scene-num">Scene 05</span>
+          <span class="scene-name">The Close &nbsp;<span class="scene-sub">— vision, not features</span></span>
+        </div>
+        <div class="scene-right">
+          <span class="scene-dur">2 min</span>
+          <span class="scene-goal-pill" style="background:var(--r-bg);color:var(--r-mid);border:1px solid rgba(184,48,48,.22);">Goal: make the ask</span>
+        </div>
+      </div>
+    </div>
+    <div class="scene-body">
+      <div class="scene-goal-line">I pull back from the prototype, paint Day 90, and make the ask. I do not let the demo be the finale — the vision is. The product is the proof. The close is the conversation.</div>
+
+      <div class="script-block">
+        <div class="script-block-label">What I say</div>
+        <span class="stage-dir">// I take the laptop back. I stand. Direct eye contact.</span>
+        <p class="script-line">"What you just used is a 14-day prototype built on synthetic data — a deliberate slice of what's possible."</p>
+        <p class="script-line">"This isn't a better dashboard. It's an intelligence layer. Today it answers questions for you. In 90 days — with your live SAP data, your real Teams threads, your actual supply chain logs — it answers questions for every decision-maker in this business. Your regional managers. Your logistics leads. Your store teams. Same engine. Calibrated to each role."</p>
+        <p class="script-line">"You told us you want a control tower for your business. <em>That's what I'm building.</em>"</p>
+        <p class="script-line">"The next step isn't a contract. It's a 4–6 week paid discovery — I connect to your live data, prove it on real numbers, and put a production-grade proof of concept in your hands. Low risk. High signal."</p>
+        <p class="script-line">"I've shown you the <em>what</em>. The discovery is the <em>how</em> — with your data."</p>
+        <span class="script-pause">— I pause — direct close —</span>
+        <p class="script-line">"James — are you in?"</p>
+      </div>
+
+      <div class="managing">
+        <div class="managing-label">What I am managing</div>
+        <div class="managing-item"><div class="managing-dot"></div><div class="managing-text"><strong>"Are you in?" is intentional.</strong> Not "what do you think?" or "any questions?" — those invite deferral. "Are you in?" invites a decision. I use it exactly as written and I do not soften it.</div></div>
+        <div class="managing-item"><div class="managing-dot"></div><div class="managing-text"><strong>Short. Declarative. One ask.</strong> I do not list features. I do not show a roadmap slide. I do not over-explain the commercial model. One question at the end, then I wait.</div></div>
+        <div class="managing-item"><div class="managing-dot"></div><div class="managing-text"><strong>If Sarah Chen is in the room:</strong> I make brief eye contact with her when I say "every decision-maker in this business." She is the internal champion — acknowledging her in front of James reinforces her position when she takes this internally.</div></div>
+      </div>
+
+      <div class="demo-state">
+        <div class="demo-state-label">Screen state at this moment</div>
+        <div class="demo-screen-box">
+          <strong>Idle or previous response — it does not matter</strong>
+          I am standing. I am not pointing at the screen. The laptop is closed or turned away.
+        </div>
+        <div class="annotation-row"><span class="ann-tag">Note</span><div class="ann-text">The demo is over. This is now a commercial conversation. I am not a PM demoing software — I am a deal captain asking for a decision.</div></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- 03: TIMING -->
+<div class="section" id="s3">
+  <div class="section-hd">
+    <span class="sn">03</span>
+    <span class="st">My timing <em>plan</em></span>
+    <div class="section-line"></div>
+  </div>
+
+  <div class="timing-wrap">
+    <div class="timing-head">
+      <div class="timing-head-label">20-minute hard ceiling · 13.5 min scripted · 6.5 min buffer for James to explore</div>
+    </div>
+    <div class="timing-row cols">
+      <span>Scene</span><span>Duration</span><span>Cumulative</span>
+    </div>
+    <div class="timing-row">
+      <div class="timing-scene-name">Pre-meeting setup <span style="color:var(--text4);font-size:12px;">(internal — before James arrives)</span></div>
+      <div class="timing-dur">T-60 min</div>
+      <div class="timing-cum">—</div>
+    </div>
+    <div class="timing-row">
+      <div class="timing-scene-name">Room read</div>
+      <div class="timing-dur">5 min</div>
+      <div class="timing-cum">—</div>
+    </div>
+    <div class="timing-row">
+      <div class="timing-scene-name"><strong>Scene 1</strong> — The Setup</div>
+      <div class="timing-dur">90 sec</div>
+      <div class="timing-cum">1:30</div>
+    </div>
+    <div class="timing-row">
+      <div class="timing-scene-name"><strong>Scene 2</strong> — First question</div>
+      <div class="timing-dur">2–3 min</div>
+      <div class="timing-cum">~4:30</div>
+    </div>
+    <div class="timing-row">
+      <div class="timing-scene-name"><strong>Scene 3</strong> — Wow moment</div>
+      <div class="timing-dur">3–4 min</div>
+      <div class="timing-cum">~8:30</div>
+    </div>
+    <div class="timing-row">
+      <div class="timing-scene-name"><strong>Scene 4</strong> — Handoff</div>
+      <div class="timing-dur">2–3 min</div>
+      <div class="timing-cum">~11:30</div>
+    </div>
+    <div class="timing-row">
+      <div class="timing-scene-name"><strong>Scene 5</strong> — The close</div>
+      <div class="timing-dur">2 min</div>
+      <div class="timing-cum">~13:30</div>
+    </div>
+    <div class="timing-row buffer">
+      <div class="timing-scene-name" style="color:var(--g);"><strong>Buffer — James's exploration time</strong></div>
+      <div class="timing-dur" style="color:var(--g-mid);">6–7 min</div>
+      <div class="timing-cum" style="color:var(--g);">~20:00</div>
+    </div>
+    <div class="timing-note">The buffer is not wasted time. If James is still asking questions at minute 18, I let him. An extended demo is a buying signal — I do not cut it short to stay on script.</div>
+  </div>
+</div>
+
+<!-- 04: CONTINGENCIES -->
+<div class="section" id="s4">
+  <div class="section-hd">
+    <span class="sn">04</span>
+    <span class="st">Off-script <em>branches I am ready for</em></span>
+    <div class="section-line"></div>
+  </div>
+  <p class="prose">Six scenarios. For each: the signal that tells me it is happening, exactly what I say, and why that response works.</p>
+
+  <div class="branch-card">
+    <div class="branch-hd">
+      <span class="branch-num">Branch 1</span>
+      <span class="branch-signal">The system gives a vague, hedged, or incomplete answer to a question</span>
+    </div>
+    <div class="branch-body">
+      <div>
+        <div class="branch-col-label say">What I say</div>
+        <div class="branch-say">"This is a 14-day prototype on synthetic data. When I connect to your live SAP and real Teams threads in the discovery phase, this answer gets significantly sharper. But notice what it did do — it identified the right sources, it didn't make up a number, and it told you what it knew and what it didn't. That's the behaviour I've engineered for."</div>
+      </div>
+      <div>
+        <div class="branch-col-label why">Why it works</div>
+        <div class="branch-why">I reframe the limitation as a feature — graceful failure and no hallucination are design choices, not bugs. I pivot directly to the paid engagement. I do not apologise. I do not look at the engineer.</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="branch-card">
+    <div class="branch-hd">
+      <span class="branch-num">Branch 2</span>
+      <span class="branch-signal">"This is all fake data, right? When does it connect to our actual systems?"</span>
+    </div>
+    <div class="branch-body">
+      <div>
+        <div class="branch-col-label say">What I say</div>
+        <div class="branch-say">"Yes — this runs on realistic synthetic data. The architecture is identical to what connects to SAP, Teams, and your WMS. The discovery is 4–6 weeks — I wire the real connectors, test against your live data, and deliver a production-grade proof of concept. What you're seeing today is the interface and the intelligence logic. The data plumbing is the next step."</div>
+      </div>
+      <div>
+        <div class="branch-col-label why">Why it works</div>
+        <div class="branch-why">Anticipated objection, clean answer, direct path to commercial engagement. I am never defensive about synthetic data — it is an honest and deliberate choice, not a limitation I am embarrassed by.</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="branch-card">
+    <div class="branch-hd">
+      <span class="branch-num">Branch 3</span>
+      <span class="branch-signal">"We tried something like this before. It didn't work." — the Tableau reference</span>
+    </div>
+    <div class="branch-body">
+      <div>
+        <div class="branch-col-label say">What I say</div>
+        <div class="branch-say">"The Tableau project failed for two specific reasons — poor data integration and low adoption. What's different here: I don't ask your IT team to build the connectors, and I don't ask your users to change their workflow. They ask questions in plain English. No training, no dashboards, no maintenance burden. That project asked people to come to the data. This brings the data to them."</div>
+      </div>
+      <div>
+        <div class="branch-col-label why">Why it works</div>
+        <div class="branch-why">I am not dismissing the failure — I am demonstrating that I understand exactly why it happened and why this is structurally different. This is the most credibility-building moment in the whole demo if it arises.</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="branch-card">
+    <div class="branch-hd">
+      <span class="branch-num">Branch 4</span>
+      <span class="branch-signal">Sarah Chen starts probing on data architecture, security, or LLM provider</span>
+    </div>
+    <div class="branch-body">
+      <div>
+        <div class="branch-col-label say">What I say</div>
+        <div class="branch-say">"Great question — I can go deep on the architecture in a technical deep-dive right after this. At this level: the data never leaves your environment, I'm not training on your data, and the LLM is the orchestration layer — not the data store. Happy to walk through the full technical spec in the session after this one."</div>
+      </div>
+      <div>
+        <div class="branch-col-label why">Why it works</div>
+        <div class="branch-why">I preserve momentum. I do not get pulled into a technical rabbit hole during the 20-minute pitch window. I signal competence without derailing the commercial narrative. Brief, confident, clean defer.</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="branch-card">
+    <div class="branch-hd">
+      <span class="branch-num">Branch 5</span>
+      <span class="branch-signal">"This is impressive. I'll need to loop in IT / Legal / Finance before deciding."</span>
+    </div>
+    <div class="branch-body">
+      <div>
+        <div class="branch-col-label say">What I say</div>
+        <div class="branch-say">"Completely understood. Let me leave you with a one-page discovery scope summary — timeline, team, data access requirements, commercial terms. My ask is a decision by end of week, because the squad I've described is available to start in two weeks. If I miss that window, the timeline shifts by a month. I'd rather not lose that runway for you."</div>
+      </div>
+      <div>
+        <div class="branch-col-label why">Why it works</div>
+        <div class="branch-why">I create genuine urgency without artificial pressure. Squad availability is real — I communicate it as a constraint, not a tactic. The one-page summary gives Sarah exactly what she needs to shepherd approval internally without me in the room.</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="branch-card">
+    <div class="branch-hd">
+      <span class="branch-num">Branch 6</span>
+      <span class="branch-signal">"Can I try a few more questions? Can you show me [other feature]?"</span>
+    </div>
+    <div class="branch-body">
+      <div>
+        <div class="branch-col-label say">What I say</div>
+        <div class="branch-say">"Absolutely. I built it to be explored." — then I step back and let him go.</div>
+      </div>
+      <div>
+        <div class="branch-col-label why">Why it works</div>
+        <div class="branch-why">An extended demo is a buying signal — the strongest one I can get in the room. I do not cut it short to stay on script. This is the best possible outcome. I let it run for as long as James wants.</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- 05: CLOSE PROTOCOL -->
+<div class="section" id="s5">
+  <div class="section-hd">
+    <span class="sn">05</span>
+    <span class="st">My close <em>protocol</em></span>
+    <div class="section-line"></div>
+  </div>
+  <p class="prose">Three steps. I execute all three before anyone stands up to leave the room.</p>
+
+  <div class="close-steps">
+    <div class="close-step">
+      <div class="close-step-spine">
+        <div class="step-circle">1</div>
+        <div class="step-line"></div>
+      </div>
+      <div class="close-step-content">
+        <div class="close-step-title">I get a verbal commitment — before anyone leaves</div>
+        <div class="close-step-body">
+          I ask directly: <strong>"Are you in — at least in principle?"</strong>
+          <div class="ynm-grid">
+            <div class="ynm-card yes">
+              <div class="ynm-label">If yes</div>
+              <div class="ynm-text">"Excellent. I'll have the discovery scope to you and Sarah by end of tomorrow — timeline, team, data access, commercial terms. One page."</div>
+            </div>
+            <div class="ynm-card maybe">
+              <div class="ynm-label">If maybe</div>
+              <div class="ynm-text">"Understood. What's the one thing that would need to be true for this to be a clear yes?" — then I listen. I do not pitch again.</div>
+            </div>
+            <div class="ynm-card no">
+              <div class="ynm-label">If no</div>
+              <div class="ynm-text">"I appreciate your honesty. Can you tell me what would have needed to be different today?" — intelligence for the next pitch.</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="close-step">
+      <div class="close-step-spine">
+        <div class="step-circle">2</div>
+        <div class="step-line"></div>
+      </div>
+      <div class="close-step-content">
+        <div class="close-step-title">I hand my leave-behind to Sarah Chen — not James</div>
+        <div class="close-step-body">
+          Sarah is the internal champion who will shepherd this through FreshChoice's approval process after I leave the room. I give her:
+          <ul style="margin-top:10px;padding-left:18px;color:var(--text2);font-size:13px;line-height:2;">
+            <li>The one-page discovery scope summary (see Section 06)</li>
+            <li>A printed copy of D1 — Solution Analysis for internal circulation</li>
+            <li>The demo link <code style="font-family:'DM Mono',monospace;font-size:11px;background:var(--surface3);padding:1px 5px;border-radius:3px;">?demo=true</code> so she can replay it for stakeholders who were not in the room</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <div class="close-step">
+      <div class="close-step-spine">
+        <div class="step-circle">3</div>
+        <div class="step-line"></div>
+      </div>
+      <div class="close-step-content">
+        <div class="close-step-title">I send a follow-up to James and Sarah — within 24 hours</div>
+        <div class="close-step-body">
+          Subject: <strong>FreshChoice × Calibrax — Discovery Scope</strong><br><br>
+          My email contains four things and nothing else:
+          <ul style="margin-top:10px;padding-left:18px;color:var(--text2);font-size:13px;line-height:2;">
+            <li>One paragraph summarising what I demonstrated</li>
+            <li>The ask: 4–6 week paid discovery, CEO + Regional Manager personas, live SAP + Teams connection</li>
+            <li>Commercial terms — one line, exact figure from the Calibrax commercial team</li>
+            <li>A decision date: <em>"I'd welcome a decision by [DATE + 5 business days] to hold my squad's availability."</em></li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="aside">
+    <div class="aside-label">Why I designed my close this way</div>
+    <p>Most pitches die in the gap between a good demo and a signed engagement. The CEO is impressed, leaves the room, gets pulled into other priorities, and my follow-up email sits in his inbox for three weeks. <strong>My close is designed to eliminate that gap.</strong> A verbal commitment in the room, a leave-behind that Sarah can action independently, and a 24-hour follow-up with a hard decision date — these three steps compress the decision cycle from "three weeks of drift" to "a week of deliberate process." I communicate the squad availability constraint as a real constraint — not a pressure tactic — because it is one.</p>
+  </div>
+</div>
+
+<!-- 06: LEAVE-BEHIND -->
+<div class="section" id="s6">
+  <div class="section-hd">
+    <span class="sn">06</span>
+    <span class="st">My one-page <em>leave-behind</em></span>
+    <div class="section-line"></div>
+  </div>
+  <p class="prose" style="margin-bottom:18px;">I print this and hand it to Sarah Chen in the room. This is the document that travels through FreshChoice's internal approval process after I leave.</p>
+
+  <div class="lb-card">
+    <div class="lb-eyebrow">FreshChoice × Calibrax · Pitch Day · Confidential</div>
+    <div class="lb-title">Nexus Command Console — Discovery Scope</div>
+    <div class="lb-sub">What I showed you today. What the next step delivers.</div>
+
+    <div class="lb-grid">
+      <div>
+        <div class="lb-block-label">What I demonstrated</div>
+        <div class="lb-block-text">A conversational interface where the CEO types a business question in plain English and receives a grounded answer blending financial data with operational context from team communications — with full source attribution. <strong>Built in 14 days. Runs on a laptop. No dashboards. No waiting for analysts.</strong></div>
+      </div>
+      <div>
+        <div class="lb-block-label">What the discovery phase delivers</div>
+        <div class="lb-block-text">
+          <strong>Live connection:</strong> SAP (finance + margins) + Microsoft Teams<br>
+          <strong>Personas:</strong> CEO + Regional Manager<br>
+          <strong>Timeline:</strong> 4–6 weeks, fixed scope, fixed price<br>
+          <strong>Deliverable:</strong> Production-grade proof of concept on real FreshChoice data
+        </div>
+      </div>
+    </div>
+
+    <hr class="lb-divider">
+
+    <div class="lb-ask">
+      <div class="lb-ask-left">
+        <div class="lb-ask-label">The ask</div>
+        <div class="lb-ask-detail">Paid discovery engagement · Decision by [DATE]</div>
+      </div>
+      <div class="lb-ask-quote">"I've shown you the what.<br>The discovery is the how."</div>
+    </div>
+  </div>
+</div>
+
+<!-- FOOTER -->
+<div class="doc-footer">
+  <div class="footer-l">Calibrax Internal — Confidential · Demo Run-Through v1.0 Final</div>
+  <div class="footer-r">Nexus Command Console · FreshChoice Pitch Sprint · Day 15</div>
+</div>
+
+</div>
+
+<script>
+// Scroll-in animation
+const obs = new IntersectionObserver(entries => {
+  entries.forEach(e => {
+    if (e.isIntersecting) { e.target.classList.add('visible'); obs.unobserve(e.target); }
+  });
+}, { threshold: 0.05, rootMargin: '0px 0px -40px 0px' });
+document.querySelectorAll('.section').forEach((el, i) => {
+  el.style.transitionDelay = `${i * 0.04}s`;
+  obs.observe(el);
+});
+</script>
+</body>
+</html>
