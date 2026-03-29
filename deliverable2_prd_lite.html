@@ -180,14 +180,16 @@ body::before{
   font-family:'DM Mono',monospace;font-size:10px;letter-spacing:.1em;
   text-transform:uppercase;color:var(--a-mid);margin-bottom:14px;
 }
-.changelog-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:4px;}
+.changelog-grid{display:flex;flex-direction:column;gap:0;}
 .change-item{
-  display:flex;align-items:flex-start;gap:8px;
-  font-size:12px;color:var(--text2);line-height:1.55;
-  padding:5px 8px;border-radius:5px;
-  transition:background .15s,color .15s;
+  display:flex;align-items:flex-start;gap:10px;
+  font-size:12px;color:var(--text);line-height:1.6;
+  padding:9px 8px;border-radius:5px;
+  border-bottom:1px solid var(--border);
+  transition:background .15s;
 }
-.change-item:hover{background:var(--surface2);color:var(--text);}
+.change-item:last-child{border-bottom:none;}
+.change-item:hover{background:var(--surface2);}
 .change-item::before{
   content:'+';color:var(--g-acc);font-weight:500;
   font-family:'DM Mono',monospace;flex-shrink:0;margin-top:1px;
@@ -712,23 +714,23 @@ body::before{
   <div class="doc-title">Nexus <em>Command Console</em></div>
   <div class="doc-subtitle">Lightweight Product Requirements Document — CEO Prototype</div>
   <div class="meta-row">
-    <span class="meta-pill accent">v0.3 — Final</span>
+    <span class="meta-pill accent">v0.4 — Final</span>
     <span class="meta-pill">Client: FreshChoice Group</span>
     <span class="meta-pill">Sprint: 14 days</span>
     <span class="meta-pill">Squad: 1 AI PM · 1 DS · 1 ENG</span>
-    <span class="meta-pill red">Supersedes v0.1</span>
+    <span class="meta-pill red">Supersedes v0.3</span>
   </div>
 </div>
 
 <!-- ══ CHANGELOG ══ -->
 <div class="changelog">
-  <div class="changelog-title">What changed in v0.3 — post-review refinements</div>
+  <div class="changelog-title">What changed in v0.4 — gap fixes post-review</div>
   <div class="changelog-grid">
-    <div class="change-item removed">Problem statement condensed to a 5-line context anchor. Full analysis in D1 — no duplication.</div>
-    <div class="change-item removed">US-06 and US-07 removed as user stories. Replaced with a Non-Functional Requirements table (requirement, threshold, test method).</div>
-    <div class="change-item removed">Mutual commitments section removed from PRD. Moved to Deliverable 4 — Sprint Plan where it belongs.</div>
-    <div class="change-item">A-03 (LLM via API) and A-04 (single laptop) reclassified as Key Decisions — these are choices already made, not unknowns.</div>
-    <div class="change-item">Sections renumbered: 10 → 9 total. Problem statement, user stories, and assumptions all tighter.</div>
+    <div class="change-item">US-03 acceptance criteria extended: classifier misroute fallback defined. If blended query routes to lookup-only, <strong>query_type</strong> must return <strong>"structured"</strong> — not <strong>"blended"</strong>. DS red-team must include 3 blended queries on Day 10.</div>
+    <div class="change-item">NFR table: new "Classifier misroute" row added. Threshold — zero misclassified blended queries in the 5 scripted demo questions. Test method — Day 10 isolation check before red-team begins.</div>
+    <div class="change-item">D-01 Key Decision: LLM provider locked to <strong>Claude Sonnet via Anthropic API</strong>. "GPT-4o or Claude Sonnet" ambiguity removed. Selection rationale explicit. GPT-4o named as fallback only.</div>
+    <div class="change-item">Architecture section updated to match D-01 lock — "Claude Sonnet via Anthropic API (locked — see D-01)" replaces the ambiguous provider reference.</div>
+    <div class="change-item">Section 09 Code Freeze gate: rationale note added explaining intentional duplication with D4 · Sprint Plan (G6). PRD owns definition; D4 operationalises with role assignments.</div>
   </div>
 </div>
 
@@ -864,6 +866,7 @@ body::before{
         <div class="story-ac-item">Passing example: <em>"The 3.2% margin drop in NZ correlates with the Auckland DC delay flagged by Sarah Chen on 11 March"</em></div>
         <div class="story-ac-item">Source panel shows citations from both structured and unstructured types</div>
         <div class="story-ac-item">All numbers verified by the guardrail post-processor</div>
+        <div class="story-ac-item" style="border-left:2px solid var(--a-acc);padding-left:10px;margin-top:4px;"><strong>Classifier misroute fallback:</strong> if a blended query lands in lookup-only (structured path) and the response contains no qualitative source, the system must not surface the response as a blended answer. The <code>query_type</code> field in the <code>done</code> event must return <code>"structured"</code> — not <code>"blended"</code> — and the source panel must show only structured citations. The DS must include at least 3 synthetic blended queries in the red-team set (Day 11–12) to verify the classifier routes correctly before pitch day.</div>
       </div>
     </div>
   </div>
@@ -939,8 +942,11 @@ body::before{
         <td>Cached responses stream at <strong>identical visual cadence</strong> to live responses</td>
         <td>Side-by-side comparison on demo laptop. No perceptible difference in token-by-token appearance speed between live and cached.</td>
       </tr>
-    </tbody>
-  </table>
+      <tr>
+        <td>Classifier misroute</td>
+        <td><strong>Zero blended queries misclassified as structured-only</strong> in the 5 scripted demo questions</td>
+        <td>DS runs 3 synthetic blended queries through the classifier in isolation on Day 10. Each must return <code>query_type: "blended"</code> in the <code>done</code> event and produce citations from both source types. Any misroute is a Day 10–11 fix item before red-team begins.</td>
+      </tr>
 </div>
 
 
@@ -1071,7 +1077,7 @@ body::before{
       <div class="scope-item must"><span><strong>Data authoring</strong> — synthetic fixtures from PM template. CSV → pandas → pre-computed lookup JSON. Days 1–4.</span></div>
       <div class="scope-item must"><span><strong>RAG pipeline</strong> — chunk + embed Teams/email corpus. ChromaDB local vector store. text-embedding-3-small. k=4 retrieval. Days 4–6.</span></div>
       <div class="scope-item must"><span><strong>Query classifier</strong> — keyword-based routing function (~30 lines Python). Structured → lookup. Unstructured → RAG. Unknown → both. Day 5.</span></div>
-      <div class="scope-item must"><span><strong>System prompt + LLM call</strong> — single prompt receiving lookup data + RAG chunks + query. Returns prose + citation JSON. GPT-4o or Claude Sonnet via API. Day 6.</span></div>
+      <div class="scope-item must"><span><strong>System prompt + LLM call</strong> — single prompt receiving lookup data + RAG chunks + query. Returns prose + citation JSON. <strong>Claude Sonnet via Anthropic API</strong> (locked — see D-01). Day 6.</span></div>
       <div class="scope-item must"><span><strong>Numeric guardrail post-processor</strong> — regex extracts all numbers from LLM response. Verifies each exists in source context. If any fail: return graceful fallback payload. Day 6, 0.5 days.</span></div>
       <div class="scope-item must"><span><strong>FastAPI SSE endpoint</strong> — POST /api/query. Streams token events then sends done event with citation JSON. Day 7.</span></div>
     </div>
@@ -1190,7 +1196,7 @@ body::before{
     <div class="kd-id">D-01</div>
     <div class="assumption-content">
       <div class="assumption-title">LLM via API — no fine-tuning, no self-hosting</div>
-      <div class="assumption-body">GPT-4o or Claude Sonnet via their respective APIs. <strong>Decision locked Day 1, API keys provisioned before standup. No model switching after Day 3</strong> — system prompt tuning is model-specific and re-tuning costs 1–2 days.</div>
+      <div class="assumption-body"><strong>Claude Sonnet via Anthropic API.</strong> <strong>Decision locked Day 1, API keys provisioned before standup. No model switching after Day 3</strong> — system prompt tuning is model-specific and re-tuning costs 1–2 days. Selection rationale: Claude Sonnet chosen over GPT-4o on three criteria — (1) superior instruction-following for structured citation JSON output, (2) lower per-token cost at prototype volume, (3) single-provider dependency simplifies key management on a 14-day timeline. GPT-4o remains the named fallback if Anthropic API is unavailable at sprint start.</div>
       <div class="assumption-why">Rationale: Fine-tuning takes weeks. API access takes hours. Demo-quality output from a well-engineered system prompt is indistinguishable from a fine-tuned model to a non-technical audience.</div>
     </div>
   </div>
@@ -1255,6 +1261,7 @@ body::before{
       <div>
         <div class="gate-title">Code freeze</div>
         <div class="gate-criteria"><strong>No code changes after Day 13</strong> without joint TL + PM approval. Demo environment locked. Demo Mode tested on pitch laptop. Engineer confirms environment runs cleanly on venue hardware.</div>
+        <div class="gate-criteria" style="margin-top:6px;font-size:12px;color:var(--text3);font-style:italic;">Note: this gate is also documented in Deliverable 4 · Sprint Plan (G6). This is intentional — the PRD owns the gate definition as a product requirement; D4 operationalises it with role assignments and escalation actions. Both documents are authoritative for their layer.</div>
       </div>
     </div>
   </div>
@@ -1264,7 +1271,7 @@ body::before{
 
 <!-- ══ FOOTER ══ -->
 <div class="doc-footer">
-  <div class="footer-l">Calibrax Internal — Confidential · PRD v0.3 Final</div>
+  <div class="footer-l">Calibrax Internal — Confidential · PRD v0.4 Final</div>
   <div class="footer-r">Nexus Command Console · FreshChoice Pitch Sprint</div>
 </div>
 
