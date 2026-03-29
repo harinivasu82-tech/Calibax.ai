@@ -196,7 +196,7 @@ body::before{content:'';position:fixed;inset:0;background-image:url("data:image/
 
 <nav class="doc-nav">
   <div class="doc-nav-left">
-    <a class="doc-nav-back" href="index.html">← Back to overview</a>
+    <a class="doc-nav-back" href="#">← Back to overview</a>
     <div class="doc-nav-divider"></div>
     <div class="doc-nav-brand"><div class="doc-nav-dot"></div>Calibrax.ai</div>
   </div>
@@ -235,7 +235,7 @@ body::before{content:'';position:fixed;inset:0;background-image:url("data:image/
     <div class="section-line"></div>
   </div>
 
-  <p class="prose">Five phases. Three roles running in parallel from Day 3. Six gate checkpoints — each with a binary pass/fail and a pre-defined escalation action. The plan is designed to front-load risk: the hardest dependency (data consistency between structured and unstructured corpus) is resolved by Day 4, before the engineer has wired anything to it.</p>
+  <p class="prose">Five phases. Six gate checkpoints — each with a binary pass/fail and a pre-defined escalation action. Three roles running in parallel from Day 3. <strong>Note on gate count:</strong> Phase 1 · Foundation carries two gates (G1 at End Day 1, G2 at End Day 2) — both are sub-gates within the same phase because Foundation has two distinct critical handoffs: sprint start and schema lock. Every other phase has one gate. The plan is designed to front-load risk: the hardest dependency (data consistency between structured and unstructured corpus) is resolved by Day 4, before the engineer has wired anything to it.</p>
 
   <div class="legend">
     <div class="legend-item"><div class="legend-swatch" style="background:#5240b8;"></div>PM</div>
@@ -384,7 +384,7 @@ body::before{content:'';position:fixed;inset:0;background-image:url("data:image/
           <div class="phase-meta">
             <span class="phase-days-badge">Days 1–2</span>
             <span class="gate-badge gate-crit">G1 · End D1</span>
-            <span class="gate-badge gate-crit">G2 · End D2</span>
+            <span class="gate-badge gate-crit" title="Sub-gate within Foundation — schema lock">G2 · End D2 (sub-gate)</span>
           </div>
         </div>
       </div>
@@ -723,8 +723,9 @@ body::before{content:'';position:fixed;inset:0;background-image:url("data:image/
       <tr>
         <th style="width:7%">Gate</th>
         <th style="width:9%">Day</th>
+        <th style="width:12%">Phase</th>
         <th style="width:11%">Severity</th>
-        <th style="width:36%">Pass condition</th>
+        <th style="width:33%">Pass condition</th>
         <th>If gate fails — escalation action</th>
       </tr>
     </thead>
@@ -732,13 +733,15 @@ body::before{content:'';position:fixed;inset:0;background-image:url("data:image/
       <tr>
         <td>G1</td>
         <td>End D1</td>
+        <td style="font-family:'DM Mono',monospace;font-size:10px;color:var(--text3);">P1 · Foundation</td>
         <td><span class="badge badge-crit">Critical</span></td>
         <td><span class="pass-text">5 demo questions locked and delivered to DS. LLM API keys working. DS-2 named as contingency. Data template in squad channel before 9am.</span></td>
         <td><span class="fail-text" style="margin-top:0;border-top:none;padding-top:0;">PM escalates to Calibrax leadership same day. Sprint pauses until all conditions are met. No data work begins on assumptions.</span></td>
       </tr>
       <tr>
-        <td>G2</td>
+        <td>G2 <span style="font-family:'DM Mono',monospace;font-size:9px;color:var(--text4);display:block;margin-top:2px;">sub-gate</span></td>
         <td>End D2</td>
+        <td style="font-family:'DM Mono',monospace;font-size:10px;color:var(--text3);">P1 · Foundation</td>
         <td><span class="badge badge-crit">Critical</span></td>
         <td><span class="pass-text">API response schema agreed and signed off by DS + ENG. Written to squad channel. TL has reviewed.</span></td>
         <td><span class="fail-text" style="margin-top:0;border-top:none;padding-top:0;">TL chairs emergency session Day 3 AM. No ENG UI work continues until schema is locked. Any work done on wrong schema is discarded.</span></td>
@@ -746,6 +749,7 @@ body::before{content:'';position:fixed;inset:0;background-image:url("data:image/
       <tr>
         <td>G3</td>
         <td>End D4</td>
+        <td style="font-family:'DM Mono',monospace;font-size:10px;color:var(--text3);">P2 · Build</td>
         <td><span class="badge badge-warn">Warning</span></td>
         <td><span class="pass-text">Lookup JSON complete with 40+ query variants. ChromaDB ingestion started. At least 50% of corpus chunked and embedded.</span></td>
         <td><span class="fail-text-warn" style="margin-top:0;border-top:none;padding-top:0;">Second DS activated immediately for Days 5–8, no grace period. PM notifies Calibrax leadership. No further scope additions permitted.</span></td>
@@ -753,6 +757,7 @@ body::before{content:'';position:fixed;inset:0;background-image:url("data:image/
       <tr>
         <td>G4</td>
         <td>End D7</td>
+        <td style="font-family:'DM Mono',monospace;font-size:10px;color:var(--text3);">P3 · Integration</td>
         <td><span class="badge badge-warn">Warning</span></td>
         <td><span class="pass-text">At least 3 of 5 scripted questions passing end-to-end through the fully wired system. First-token latency ≤ 2 seconds on demo hardware.</span></td>
         <td><span class="fail-text-warn" style="margin-top:0;border-top:none;padding-top:0;">If 2 pass: nice-to-haves cancelled, scope reviewed same day. If fewer than 2 pass: leadership escalation, emergency scope reduction, second DS extended.</span></td>
@@ -760,6 +765,7 @@ body::before{content:'';position:fixed;inset:0;background-image:url("data:image/
       <tr>
         <td>G5</td>
         <td>End D12</td>
+        <td style="font-family:'DM Mono',monospace;font-size:10px;color:var(--text3);">P4 · Validation</td>
         <td><span class="badge badge-crit">Critical</span></td>
         <td><span class="pass-text">All 5 scripted questions pass. Zero visible errors. Zero hallucinated numbers. At least 10 of 15 off-script queries return plausible, non-embarrassing responses.</span></td>
         <td><span class="fail-text" style="margin-top:0;border-top:none;padding-top:0;">Day 13 used for emergency fixes. PM makes pitch go/no-go call by end of Day 13. If no-go: contact FreshChoice to reschedule. Partial (4/5): adjust demo script, pitch with 4 questions.</span></td>
@@ -767,6 +773,7 @@ body::before{content:'';position:fixed;inset:0;background-image:url("data:image/
       <tr>
         <td>G6</td>
         <td>End D13</td>
+        <td style="font-family:'DM Mono',monospace;font-size:10px;color:var(--text3);">P5 · Lock &amp; Prep</td>
         <td><span class="badge badge-ok">Freeze</span></td>
         <td><span class="pass-text">Code frozen. Demo Mode tested on pitch laptop. ENG confirms app runs cleanly on venue hardware. All 5 cached responses streaming correctly.</span></td>
         <td><span class="fail-text-ok" style="margin-top:0;border-top:none;padding-top:0;">Any post-freeze change requires joint TL + PM written sign-off. Change is logged. Risk flagged to PM immediately — no silent hotfixes.</span></td>
